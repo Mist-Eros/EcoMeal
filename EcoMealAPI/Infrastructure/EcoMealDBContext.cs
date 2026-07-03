@@ -10,4 +10,6 @@ public class EcoMealDBContext : DbContext
     {}
 
     public DbSet<User> User { get; set;}
+    public DbSet<BusinessType> BusinessType { get; set;}
+    public DbSet<PackageType> PackageType { get; set;}
 }
