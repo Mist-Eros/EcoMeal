@@ -5,7 +5,30 @@
 }
 
 main {
-    flex: 1;
+    padding-top: 76px;
+    min-height: 100vh;
+    background: #f8f9fa;
+    position: relative;
+    overflow: hidden;
+}
+
+main::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 10px 10px, rgba(57, 97, 71, 0.12) 1.5px, transparent 1.5px);
+    background-size: 20px 20px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
 }
 
 .sidebar {

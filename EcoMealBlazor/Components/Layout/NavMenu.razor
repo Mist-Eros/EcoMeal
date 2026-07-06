@@ -1,24 +1,14 @@
 ﻿<nav class="navbar navbar-expand-lg navbar-dark bg-success">
     <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="">EcoMeal</a>
+        <a class="navbar-brand fw-bold" href="/landing">EcoMeal</a>
         <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse @(NavMenuCollapsed ? "" : "show")">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
                         <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-                    </NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="counter">
-                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-                    </NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="weather">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
                     </NavLink>
                 </li>
             </ul>
