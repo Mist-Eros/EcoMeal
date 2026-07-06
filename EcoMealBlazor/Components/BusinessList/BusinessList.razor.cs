@@ -8,9 +8,9 @@ public partial class BusinessList
 {
     [Inject] 
     public required BusinessService BusinessService { get; set;}
-    private List<BusinessModel>? Business { get; set;}
+    private List<BusinessModel>? Businesses { get; set;}
     protected override async Task OnInitializedAsync()
     {
-        Business = await BusinessService.GetAllAsync();
+        Businesses = await BusinessService.GetAllAsync();
     }
 }
