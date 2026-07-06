@@ -1,4 +1,4 @@
-using Ecomeal.EcoMealBlazor.Models;
+using EcoMeal.EcoMealBlazor.Models;
 using EcoMeal.EcoMealBlazor.Services;
 using Microsoft.AspNetCore.Components;
 

@@ -1,0 +1,9 @@
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -0.5rem;
+}
+
+.row > div {
+    padding: 0 0.5rem;
+}

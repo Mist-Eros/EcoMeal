@@ -1,4 +1,4 @@
-namespace Ecomeal.EcoMealBlazor.Models;
+namespace EcoMeal.EcoMealBlazor.Models;
 
 public class BusinessModel
 {

@@ -1,4 +1,4 @@
-using Ecomeal.EcoMealBlazor.Models;
+using EcoMeal.EcoMealBlazor.Models;
 
 namespace EcoMeal.EcoMealBlazor.Services;
 

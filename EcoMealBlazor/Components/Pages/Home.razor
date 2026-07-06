@@ -2,7 +2,20 @@
 @rendermode InteractiveServer
 @using EcoMeal.EcoMealBlazor.Components.BusinessList
 
-<PageTitle>Home</PageTitle>
+<PageTitle>EcoMeal - Home</PageTitle>
 
-<h1>Hello, world!</h1>
-<BusinessList />
+<div class="container mt-4">
+    <div class="text-center mb-5">
+        <h1 class="display-3 fw-bold" style="background: linear-gradient(135deg, #1a472a, #2d6a4f, #40916c); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            EcoMeal
+        </h1>
+        <p class="lead text-muted">Lettuce help you save some money :3</p>
+        <hr class="w-50 mx-auto" style="border-color: #2d6a4f;" />
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <BusinessList />
+        </div>
+    </div>
+</div>
