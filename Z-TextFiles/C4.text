@@ -1,0 +1,104 @@
+HTTP Verbs - also known as protocols
+
+also known as methods for HTTP, they represent commands, standardized, that indicate the
+action we want
+
+
+post get
+put patch
+delette
+
+
+API Controllers
+
+class inheriting ControllerBase and uses ApiController, used to build RESTful APIs
+
+DTO mentioned
+
+error codes
+100 200 300 400 500
+like 404, 204
+what they are about
+
+we made our first endpoint!!
+
+UI/UX = user interface / user experience
+UI = looks/ style
+UX = behavior
+
+"good design is invisible." = make it simple, make it accessible.
+An app is perfect when the user does his task without noticing the design
+
+UCD = user centric design
+
+dont do things for yourself, do them for the people who use the product.
+
+Jakob's law
+
+users will use most of their time on other websites or apps
+this means you need to make your app similar to things theyre used to
+
+e ca si cum ai intra intr-o baie noua. Te astepti sa ai un vas de toaleta, o chiuveta etc.
+Daca lipsesc o sa fie unnerving
+
+Fitts law
+
+the time to move cursor or finger depends on the distance and dimension
+
+REDUCE the physical and mental effort of the user, guide them easily towards their task
+
+Visual hierarchy
+
+marime si ierarhie
+culoare si contrast
+feedback Visual
+aliniere si proximitate
+consistenta
+claritate si simplitate
+
+web components
+
+button
+checkbox
+radio
+dropdown
+input
+tab switcher
+card
+carousel
+alert
+hamburbur
+
+Bootstrap
+
+CSS Framework
+uses aa 12 collumn grid based system
+
+1 1 1 1 1 1 1 1 1 1 1 1
+ 2   2   2   2   2   2
+  3     3     3     3
+   4       4       4
+     6          6
+   4          8
+          12
+
+XS S M L XL
+
+col-xl-6
+col-s-1
+
+This allows us to make things be 3/row on pc, but 2/1 on tab, but 1/row on phone.
+                                col-l-3
+                                                  col-m-6 
+                                                                col-s-12
+
+BLAZOR AND RAZOR components
+
+</> Markup (HTML)
+C# Logic
+{} Styles (CSS)
+
+DOM is the Document Object Manager, what it does is house EVERYTHING! 
+All the html code after Inspect Element is the DOM
+this means its safe to modify cuz we got le epic everything epicly finished to load
+
