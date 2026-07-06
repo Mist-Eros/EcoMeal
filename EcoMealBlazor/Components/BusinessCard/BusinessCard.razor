@@ -10,7 +10,8 @@
     <p class="card-text">@Business.Description</p>
     <p class="card-text">@Business.Address</p>
     <p class="card-text">@Business.Contact</p>
-    @*<a href="#" class="btn btn-primary">Go somewhere</a>
-    can also comment lines like this in html, kinda op*@
+    <button class="btn btn-danger" @onclick="DeleteBusiness">
+        Delete this Business
+    </button>
   </div>
 </div>

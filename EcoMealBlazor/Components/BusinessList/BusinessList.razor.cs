@@ -13,4 +13,10 @@ public partial class BusinessList
     {
         Businesses = await BusinessService.GetAllAsync();
     }
+
+    private async Task RefreshList()
+    {
+        Businesses = await BusinessService.GetAllAsync();
+        StateHasChanged();
+    }
 }
