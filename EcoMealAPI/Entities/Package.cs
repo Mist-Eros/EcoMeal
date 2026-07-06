@@ -14,11 +14,10 @@ public class Package
     public required int PackageTypeId { get; set; }
     
     public string? Description { get; set; }
-    public required decimal Price { get; set; }  // ← Make sure this exists
+    public required decimal Price { get; set; }
     public required DateTime Start_PickUp { get; set; }
     public required DateTime End_Pickup { get; set; }
     
-    // Navigation properties
     public Business Business { get; set; }
     public PackageType PackageType { get; set; }
     public ICollection<Order> Orders { get; set; } = new List<Order>();
