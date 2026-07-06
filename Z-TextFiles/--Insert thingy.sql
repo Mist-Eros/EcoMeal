@@ -3,7 +3,7 @@
 INSERT INTO [dbo].[Businesses] ([Name], [Address], [Description], [Contact], [BusinessTypeId])
 VALUES 
 (N'Pizza Imiza', N'Craiova', N'Probabil cea mai buna', N'pizza@imiza.ro', 1),
-(N'KEC', N'Craiova', N'It''s Toe Liking Good', N'kec@good.ro', 3),
+(N'KEC', N'Craiova', N'It''s Toe Licking Good', N'kec@good.ro', 3),
 (N'Shaorma Prietenii', N'Craiova', N'Nu-ti mai trebuie dusmani', N'sh@orma.ro', 3),
 (N'MonDay', N'Craiova', N'House of burgers', N'first@weekday.ro', 3),
 (N'Peter', N'Craiova', N'Traditie din 2025', N'craiova@peter.com', 2),
