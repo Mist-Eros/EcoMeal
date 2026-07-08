@@ -1,6 +1,7 @@
 using EcoMeal.EcoMealBlazor.Models;
 using EcoMeal.EcoMealBlazor.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace EcoMeal.EcoMealBlazor.Components.BusinessCard;
 
@@ -14,6 +15,9 @@ public partial class BusinessCard
     
     [Inject]
     public required NavigationManager NavigationManager { get; set; }
+    
+    [Inject]
+    public required IJSRuntime JSRuntime { get; set; }
     
     [Parameter]
     public EventCallback OnDeleted { get; set; }
@@ -47,6 +51,9 @@ public partial class BusinessCard
     private async Task DeleteBusiness()
     {
         if (isDeleting) return;
+        
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete '{Business.Name}'?");
+        if (!confirmed) return;
         
         isDeleting = true;
         

@@ -53,4 +53,80 @@ public class BusinessService
             return false;
         }
     }
+    public async Task<List<PackageTypeModel>> GetPackageTypesAsync()
+    {
+        try
+        {
+            var types = await _http.GetFromJsonAsync<List<PackageTypeModel>>("api/PackageTypes");
+            return types ?? new List<PackageTypeModel>();
+        }
+        catch
+        {
+            return new List<PackageTypeModel>();
+        }
+    }
+
+    public async Task<bool> AddPackageToBusinessAsync(int businessId, PackageAddModel model)
+    {
+        try
+        {
+            var response = await _http.PostAsJsonAsync($"api/business/{businessId}/addPackage", model);
+            return response.IsSuccessStatusCode;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> DeletePackageAsync(int packageId)
+    {
+        try
+        {
+            var response = await _http.DeleteAsync($"api/package/{packageId}");
+            return response.IsSuccessStatusCode;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> UpdateBusinessAsync(BusinessEditModel model)
+    {
+        try
+        {
+            var response = await _http.PutAsJsonAsync($"api/business/{model.Id}", model);
+            return response.IsSuccessStatusCode;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+    public async Task<PackageGetModel?> GetPackageByIdAsync(int packageId)
+    {
+        try
+        {
+            var package = await _http.GetFromJsonAsync<PackageGetModel>($"api/package/{packageId}");
+            return package;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public async Task<bool> UpdatePackageAsync(PackageEditModel model)
+    {
+        try
+        {
+            var response = await _http.PutAsJsonAsync($"api/package/{model.Id}", model);
+            return response.IsSuccessStatusCode;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }

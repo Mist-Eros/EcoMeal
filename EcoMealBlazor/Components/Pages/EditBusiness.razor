@@ -1,0 +1,139 @@
+@page "/business/{Id:int}/edit"
+@rendermode InteractiveServer
+@using EcoMeal.EcoMealBlazor.Models
+@using EcoMeal.EcoMealBlazor.Services
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager NavigationManager
+@inject BusinessService BusinessService
+
+@if (EditModel == null || string.IsNullOrEmpty(EditModel.Name))
+{
+    <div class="container my-4 text-center">
+        <div class="spinner-border text-success" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    return;
+}
+
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+                    <h2 class="card-title fw-bold text-success mb-4">
+                        <i class="bi bi-pencil-square me-2"></i>Edit Business
+                    </h2>
+
+                    <EditForm Model="EditModel" OnValidSubmit="HandleSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="alert alert-danger" />
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Name</label>
+                            <InputText class="form-control rounded-pill" @bind-Value="EditModel.Name" placeholder="Business name..." />
+                            <ValidationMessage For="@(() => EditModel.Name)" class="text-danger small" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Address</label>
+                            <InputText class="form-control rounded-pill" @bind-Value="EditModel.Address" placeholder="Business address..." />
+                            <ValidationMessage For="@(() => EditModel.Address)" class="text-danger small" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Description</label>
+                            <InputTextArea class="form-control rounded-4" @bind-Value="EditModel.Description" placeholder="Describe the business..." rows="3" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Contact</label>
+                            <InputText class="form-control rounded-pill" @bind-Value="EditModel.Contact" placeholder="Phone or email..." />
+                            <ValidationMessage For="@(() => EditModel.Contact)" class="text-danger small" />
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Business Type</label>
+                            <InputSelect class="form-select rounded-pill" @bind-Value="EditModel.BusinessTypeId">
+                                <option value="" disabled>Select a type...</option>
+                                @foreach (var type in BusinessTypes)
+                                {
+                                    <option value="@type.Id">@type.Name</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => EditModel.BusinessTypeId)" class="text-danger small" />
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(ErrorMessage))
+                        {
+                            <div class="alert alert-danger">@ErrorMessage</div>
+                        }
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success rounded-pill px-4" disabled="@IsSubmitting">
+                                @if (IsSubmitting)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                                }
+                                <i class="bi bi-check-lg me-1"></i> Save
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4" @onclick="GoBack">
+                                Cancel
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private BusinessEditModel EditModel = new();
+    private List<BusinessTypeModel> BusinessTypes = new();
+    private bool IsSubmitting = false;
+    private string? ErrorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var business = await BusinessService.GetOneById(Id);
+        if (business != null)
+        {
+            EditModel = new BusinessEditModel
+            {
+                Id = business.Id,
+                Name = business.Name,
+                Address = business.Address,
+                Description = business.Description,
+                Contact = business.Contact,
+                BusinessTypeId = business.BusinessTypeId
+            };
+        }
+        BusinessTypes = await BusinessService.GetBusinessTypesAsync();
+    }
+
+    private async Task HandleSubmit()
+    {
+        IsSubmitting = true;
+        ErrorMessage = null;
+
+        var success = await BusinessService.UpdateBusinessAsync(EditModel);
+        if (success)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            ErrorMessage = "Something went wrong. Please try again.";
+            IsSubmitting = false;
+        }
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo($"/business/{Id}");
+    }
+}

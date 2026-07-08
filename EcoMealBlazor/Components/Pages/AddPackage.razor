@@ -1,0 +1,126 @@
+@page "/business/{BusinessId:int}/addpackage"
+@rendermode InteractiveServer
+@using EcoMeal.EcoMealBlazor.Models
+@using System.ComponentModel.DataAnnotations
+@using EcoMeal.EcoMealBlazor.Services
+@inject NavigationManager NavigationManager
+@inject BusinessService BusinessService
+
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+                    <h2 class="card-title fw-bold text-success mb-4">
+                        <i class="bi bi-plus-circle me-2"></i>Add Package
+                    </h2>
+
+                    <EditForm Model="Model" OnValidSubmit="HandleSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="alert alert-danger" />
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Name</label>
+                            <InputText class="form-control rounded-pill" @bind-Value="Model.Name" placeholder="Package name..." />
+                            <ValidationMessage For="@(() => Model.Name)" class="text-danger small" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Description</label>
+                            <InputTextArea class="form-control rounded-4" @bind-Value="Model.Description" placeholder="Describe the package..." rows="3" />
+                            <ValidationMessage For="@(() => Model.Description)" class="text-danger small" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Price (RON)</label>
+                            <InputNumber class="form-control rounded-pill" @bind-Value="Model.Price" placeholder="0.00" step="0.01" min="0" />
+                            <ValidationMessage For="@(() => Model.Price)" class="text-danger small" />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Pickup Start</label>
+                                <InputDate class="form-control rounded-pill" @bind-Value="Model.Start_PickUp" />
+                                <ValidationMessage For="@(() => Model.Start_PickUp)" class="text-danger small" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Pickup End</label>
+                                <InputDate class="form-control rounded-pill" @bind-Value="Model.End_PickUp" />
+                                <ValidationMessage For="@(() => Model.End_PickUp)" class="text-danger small" />
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Package Type</label>
+                            <InputSelect class="form-select rounded-pill" @bind-Value="Model.PackageTypeId">
+                                <option value="">Select a type...</option>
+                                @foreach (var type in PackageTypes)
+                                {
+                                    <option value="@type.Id">@type.Name</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => Model.PackageTypeId)" class="text-danger small" />
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(ErrorMessage))
+                        {
+                            <div class="alert alert-danger">@ErrorMessage</div>
+                        }
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success rounded-pill px-4" disabled="@IsSubmitting">
+                                @if (IsSubmitting)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                                }
+                                <i class="bi bi-check-lg me-1"></i> Save
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4" @onclick="GoBack">
+                                Cancel
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int BusinessId { get; set; }
+
+    private PackageAddModel Model = new();
+    private List<PackageTypeModel> PackageTypes = new();
+    private bool IsSubmitting = false;
+    private string? ErrorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        PackageTypes = await BusinessService.GetPackageTypesAsync();
+        Model.Start_PickUp = DateTime.Now;
+        Model.End_PickUp = DateTime.Now.AddHours(2);
+    }
+
+    private async Task HandleSubmit()
+    {
+        IsSubmitting = true;
+        ErrorMessage = null;
+
+        var success = await BusinessService.AddPackageToBusinessAsync(BusinessId, Model);
+        if (success)
+        {
+            NavigationManager.NavigateTo($"/business/{BusinessId}");
+        }
+        else
+        {
+            ErrorMessage = "Something went wrong. Please try again.";
+            IsSubmitting = false;
+        }
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo($"/business/{BusinessId}");
+    }
+}

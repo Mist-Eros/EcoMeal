@@ -5,5 +5,6 @@ namespace EcoMeal.EcoMealBlazor.Models;
 
 public class BusinessDetailsModel : BusinessModel
 {
+        public int BusinessTypeId { get; set; }
     public List<PackageGetModel> Packages { get; set; } = new();
 }
