@@ -1,0 +1,113 @@
+@page "/business/create"
+@rendermode InteractiveServer
+@using EcoMeal.EcoMealBlazor.Models
+@using EcoMeal.EcoMealBlazor.Services
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager NavigationManager
+@inject BusinessService BusinessService
+
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+                    <h2 class="card-title fw-bold text-success mb-4">
+                        <i class="bi bi-plus-circle me-2"></i>Add Business
+                    </h2>
+
+                    <EditForm Model="Model" OnValidSubmit="HandleSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="alert alert-danger" />
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Name</label>
+                            <InputText class="form-control rounded-pill" @bind-Value="Model.Name" placeholder="Business name..." />
+                            <ValidationMessage For="@(() => Model.Name)" class="text-danger small" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Address</label>
+                            <InputText class="form-control rounded-pill" @bind-Value="Model.Address" placeholder="Business address..." />
+                            <ValidationMessage For="@(() => Model.Address)" class="text-danger small" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Description</label>
+                            <InputTextArea class="form-control rounded-4" @bind-Value="Model.Description" placeholder="Describe the business..." rows="3" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Contact</label>
+                            <InputText class="form-control rounded-pill" @bind-Value="Model.Contact" placeholder="Phone or email..." />
+                            <ValidationMessage For="@(() => Model.Contact)" class="text-danger small" />
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Business Type</label>
+                            <InputSelect class="form-select rounded-pill" @bind-Value="Model.BusinessTypeId">
+                                <option value="">Select a type...</option>
+                                @foreach (var type in BusinessTypes)
+                                {
+                                    <option value="@type.Id">@type.Name</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => Model.BusinessTypeId)" class="text-danger small" />
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(ErrorMessage))
+                        {
+                            <div class="alert alert-danger">@ErrorMessage</div>
+                        }
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success rounded-pill px-4" disabled="@IsSubmitting">
+                                @if (IsSubmitting)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                                }
+                                <i class="bi bi-check-lg me-1"></i> Save
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4" @onclick="GoBack">
+                                Cancel
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private BusinessAddModel Model = new();
+    private List<BusinessTypeModel> BusinessTypes = new();
+    private bool IsSubmitting = false;
+    private string? ErrorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        BusinessTypes = await BusinessService.GetBusinessTypesAsync();
+    }
+
+    private async Task HandleSubmit()
+    {
+        IsSubmitting = true;
+        ErrorMessage = null;
+
+        var success = await BusinessService.CreateBusinessAsync(Model);
+        if (success)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            ErrorMessage = "Something went wrong. Please try again.";
+            IsSubmitting = false;
+        }
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

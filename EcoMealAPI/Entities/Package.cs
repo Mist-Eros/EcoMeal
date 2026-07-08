@@ -5,8 +5,8 @@ namespace EcoMeal.EcoMealAPI.Entities;
 public class Package
 {
     public int Id { get; set; }
-    public required int No_Package { get; set; }
-    
+    public required string Name { get; set; }
+
     [ForeignKey(nameof(Business))]
     public required int BusinessId { get; set; }
     
@@ -16,7 +16,7 @@ public class Package
     public string? Description { get; set; }
     public required decimal Price { get; set; }
     public required DateTime Start_PickUp { get; set; }
-    public required DateTime End_Pickup { get; set; }
+    public required DateTime End_PickUp { get; set; }
     
     public Business Business { get; set; }
     public PackageType PackageType { get; set; }
