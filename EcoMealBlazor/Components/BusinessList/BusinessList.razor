@@ -1,19 +1,25 @@
 @namespace EcoMeal.EcoMealBlazor.Components.BusinessList
+@using EcoMeal.EcoMealBlazor.Components
 @using EcoMeal.EcoMealBlazor.Components.BusinessCard
 @using EcoMeal.EcoMealBlazor.Models
+@using EcoMeal.EcoMealBlazor.Services
 
-@if (Businesses is null) 
+<div class="mb-4">
+    <SearchBar OnSearch="HandleSearch" />
+</div>
+
+@if (FilteredBusinesses is null) 
 {
     <p>Loading...</p>
 }
-else if (!Businesses.Any())
+else if (!FilteredBusinesses.Any())
 {
     <p>No businesses found.</p>
 }
 else
 {
     <div class="row">
-        @foreach (var business in Businesses)
+        @foreach (var business in FilteredBusinesses)
         {
             <div class="col-12 col-sm-6 col-lg-3 mb-4">
                 <BusinessCard Business="business" OnDeleted="RefreshList" />
