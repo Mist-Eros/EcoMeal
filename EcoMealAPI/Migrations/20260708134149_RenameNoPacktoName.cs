@@ -10,41 +10,87 @@ namespace EcoMealAPI.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "No_Package",
-                table: "Package");
+            migrationBuilder.Sql(
+                @"IF EXISTS (
+                    SELECT 1
+                    FROM sys.columns
+                    WHERE Name = N'No_Package'
+                      AND Object_ID = Object_ID(N'[dbo].[Package]')
+                )
+                BEGIN
+                    ALTER TABLE [dbo].[Package] DROP COLUMN [No_Package];
+                END");
 
-            migrationBuilder.RenameColumn(
-                name: "End_Pickup",
-                table: "Package",
-                newName: "End_PickUp");
+            migrationBuilder.Sql(
+                @"IF EXISTS (
+                    SELECT 1
+                    FROM sys.columns
+                    WHERE Name = N'End_Pickup'
+                      AND Object_ID = Object_ID(N'[dbo].[Package]')
+                )
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM sys.columns
+                    WHERE Name = N'End_PickUp'
+                      AND Object_ID = Object_ID(N'[dbo].[Package]')
+                )
+                BEGIN
+                    EXEC sp_rename N'[Package].[End_Pickup]', N'End_PickUp', 'COLUMN';
+                END");
 
-            migrationBuilder.AddColumn<string>(
-                name: "Name",
-                table: "Package",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+            migrationBuilder.Sql(
+                @"IF NOT EXISTS (
+                    SELECT 1
+                    FROM sys.columns
+                    WHERE Name = N'Name'
+                      AND Object_ID = Object_ID(N'[dbo].[Package]')
+                )
+                BEGIN
+                    ALTER TABLE [dbo].[Package] ADD [Name] nvarchar(max) NOT NULL CONSTRAINT [DF_Package_Name] DEFAULT N'';
+                END");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Name",
-                table: "Package");
+            migrationBuilder.Sql(
+                @"IF EXISTS (
+                    SELECT 1
+                    FROM sys.columns
+                    WHERE Name = N'Name'
+                      AND Object_ID = Object_ID(N'[dbo].[Package]')
+                )
+                BEGIN
+                    ALTER TABLE [dbo].[Package] DROP COLUMN [Name];
+                END");
 
-            migrationBuilder.RenameColumn(
-                name: "End_PickUp",
-                table: "Package",
-                newName: "End_Pickup");
+            migrationBuilder.Sql(
+                @"IF EXISTS (
+                    SELECT 1
+                    FROM sys.columns
+                    WHERE Name = N'End_PickUp'
+                      AND Object_ID = Object_ID(N'[dbo].[Package]')
+                )
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM sys.columns
+                    WHERE Name = N'End_Pickup'
+                      AND Object_ID = Object_ID(N'[dbo].[Package]')
+                )
+                BEGIN
+                    EXEC sp_rename N'[Package].[End_PickUp]', N'End_Pickup', 'COLUMN';
+                END");
 
-            migrationBuilder.AddColumn<int>(
-                name: "No_Package",
-                table: "Package",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+            migrationBuilder.Sql(
+                @"IF NOT EXISTS (
+                    SELECT 1
+                    FROM sys.columns
+                    WHERE Name = N'No_Package'
+                      AND Object_ID = Object_ID(N'[dbo].[Package]')
+                )
+                BEGIN
+                    ALTER TABLE [dbo].[Package] ADD [No_Package] int NOT NULL CONSTRAINT [DF_Package_No_Package] DEFAULT 0;
+                END");
         }
     }
 }

@@ -1,10 +1,42 @@
 ﻿@inherits LayoutComponentBase
 @using EcoMeal.EcoMealBlazor.Components
+@using EcoMeal.EcoMealBlazor.Services
+@inject AuthService AuthService
+@inject NavigationManager Navigation
 
-<NavMenu />
+<div class="page">
+    <NavMenu />
+    
+    <main>
+        <div class="container mt-4">
+            @Body
+        </div>
+    </main>
+</div>
 
-<main>
-    <div class="container mt-4">
-        @Body
-    </div>
-</main>
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await AuthService.LoadTokenAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading auth token: {ex.Message}");
+        }
+        
+        AuthService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        AuthService.OnChange -= StateHasChanged;
+    }
+}

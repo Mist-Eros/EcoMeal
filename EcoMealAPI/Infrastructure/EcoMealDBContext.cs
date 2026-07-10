@@ -1,15 +1,15 @@
 using EcoMeal.EcoMealAPI.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcoMeal.EcoMealAPI.Infrastructure;
 
-public class EcoMealDBContext : DbContext
+public class EcoMealDBContext : IdentityDbContext<User, IdentityRole<int>, int>
 {
     public EcoMealDBContext(DbContextOptions<EcoMealDBContext> options) 
         :base(options)
     {}
-
-    public DbSet<User> User { get; set;}
     public DbSet<BusinessType> BusinessType { get; set;}
     public DbSet<PackageType> PackageType { get; set;}
     public DbSet<Business> Businesses { get; set;}
@@ -18,6 +18,8 @@ public class EcoMealDBContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         // Business configuration
         modelBuilder.Entity<Business>(entity =>
         {
@@ -59,10 +61,12 @@ public class EcoMealDBContext : DbContext
         {
             entity.HasKey(e => e.Id);
             
+            /*
             // User -> Orders (One-to-Many)
             entity.HasMany(u => u.Orders)
                 .WithOne(o => o.User)
                 .HasForeignKey(o => o.UserId);
+            */
         });
 
         // Order configuration

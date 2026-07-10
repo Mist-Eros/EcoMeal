@@ -4,6 +4,7 @@ using EcoMeal.EcoMealAPI.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcoMealAPI.Migrations
 {
     [DbContext(typeof(EcoMealDBContext))]
-    partial class EcoMealDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260710080024_RenamedContactInUser")]
+    partial class RenamedContactInUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
