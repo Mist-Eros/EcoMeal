@@ -1,49 +1,73 @@
-using System.Security.Cryptography;
 using EcoMeal.EcoMealAPI.Constants;
 using EcoMeal.EcoMealAPI.Entities;
 using EcoMeal.EcoMealAPI.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddDbContext<EcoMealDBContext> (
-    Options => 
-    Options.UseSqlServer (
+builder.Services.AddDbContext<EcoMealDBContext>(
+    options => 
+    options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
 
-builder.Services.AddAuthorization();
-
-builder.Services.AddCors(Options =>
+builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 {
-    Options.AddPolicy("AllowBlazorSite",
-    policy =>
-    {
-        policy.WithOrigins("https://localhost:7002;http://localhost:5028")
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
-});
-
-builder.Services.AddIdentityApiEndpoints<User>(Options =>
-{
-    Options.SignIn.RequireConfirmedAccount = false;
-    Options.Password.RequireNonAlphanumeric = false;
-    Options.Password.RequireUppercase = false;
-    Options.Password.RequireLowercase = false;
-    Options.Password.RequireDigit = false;
-    Options.Password.RequiredLength = 6;
+    options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 3;
 })
 .AddRoles<IdentityRole<int>>()
-.AddEntityFrameworkStores<EcoMealDBContext>();
+.AddEntityFrameworkStores<EcoMealDBContext>()
+.AddDefaultTokenProviders();
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "EcoMealAPI",
+        ValidAudience = builder.Configuration["Jwt:Audience"] ?? "EcoMealBlazor",
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(
+                builder.Configuration["Jwt:Key"] ?? "YourSuperSecretKeyAtLeast32CharactersLongForJWT!1234567890"
+            )
+        )
+    };
+});
+
+builder.Services.AddAuthorization();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazorSite",
+    policy =>
+    {
+        policy.WithOrigins("https://localhost:7002", "http://localhost:5028")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -53,36 +77,80 @@ builder.Services.AddControllers()
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<EcoMealDBContext>();
+    await dbContext.Database.EnsureCreatedAsync();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/openapi/v1.json", "EcpMeal Api");
+        options.SwaggerEndpoint("/openapi/v1.json", "EcoMeal Api");
     });
 }
 
-app.MapControllers();
 app.UseHttpsRedirection();
-
 app.UseCors("AllowBlazorSite");
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapControllers();
 
-app.MapIdentityApi<User>();
+app.MapPost("/login", async (UserManager<User> userManager, LoginRequest request) =>
+{
+    var user = await userManager.FindByEmailAsync(request.Email);
+    if (user == null || !await userManager.CheckPasswordAsync(user, request.Password))
+        return Results.Unauthorized();
+
+    var roles = await userManager.GetRolesAsync(user);
+    var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.Name, user.UserName),
+        new Claim(ClaimTypes.Email, user.Email),
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+    };
+    claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+        builder.Configuration["Jwt:Key"] ?? "YourSuperSecretKeyAtLeast32CharactersLongForJWT!1234567890"));
+    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+    var token = new JwtSecurityToken(
+        issuer: builder.Configuration["Jwt:Issuer"] ?? "EcoMealAPI",
+        audience: builder.Configuration["Jwt:Audience"] ?? "EcoMealBlazor",
+        claims: claims,
+        expires: DateTime.Now.AddDays(7),
+        signingCredentials: creds);
+
+    return Results.Ok(new { AccessToken = new JwtSecurityTokenHandler().WriteToken(token) });
+});
 
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
-    var roles = new[] { UserRoles.Admin, UserRoles.User };
-    foreach (var role in roles)
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    
+    foreach (var role in new[] { UserRoles.Admin, UserRoles.User })
     {
         if (!await roleManager.RoleExistsAsync(role))
-        {
             await roleManager.CreateAsync(new IdentityRole<int> { Name = role });
-        }
+    }
+    
+    var adminEmail = "admin@ecomeal.com";
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+    if (adminUser == null)
+    {
+        adminUser = new User { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
+        await userManager.CreateAsync(adminUser, "Admin123!");
+        await userManager.AddToRoleAsync(adminUser, UserRoles.Admin);
     }
 }
 
 app.Run();
+
+public class LoginRequest
+{
+    public string Email { get; set; }
+    public string Password { get; set; }
+}

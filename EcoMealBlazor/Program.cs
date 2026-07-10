@@ -25,6 +25,8 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 
+builder.Services.AddScoped<PermissionService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

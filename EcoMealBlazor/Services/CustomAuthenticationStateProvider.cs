@@ -23,55 +23,62 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         {
             var tokenResult = await _localStorage.GetAsync<string>("authToken");
             var rolesResult = await _localStorage.GetAsync<List<string>>("userRoles");
+            var emailResult = await _localStorage.GetAsync<string>("userEmail");
 
             if (!tokenResult.Success || string.IsNullOrEmpty(tokenResult.Value))
             {
                 return new AuthenticationState(_anonymous);
             }
 
-            var identity = new ClaimsIdentity(new[]
+            var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, tokenResult.Value)
-            }, "CustomAuth");
+                new Claim(ClaimTypes.NameIdentifier, tokenResult.Value),
+                new Claim(ClaimTypes.Name, emailResult.Success ? emailResult.Value ?? "user" : "user"),
+                new Claim(ClaimTypes.Email, emailResult.Success ? emailResult.Value ?? "user@example.com" : "user@example.com")
+            };
 
             if (rolesResult.Success && rolesResult.Value != null)
             {
                 foreach (var role in rolesResult.Value)
                 {
-                    identity.AddClaim(new Claim(ClaimTypes.Role, role));
+                    claims.Add(new Claim(ClaimTypes.Role, role));
                 }
             }
 
+            var identity = new ClaimsIdentity(claims, "CustomAuth");
             var user = new ClaimsPrincipal(identity);
             return new AuthenticationState(user);
         }
         catch (InvalidOperationException ex)
         {
-            _logger.LogWarning(ex, "Failed to retrieve authentication state from local storage. This is expected during pre-rendering.");
+            _logger.LogWarning(ex, "Failed to retrieve authentication state from local storage.");
             return new AuthenticationState(_anonymous);
         }
     }
 
-    public void NotifyUserAuthentication(string token, List<string> roles)
+    public void NotifyUserAuthentication(string token, List<string> roles, string email)
     {
-        var identity = new ClaimsIdentity(new[]
+        var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, token)
-        }, "CustomAuth");
-
+            new Claim(ClaimTypes.NameIdentifier, token),
+            new Claim(ClaimTypes.Name, email),
+            new Claim(ClaimTypes.Email, email)
+        };
+        
         foreach (var role in roles)
         {
-            identity.AddClaim(new Claim(ClaimTypes.Role, role));
+            claims.Add(new Claim(ClaimTypes.Role, role));
         }
-
+        
+        var identity = new ClaimsIdentity(claims, "Bearer");
         var user = new ClaimsPrincipal(identity);
-        var state = Task.FromResult(new AuthenticationState(user));
-        NotifyAuthenticationStateChanged(state);
+        var authState = Task.FromResult(new AuthenticationState(user));
+        NotifyAuthenticationStateChanged(authState);
     }
 
     public void NotifyUserLogout()
     {
-        var state = Task.FromResult(new AuthenticationState(_anonymous));
-        NotifyAuthenticationStateChanged(state);
+        var authState = Task.FromResult(new AuthenticationState(_anonymous));
+        NotifyAuthenticationStateChanged(authState);
     }
 }

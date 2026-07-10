@@ -1,0 +1,239 @@
+@page "/account"
+@using EcoMeal.EcoMealBlazor.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@inject AuthService AuthService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+@inject HttpClient Http
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">
+                        <span class="bi bi-person-gear me-2"></span>
+                        Account Settings
+                    </h4>
+                </div>
+                <div class="card-body">
+                    @if (_isLoading)
+                    {
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-success" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="fw-bold">Email</label>
+                                <p class="form-control-plaintext">@_userEmail</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="fw-bold">Name</label>
+                                <p class="form-control-plaintext">@_userName</p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <label class="fw-bold">Current Role</label>
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="badge bg-info fs-6 p-2 px-4">@_userRole</span>
+                                    <button class="btn btn-outline-primary btn-sm" @onclick="ToggleEditRole">
+                                        <span class="bi bi-pencil me-1"></span> Change Role
+                                    </button>
+                                </div>
+                                @if (_isEditingRole)
+                                {
+                                    <div class="mt-3 p-3 border rounded bg-light">
+                                        <div class="row g-2">
+                                            <div class="col-md-8">
+                                                <select class="form-select" @bind="_selectedRole">
+                                                    @foreach (var role in _availableRoles)
+                                                    {
+                                                        <option value="@role">@role</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <button class="btn btn-success w-100" @onclick="UpdateUserRole" disabled="@_isUpdating">
+                                                    @if (_isUpdating)
+                                                    {
+                                                        <span class="spinner-border spinner-border-sm me-1"></span>
+                                                    }
+                                                    <span class="bi bi-save me-1"></span> Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(_roleUpdateMessage))
+                                        {
+                                            <div class="mt-2 alert @(_roleUpdateSuccess ? "alert-success" : "alert-danger")">
+                                                @_roleUpdateMessage
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-outline-secondary w-100" @onclick="GoToHome">
+                                    <span class="bi bi-house me-1"></span> Back to Home
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-outline-danger w-100" @onclick="HandleLogout">
+                                    <span class="bi bi-box-arrow-right me-1"></span> Logout
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool _isLoading = true;
+    private bool _isEditingRole = false;
+    private bool _isUpdating = false;
+    private bool _roleUpdateSuccess = false;
+    private string _userEmail = string.Empty;
+    private string _userName = string.Empty;
+    private string _userRole = string.Empty;
+    private string _selectedRole = string.Empty;
+    private string _roleUpdateMessage = string.Empty;
+    private List<string> _availableRoles = new() { "User", "Admin" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await LoadUserInfo();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading account: {ex.Message}");
+        }
+        finally
+        {
+            _isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadUserInfo()
+    {
+        try
+        {
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            
+            if (user.Identity?.IsAuthenticated == true)
+            {
+                _userEmail = user.FindFirst(ClaimTypes.Email)?.Value ?? user.Identity?.Name ?? "Unknown";
+                _userName = user.FindFirst("Name")?.Value ?? user.Identity?.Name ?? "User";
+                _userRole = user.FindFirst(ClaimTypes.Role)?.Value ?? "User";
+                _selectedRole = _userRole;
+            }
+            else
+            {
+                Navigation.NavigateTo("/login");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading user info: {ex.Message}");
+        }
+    }
+
+    private void GoToHome()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+    private void ToggleEditRole()
+    {
+        _isEditingRole = !_isEditingRole;
+        if (_isEditingRole)
+        {
+            _selectedRole = _userRole;
+            _roleUpdateMessage = string.Empty;
+        }
+        StateHasChanged();
+    }
+
+    private async Task UpdateUserRole()
+    {
+        if (string.IsNullOrEmpty(_selectedRole) || _selectedRole == _userRole)
+        {
+            _roleUpdateMessage = "Please select a different role.";
+            _roleUpdateSuccess = false;
+            return;
+        }
+
+        _isUpdating = true;
+        _roleUpdateMessage = string.Empty;
+        StateHasChanged();
+
+        try
+        {
+            var response = await Http.PutAsJsonAsync($"api/users/{_userEmail}/role", new { Role = _selectedRole });
+            
+            if (response.IsSuccessStatusCode)
+            {
+                _userRole = _selectedRole;
+                _roleUpdateSuccess = true;
+                _roleUpdateMessage = $"Role successfully updated to '{_selectedRole}'!";
+                _isEditingRole = false;
+                await AuthService.LoadTokenAsync();
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _roleUpdateSuccess = false;
+                
+                try
+                {
+                    var errorObj = System.Text.Json.JsonSerializer.Deserialize<ErrorResponse>(errorContent);
+                    _roleUpdateMessage = errorObj?.Message ?? errorContent;
+                }
+                catch
+                {
+                    _roleUpdateMessage = errorContent;
+                }
+                
+                Console.WriteLine($"Error response: {errorContent}");
+            }
+        }
+        catch (Exception ex)
+        {
+            _roleUpdateSuccess = false;
+            _roleUpdateMessage = $"Error: {ex.Message}";
+            Console.WriteLine($"Exception: {ex.Message}");
+        }
+        finally
+        {
+            _isUpdating = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleLogout()
+    {
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/", forceLoad: true);
+    }
+
+    private class ErrorResponse
+    {
+        public string Message { get; set; }
+    }
+}

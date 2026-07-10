@@ -2,6 +2,7 @@
 @using EcoMeal.EcoMealBlazor.Models
 @using EcoMeal.EcoMealBlazor.Models.Auth
 @using EcoMeal.EcoMealBlazor.Services
+@using Microsoft.AspNetCore.Components.Forms
 @inject AuthService AuthService
 @inject NavigationManager Navigation
 
@@ -51,9 +52,7 @@
 <p class="mt-3">Already have an account? <a href="/login">Login</a></p>
 
 @code {
-    [SupplyParameterFromForm]
     private RegisterModel registerModel { get; set; } = new();
-
     private string? errorMessage;
 
     private async Task HandleRegister()

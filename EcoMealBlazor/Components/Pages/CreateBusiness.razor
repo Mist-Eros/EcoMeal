@@ -97,7 +97,7 @@
         var success = await BusinessService.CreateBusinessAsync(Model);
         if (success)
         {
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/businesses");
         }
         else
         {

@@ -1,6 +1,5 @@
 using System.Net.Http.Json;
 using EcoMeal.EcoMealBlazor.Models.Auth;
-using EcoMeal.EcoMealBlazor.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
@@ -15,7 +14,6 @@ public class AuthService
     public string? Token { get; private set; }
     public bool IsAuthenticated => !string.IsNullOrEmpty(Token);
     
-    // Add this event for UI updates
     public event Action? OnChange;
 
     public AuthService(HttpClient http, ProtectedLocalStorage localStorage, AuthenticationStateProvider authStateProvider)
@@ -28,17 +26,13 @@ public class AuthService
     public async Task<AuthResult> RegisterAsync(string email, string password, string name, string contact)
     {
         var request = new RegisterRequest { Email = email, Password = password, Name = name, Contact = contact };
-        var response = await _http.PostAsJsonAsync("api/auth/register", request);
+        var response = await _http.PostAsJsonAsync("register", request);
 
         if (response.IsSuccessStatusCode)
             return AuthResult.Ok();
 
-        var error = await response.Content.ReadFromJsonAsync<RegisterErrorResponse>();
-        var errorMessage = error?.Errors != null
-            ? string.Join("; ", error.Errors)
-            : "Registration failed.";
-
-        return AuthResult.Fail(errorMessage);
+        var error = await response.Content.ReadAsStringAsync();
+        return AuthResult.Fail(error);
     }
 
     public async Task<AuthResult> LoginAsync(string email, string password)
@@ -54,16 +48,16 @@ public class AuthService
             if (Token != null)
             {
                 await _localStorage.SetAsync("authToken", Token);
+                await _localStorage.SetAsync("userEmail", email);
 
-                var roles = await FetchRolesAsync(Token);
+                var roles = new List<string> { "User" };
                 await _localStorage.SetAsync("userRoles", roles);
 
                 if (_authStateProvider is CustomAuthenticationStateProvider customProvider)
                 {
-                    customProvider.NotifyUserAuthentication(Token, roles);
+                    customProvider.NotifyUserAuthentication(Token, roles, email);
                 }
                 
-                // Notify UI of state change
                 NotifyStateChanged();
             }
 
@@ -85,11 +79,12 @@ public class AuthService
 
             if (_authStateProvider is CustomAuthenticationStateProvider customProvider)
             {
-                customProvider.NotifyUserAuthentication(Token, roles);
+                var emailResult = await _localStorage.GetAsync<string>("userEmail");
+                var email = emailResult.Success ? emailResult.Value ?? "user@example.com" : "user@example.com";
+                customProvider.NotifyUserAuthentication(Token, roles, email);
             }
         }
         
-        // Notify UI of state change
         NotifyStateChanged();
     }
 
@@ -98,38 +93,15 @@ public class AuthService
         Token = null;
         await _localStorage.DeleteAsync("authToken");
         await _localStorage.DeleteAsync("userRoles");
+        await _localStorage.DeleteAsync("userEmail");
 
         if (_authStateProvider is CustomAuthenticationStateProvider customProvider)
         {
             customProvider.NotifyUserLogout();
         }
         
-        // Notify UI of state change
         NotifyStateChanged();
     }
 
-    private async Task<List<string>> FetchRolesAsync(string token)
-    {
-        try
-        {
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/auth/me");
-            requestMessage.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-            var response = await _http.SendAsync(requestMessage);
-            if (response.IsSuccessStatusCode)
-            {
-                var userMe = await response.Content.ReadFromJsonAsync<UserMeResponse>();
-                return userMe?.Roles ?? new List<string>();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error fetching roles: {ex.Message}");
-        }
-
-        return new List<string>();
-    }
-
-    // Helper method to notify subscribers
     private void NotifyStateChanged() => OnChange?.Invoke();
 }
