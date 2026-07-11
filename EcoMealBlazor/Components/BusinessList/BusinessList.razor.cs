@@ -1,6 +1,7 @@
 using EcoMeal.EcoMealBlazor.Models;
 using EcoMeal.EcoMealBlazor.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace EcoMeal.EcoMealBlazor.Components.BusinessList;
 
@@ -8,13 +9,21 @@ public partial class BusinessList
 {
     [Inject]
     public required BusinessService BusinessService { get; set; }
+    
+    [Inject]
+    public required AuthenticationStateProvider AuthStateProvider { get; set; }
 
     private List<BusinessModel>? AllBusinesses;
     private List<BusinessModel>? FilteredBusinesses;
+    private bool _isAdmin = false;
 
     protected override async Task OnInitializedAsync()
     {
         await LoadBusinesses();
+        
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        _isAdmin = user.IsInRole("Admin");
     }
 
     private async Task LoadBusinesses()
