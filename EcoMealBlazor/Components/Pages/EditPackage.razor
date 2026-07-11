@@ -6,7 +6,7 @@
 @inject NavigationManager NavigationManager
 @inject BusinessService BusinessService
 
-@if (Package == null)
+@if (_isLoading)
 {
     <div class="container my-4 text-center">
         <div class="spinner-border text-success" role="status">
@@ -19,7 +19,7 @@
 <div class="container my-4">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10">
-            <div class="card shadow-sm border-0 rounded-4">
+            <div class="card form-card">
                 <div class="card-body p-4">
                     <h2 class="card-title fw-bold text-success mb-4">
                         <i class="bi bi-pencil-square me-2"></i>Edit Package
@@ -31,38 +31,41 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Name</label>
-                            <InputText class="form-control rounded-pill" @bind-Value="EditModel.Name" placeholder="Package name..." />
+                            <InputText class="form-control rounded-pill dark-input" @bind-Value="EditModel.Name" placeholder="Package name..." />
                             <ValidationMessage For="@(() => EditModel.Name)" class="text-danger small" />
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Description</label>
-                            <InputTextArea class="form-control rounded-4" @bind-Value="EditModel.Description" placeholder="Describe the package..." rows="3" />
+                            <InputTextArea class="form-control rounded-4 dark-input" @bind-Value="EditModel.Description" placeholder="Describe the package..." rows="3" />
                             <ValidationMessage For="@(() => EditModel.Description)" class="text-danger small" />
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Price (RON)</label>
-                            <InputNumber class="form-control rounded-pill" @bind-Value="EditModel.Price" placeholder="0.00" step="0.01" min="0" />
+                            <InputNumber class="form-control rounded-pill dark-input" @bind-Value="EditModel.Price" placeholder="0.00" step="0.01" min="0" />
                             <ValidationMessage For="@(() => EditModel.Price)" class="text-danger small" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Pickup Date</label>
+                            <input type="date" class="form-control rounded-pill dark-input" @bind="_pickupDate" />
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-semibold">Pickup Start</label>
-                                <InputDate class="form-control rounded-pill" @bind-Value="EditModel.Start_PickUp" />
-                                <ValidationMessage For="@(() => EditModel.Start_PickUp)" class="text-danger small" />
+                                <label class="form-label fw-semibold">Start Time</label>
+                                <input type="time" class="form-control rounded-pill dark-input" @bind="_startTime" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-semibold">Pickup End</label>
-                                <InputDate class="form-control rounded-pill" @bind-Value="EditModel.End_PickUp" />
-                                <ValidationMessage For="@(() => EditModel.End_PickUp)" class="text-danger small" />
+                                <label class="form-label fw-semibold">End Time</label>
+                                <input type="time" class="form-control rounded-pill dark-input" @bind="_endTime" />
                             </div>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Package Type</label>
-                            <InputSelect class="form-select rounded-pill" @bind-Value="EditModel.PackageTypeId">
+                            <InputSelect class="form-select rounded-pill dark-input" @bind-Value="EditModel.PackageTypeId">
                                 <option value="" disabled>Select a type...</option>
                                 @foreach (var type in PackageTypes)
                                 {
@@ -78,14 +81,14 @@
                         }
 
                         <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-success rounded-pill px-4" disabled="@IsSubmitting">
+                            <button type="submit" class="btn-form-save" disabled="@IsSubmitting">
                                 @if (IsSubmitting)
                                 {
                                     <span class="spinner-border spinner-border-sm me-1" role="status"></span>
                                 }
                                 <i class="bi bi-check-lg me-1"></i> Save
                             </button>
-                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4" @onclick="GoBack">
+                            <button type="button" class="btn-form-cancel" @onclick="GoBack">
                                 Cancel
                             </button>
                         </div>
@@ -104,34 +107,52 @@
     public int PackageId { get; set; }
 
     private PackageEditModel EditModel = new();
-    private PackageGetModel? Package;
     private List<PackageTypeModel> PackageTypes = new();
     private bool IsSubmitting = false;
     private string? ErrorMessage;
+    private bool _isLoading = true;
+
+    private DateOnly? _pickupDate;
+    private TimeOnly? _startTime;
+    private TimeOnly? _endTime;
 
     protected override async Task OnInitializedAsync()
     {
-        Package = await BusinessService.GetPackageByIdAsync(PackageId);
-        if (Package != null)
+        var package = await BusinessService.GetPackageByIdAsync(PackageId);
+        if (package != null)
         {
             EditModel = new PackageEditModel
             {
-                Id = Package.Id,
-                Name = Package.Name,
-                Description = Package.Description,
-                Price = Package.Price,
-                Start_PickUp = Package.Start_PickUp,
-                End_PickUp = Package.End_PickUp,
-                PackageTypeId = Package.PackageTypeId
+                Id = package.Id,
+                Name = package.Name,
+                Description = package.Description,
+                Price = package.Price,
+                Start_PickUp = package.Start_PickUp,
+                End_PickUp = package.End_PickUp,
+                PackageTypeId = package.PackageTypeId
             };
+            _pickupDate = DateOnly.FromDateTime(package.Start_PickUp);
+            _startTime = TimeOnly.FromDateTime(package.Start_PickUp);
+            _endTime = TimeOnly.FromDateTime(package.End_PickUp);
         }
         PackageTypes = await BusinessService.GetPackageTypesAsync();
+        _isLoading = false;
+    }
+
+    private void ApplyDateTime()
+    {
+        if (_pickupDate.HasValue && _startTime.HasValue && _endTime.HasValue)
+        {
+            EditModel.Start_PickUp = _pickupDate.Value.ToDateTime(_startTime.Value);
+            EditModel.End_PickUp = _pickupDate.Value.ToDateTime(_endTime.Value);
+        }
     }
 
     private async Task HandleSubmit()
     {
         IsSubmitting = true;
         ErrorMessage = null;
+        ApplyDateTime();
 
         var success = await BusinessService.UpdatePackageAsync(EditModel);
         if (success)

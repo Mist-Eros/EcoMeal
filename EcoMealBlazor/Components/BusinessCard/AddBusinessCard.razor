@@ -1,16 +1,8 @@
 @namespace EcoMeal.EcoMealBlazor.Components.BusinessCard
-@inject NavigationManager NavigationManager
 
-<div class="card h-100 shadow-sm rounded-4 border-2 border-success border-dashed" @onclick="NavigateToAdd" style="cursor: pointer; transition: transform 0.2s; background: transparent;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-    <div class="card-body d-flex flex-column align-items-center justify-content-center" style="min-height: 320px;">
-        <div class="text-success" style="font-size: 4rem; font-weight: 300;">+</div>
-        <span class="text-success fw-semibold mt-2" style="font-size: 1.2rem;">Add</span>
+<div class="add-card" @onclick="OnAdd">
+    <div class="add-card-body">
+        <div class="add-icon">+</div>
+        <span class="add-text">Add</span>
     </div>
 </div>
-
-@code {
-    private void NavigateToAdd()
-    {
-        NavigationManager.NavigateTo("/business/create");
-    }
-}

@@ -1,0 +1,21 @@
+@page "/business/{BusinessId:int}/package/{PackageId:int}/order"
+@layout MainLayout
+
+<div class="order-fixed-overlay">
+    <div class="order-content">
+        <i class="bi bi-check-circle-fill text-success order-icon"></i>
+        <h1 class="order-title">Item Ordered!</h1>
+        <p class="order-subtitle">Your order has been placed successfully.</p>
+        <a href="/businesses" class="order-back-btn">
+            <i class="bi bi-arrow-left"></i> Back to Businesses
+        </a>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int BusinessId { get; set; }
+
+    [Parameter]
+    public int PackageId { get; set; }
+}

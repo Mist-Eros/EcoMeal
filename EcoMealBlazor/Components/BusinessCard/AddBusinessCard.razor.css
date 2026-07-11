@@ -1,0 +1,63 @@
+.add-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 2px dashed #2d6a4f !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    min-height: 320px;
+    background: transparent !important;
+}
+
+.add-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px rgba(26, 71, 42, 0.18) !important;
+    border-color: #1a472a !important;
+    background: rgba(45, 106, 79, 0.05) !important;
+}
+
+.add-card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.add-icon {
+    color: #2d6a4f;
+    font-size: 4rem;
+    font-weight: 300;
+    line-height: 1;
+}
+
+.add-text {
+    color: #2d6a4f;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+}
+
+/* Dark mode */
+[data-theme="dark"] .add-card {
+    border-color: #40916c !important;
+    background: transparent !important;
+}
+
+[data-theme="dark"] .add-card:hover {
+    border-color: #9fe7d8 !important;
+    background: rgba(159, 231, 216, 0.05) !important;
+}
+
+[data-theme="dark"] .add-icon {
+    color: #9fe7d8;
+}
+
+[data-theme="dark"] .add-text {
+    color: #9fe7d8;
+}

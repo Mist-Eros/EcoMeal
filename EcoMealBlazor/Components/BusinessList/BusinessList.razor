@@ -3,41 +3,44 @@
 @using EcoMeal.EcoMealBlazor.Components.BusinessCard
 @using EcoMeal.EcoMealBlazor.Models
 @using EcoMeal.EcoMealBlazor.Services
+@using Microsoft.AspNetCore.Components.Authorization
 
-<div class="mb-4">
-    <SearchBar OnSearch="HandleSearch" />
-</div>
+<div class="business-list-container">
+    <div class="search-section">
+        <SearchBar OnSearch="HandleSearch" />
+    </div>
 
-@if (FilteredBusinesses is null) 
-{
-    <div class="text-center py-5">
-        <div class="spinner-border text-success" style="width: 3rem; height: 3rem;" role="status">
-            <span class="visually-hidden">Loading...</span>
+    @if (FilteredBusinesses is null) 
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-success" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="text-muted mt-3">Loading businesses...</p>
         </div>
-        <p class="text-muted mt-3">Loading businesses...</p>
-    </div>
-}
-else if (!FilteredBusinesses.Any())
-{
-    <div class="text-center py-5">
-        <i class="bi bi-shop fs-1 text-muted"></i>
-        <p class="text-muted mt-3" style="font-size: 1.1rem;">No businesses found.</p>
-    </div>
-}
-else
-{
-    <div class="row g-4">
-        @foreach (var business in FilteredBusinesses)
-        {
-            <div class="col-12 col-sm-6 col-lg-3">
-                <BusinessCard Business="business" OnDeleted="RefreshList" />
-            </div>
-        }
-        @if (_isAdmin)
-        {
-            <div class="col-12 col-sm-6 col-lg-3">
-                <AddBusinessCard />
-            </div>
-        }
-    </div>
-}
+    }
+    else if (!FilteredBusinesses.Any())
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-shop fs-1 text-muted"></i>
+            <p class="text-muted mt-3" style="font-size: 1.1rem;">No businesses found.</p>
+        </div>
+    }
+    else
+    {
+        <div class="business-grid">
+            @foreach (var business in FilteredBusinesses)
+            {
+                <div class="business-grid-item">
+                    <BusinessCard Business="business" OnDeleted="RefreshList" />
+                </div>
+            }
+            @if (_isAdmin)
+            {
+                <div class="business-grid-item">
+                    <AddBusinessCard OnAdd="NavigateToAddBusiness" />
+                </div>
+            }
+        </div>
+    }
+</div>

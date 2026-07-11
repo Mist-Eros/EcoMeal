@@ -9,7 +9,7 @@
 <div class="container my-4">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10">
-            <div class="card shadow-sm border-0 rounded-4">
+            <div class="card form-card">
                 <div class="card-body p-4">
                     <h2 class="card-title fw-bold text-success mb-4">
                         <i class="bi bi-plus-circle me-2"></i>Add Business
@@ -21,30 +21,30 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Name</label>
-                            <InputText class="form-control rounded-pill" @bind-Value="Model.Name" placeholder="Business name..." />
+                            <InputText class="form-control rounded-pill dark-input" @bind-Value="Model.Name" placeholder="Business name..." />
                             <ValidationMessage For="@(() => Model.Name)" class="text-danger small" />
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Address</label>
-                            <InputText class="form-control rounded-pill" @bind-Value="Model.Address" placeholder="Business address..." />
+                            <InputText class="form-control rounded-pill dark-input" @bind-Value="Model.Address" placeholder="Business address..." />
                             <ValidationMessage For="@(() => Model.Address)" class="text-danger small" />
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Description</label>
-                            <InputTextArea class="form-control rounded-4" @bind-Value="Model.Description" placeholder="Describe the business..." rows="3" />
+                            <InputTextArea class="form-control rounded-4 dark-input" @bind-Value="Model.Description" placeholder="Describe the business..." rows="3" />
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Contact</label>
-                            <InputText class="form-control rounded-pill" @bind-Value="Model.Contact" placeholder="Phone or email..." />
+                            <InputText class="form-control rounded-pill dark-input" @bind-Value="Model.Contact" placeholder="Phone or email..." />
                             <ValidationMessage For="@(() => Model.Contact)" class="text-danger small" />
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Business Type</label>
-                            <InputSelect class="form-select rounded-pill" @bind-Value="Model.BusinessTypeId">
+                            <InputSelect class="form-select rounded-pill dark-input" @bind-Value="Model.BusinessTypeId">
                                 <option value="">Select a type...</option>
                                 @foreach (var type in BusinessTypes)
                                 {
@@ -60,14 +60,14 @@
                         }
 
                         <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-success rounded-pill px-4" disabled="@IsSubmitting">
+                            <button type="submit" class="btn-form-save" disabled="@IsSubmitting">
                                 @if (IsSubmitting)
                                 {
                                     <span class="spinner-border spinner-border-sm me-1" role="status"></span>
                                 }
                                 <i class="bi bi-check-lg me-1"></i> Save
                             </button>
-                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4" @onclick="GoBack">
+                            <button type="button" class="btn-form-cancel" @onclick="GoBack">
                                 Cancel
                             </button>
                         </div>

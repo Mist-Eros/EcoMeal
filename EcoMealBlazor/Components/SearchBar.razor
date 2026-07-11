@@ -3,29 +3,32 @@
 @using EcoMeal.EcoMealBlazor.Services
 @inject NavigationManager NavigationManager
 
-<div class="d-flex align-items-center gap-2" style="max-width: 600px;">
-    <div class="position-relative flex-grow-1">
+<div class="search-container">
+    <div class="search-wrapper">
+        <span class="search-icon bi bi-search"></span>
         <input type="text" 
-               class="form-control rounded-pill" 
+               class="search-input" 
                placeholder="Search..." 
                @bind="SearchTerm"
                @bind:event="oninput"
-               style="padding-left: 20px;" />
+               @bind:after="OnSearchTermChanged" />
+        <button class="search-clear" @onclick="ClearSearch" style="@(_searchTermVisible ? "display: flex;" : "display: none;")">
+            <span class="bi bi-x-lg"></span>
+        </button>
     </div>
-    <select class="form-select rounded-pill" style="width: auto; min-width: 140px;" @bind="SelectedType">
-        <option value="">All Types</option>
-        @foreach (var type in BusinessTypes)
-        {
-            <option value="@type.Name">@type.Name</option>
-        }
-    </select>
-    <select class="form-select rounded-pill" style="width: auto; min-width: 100px;" @bind="SearchBy">
-        <option value="name">Name</option>
-        <option value="address">Address</option>
-    </select>
-    <button class="btn p-0 border-0 bg-transparent" @onclick="ApplySearch" style="transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-        <img src="/EcoMealIcon.png" alt="Search" style="height: 35px; width: 35px; object-fit: contain;" />
-    </button>
+    <div class="search-filters">
+        <select class="filter-select" @bind="SelectedType" @bind:after="OnSearchTermChanged">
+            <option value="">All Types</option>
+            @foreach (var type in BusinessTypes)
+            {
+                <option value="@type.Name">@type.Name</option>
+            }
+        </select>
+        <select class="filter-select" @bind="SearchBy" @bind:after="OnSearchTermChanged">
+            <option value="name">Name</option>
+            <option value="address">Address</option>
+        </select>
+    </div>
 </div>
 
 @code {
@@ -35,6 +38,7 @@
     private string SearchTerm = "";
     private string SelectedType = "";
     private string SearchBy = "name";
+    private bool _searchTermVisible = false;
     private List<BusinessTypeModel> BusinessTypes = new();
 
     [Inject]
@@ -43,6 +47,19 @@
     protected override async Task OnInitializedAsync()
     {
         BusinessTypes = await BusinessService.GetBusinessTypesAsync();
+    }
+
+    private async Task OnSearchTermChanged()
+    {
+        _searchTermVisible = !string.IsNullOrEmpty(SearchTerm);
+        await ApplySearch();
+    }
+
+    private async Task ClearSearch()
+    {
+        SearchTerm = "";
+        _searchTermVisible = false;
+        await ApplySearch();
     }
 
     private async Task ApplySearch()

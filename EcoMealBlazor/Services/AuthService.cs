@@ -69,23 +69,30 @@ public class AuthService
 
     public async Task LoadTokenAsync()
     {
-        var tokenResult = await _localStorage.GetAsync<string>("authToken");
-        Token = tokenResult.Success ? tokenResult.Value : null;
-
-        if (Token != null)
+        try
         {
-            var rolesResult = await _localStorage.GetAsync<List<string>>("userRoles");
-            var roles = rolesResult.Success && rolesResult.Value != null ? rolesResult.Value : new List<string>();
+            var tokenResult = await _localStorage.GetAsync<string>("authToken");
+            Token = tokenResult.Success ? tokenResult.Value : null;
 
-            if (_authStateProvider is CustomAuthenticationStateProvider customProvider)
+            if (Token != null)
             {
-                var emailResult = await _localStorage.GetAsync<string>("userEmail");
-                var email = emailResult.Success ? emailResult.Value ?? "user@example.com" : "user@example.com";
-                customProvider.NotifyUserAuthentication(Token, roles, email);
+                var rolesResult = await _localStorage.GetAsync<List<string>>("userRoles");
+                var roles = rolesResult.Success && rolesResult.Value != null ? rolesResult.Value : new List<string>();
+
+                if (_authStateProvider is CustomAuthenticationStateProvider customProvider)
+                {
+                    var emailResult = await _localStorage.GetAsync<string>("userEmail");
+                    var email = emailResult.Success ? emailResult.Value ?? "user@example.com" : "user@example.com";
+                    customProvider.NotifyUserAuthentication(Token, roles, email);
+                }
             }
+            
+            NotifyStateChanged();
         }
-        
-        NotifyStateChanged();
+        catch (InvalidOperationException)
+        {
+            // Skip during prerendering - will retry on next render
+        }
     }
 
     public async Task LogoutAsync()
@@ -116,6 +123,11 @@ public class AuthService
     public async Task UpdateRolesAsync(List<string> roles)
     {
         await _localStorage.SetAsync("userRoles", roles);
+    }
+
+    public void NotifyChanged()
+    {
+        NotifyStateChanged();
     }
 
     private void NotifyStateChanged() => OnChange?.Invoke();

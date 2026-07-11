@@ -81,7 +81,6 @@ public partial class BusinessCard
 
     private void OrderBusiness()
     {
-        // Navigate to order page or open order modal
-        NavigationManager.NavigateTo($"/business/{Business.Id}/");
+        NavigationManager.NavigateTo($"/business/{Business.Id}");
     }
 }

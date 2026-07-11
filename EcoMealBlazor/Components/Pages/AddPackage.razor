@@ -9,7 +9,7 @@
 <div class="container my-4">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10">
-            <div class="card shadow-sm border-0 rounded-4">
+            <div class="card form-card">
                 <div class="card-body p-4">
                     <h2 class="card-title fw-bold text-success mb-4">
                         <i class="bi bi-plus-circle me-2"></i>Add Package
@@ -21,38 +21,41 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Name</label>
-                            <InputText class="form-control rounded-pill" @bind-Value="Model.Name" placeholder="Package name..." />
+                            <InputText class="form-control rounded-pill dark-input" @bind-Value="Model.Name" placeholder="Package name..." />
                             <ValidationMessage For="@(() => Model.Name)" class="text-danger small" />
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Description</label>
-                            <InputTextArea class="form-control rounded-4" @bind-Value="Model.Description" placeholder="Describe the package..." rows="3" />
+                            <InputTextArea class="form-control rounded-4 dark-input" @bind-Value="Model.Description" placeholder="Describe the package..." rows="3" />
                             <ValidationMessage For="@(() => Model.Description)" class="text-danger small" />
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Price (RON)</label>
-                            <InputNumber class="form-control rounded-pill" @bind-Value="Model.Price" placeholder="0.00" step="0.01" min="0" />
+                            <InputNumber class="form-control rounded-pill dark-input" @bind-Value="Model.Price" placeholder="0.00" step="0.01" min="0" />
                             <ValidationMessage For="@(() => Model.Price)" class="text-danger small" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Pickup Date</label>
+                            <input type="date" class="form-control rounded-pill dark-input" @bind="_pickupDate" />
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-semibold">Pickup Start</label>
-                                <InputDate class="form-control rounded-pill" @bind-Value="Model.Start_PickUp" />
-                                <ValidationMessage For="@(() => Model.Start_PickUp)" class="text-danger small" />
+                                <label class="form-label fw-semibold">Start Time</label>
+                                <input type="time" class="form-control rounded-pill dark-input" @bind="_startTime" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-semibold">Pickup End</label>
-                                <InputDate class="form-control rounded-pill" @bind-Value="Model.End_PickUp" />
-                                <ValidationMessage For="@(() => Model.End_PickUp)" class="text-danger small" />
+                                <label class="form-label fw-semibold">End Time</label>
+                                <input type="time" class="form-control rounded-pill dark-input" @bind="_endTime" />
                             </div>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Package Type</label>
-                            <InputSelect class="form-select rounded-pill" @bind-Value="Model.PackageTypeId">
+                            <InputSelect class="form-select rounded-pill dark-input" @bind-Value="Model.PackageTypeId">
                                 <option value="">Select a type...</option>
                                 @foreach (var type in PackageTypes)
                                 {
@@ -68,14 +71,14 @@
                         }
 
                         <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-success rounded-pill px-4" disabled="@IsSubmitting">
+                            <button type="submit" class="btn-form-save" disabled="@IsSubmitting">
                                 @if (IsSubmitting)
                                 {
                                     <span class="spinner-border spinner-border-sm me-1" role="status"></span>
                                 }
                                 <i class="bi bi-check-lg me-1"></i> Save
                             </button>
-                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4" @onclick="GoBack">
+                            <button type="button" class="btn-form-cancel" @onclick="GoBack">
                                 Cancel
                             </button>
                         </div>
@@ -95,17 +98,29 @@
     private bool IsSubmitting = false;
     private string? ErrorMessage;
 
+    private DateOnly? _pickupDate = DateOnly.FromDateTime(DateTime.Now);
+    private TimeOnly? _startTime = TimeOnly.FromDateTime(DateTime.Now);
+    private TimeOnly? _endTime = TimeOnly.FromDateTime(DateTime.Now.AddHours(2));
+
     protected override async Task OnInitializedAsync()
     {
         PackageTypes = await BusinessService.GetPackageTypesAsync();
-        Model.Start_PickUp = DateTime.Now;
-        Model.End_PickUp = DateTime.Now.AddHours(2);
+    }
+
+    private void ApplyDateTime()
+    {
+        if (_pickupDate.HasValue && _startTime.HasValue && _endTime.HasValue)
+        {
+            Model.Start_PickUp = _pickupDate.Value.ToDateTime(_startTime.Value);
+            Model.End_PickUp = _pickupDate.Value.ToDateTime(_endTime.Value);
+        }
     }
 
     private async Task HandleSubmit()
     {
         IsSubmitting = true;
         ErrorMessage = null;
+        ApplyDateTime();
 
         var success = await BusinessService.AddPackageToBusinessAsync(BusinessId, Model);
         if (success)

@@ -7,17 +7,15 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-8 mx-auto">
-            <div class="card shadow">
-                <div class="card-header bg-success text-white">
-                    <h4 class="mb-0">
-                        <span class="bi bi-person-gear me-2"></span>
-                        Account Settings
-                    </h4>
-                </div>
-                <div class="card-body">
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="card form-card">
+                <div class="card-body p-4">
+                    <h2 class="fw-bold text-success mb-4">
+                        <i class="bi bi-person-gear me-2"></i>Account Settings
+                    </h2>
+
                     @if (_isLoading)
                     {
                         <div class="text-center py-5">
@@ -28,70 +26,68 @@
                     }
                     else
                     {
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <label class="fw-bold">Email</label>
-                                <p class="form-control-plaintext">@_userEmail</p>
+                        <div class="mb-4">
+                            <div class="account-info-row">
+                                <div class="account-info-icon"><i class="bi bi-envelope"></i></div>
+                                <div>
+                                    <div class="account-info-label">Email</div>
+                                    <div class="account-info-value">@_userEmail</div>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="fw-bold">Name</label>
-                                <p class="form-control-plaintext">@_userName</p>
+                            <div class="account-info-row">
+                                <div class="account-info-icon"><i class="bi bi-person"></i></div>
+                                <div>
+                                    <div class="account-info-label">Name</div>
+                                    <div class="account-info-value">@_userName</div>
+                                </div>
+                            </div>
+                            <div class="account-info-row">
+                                <div class="account-info-icon"><i class="bi bi-shield-check"></i></div>
+                                <div>
+                                    <div class="account-info-label">Role</div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="account-role-badge">@_userRole</span>
+                                        <button class="account-edit-btn" @onclick="ToggleEditRole">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row mb-4">
-                            <div class="col-md-12">
-                                <label class="fw-bold">Current Role</label>
-                                <div class="d-flex align-items-center gap-3">
-                                    <span class="badge bg-info fs-6 p-2 px-4">@_userRole</span>
-                                    <button class="btn btn-outline-primary btn-sm" @onclick="ToggleEditRole">
-                                        <span class="bi bi-pencil me-1"></span> Change Role
-                                    </button>
+                        @if (_isEditingRole)
+                        {
+                            <div class="account-role-editor">
+                                <label class="form-label fw-semibold">Change Role</label>
+                                <div class="account-role-picker">
+                                    @foreach (var role in _availableRoles)
+                                    {
+                                        <button class="account-role-option @(_selectedRole == role ? "active" : "")"
+                                                @onclick="() => SelectRole(role)"
+                                                disabled="@_isUpdating">
+                                            @role
+                                        </button>
+                                    }
                                 </div>
-                                @if (_isEditingRole)
+                                @if (!string.IsNullOrEmpty(_roleUpdateMessage))
                                 {
-                                    <div class="mt-3 p-3 border rounded bg-light">
-                                        <div class="row g-2">
-                                            <div class="col-md-8">
-                                                <select class="form-select" @bind="_selectedRole">
-                                                    @foreach (var role in _availableRoles)
-                                                    {
-                                                        <option value="@role">@role</option>
-                                                    }
-                                                </select>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <button class="btn btn-success w-100" @onclick="UpdateUserRole" disabled="@_isUpdating">
-                                                    @if (_isUpdating)
-                                                    {
-                                                        <span class="spinner-border spinner-border-sm me-1"></span>
-                                                    }
-                                                    <span class="bi bi-save me-1"></span> Save
-                                                </button>
-                                            </div>
-                                        </div>
-                                        @if (!string.IsNullOrEmpty(_roleUpdateMessage))
-                                        {
-                                            <div class="mt-2 alert @(_roleUpdateSuccess ? "alert-success" : "alert-danger")">
-                                                @_roleUpdateMessage
-                                            </div>
-                                        }
+                                    <div class="mt-2 small @(_roleUpdateSuccess ? "text-success" : "text-danger")">
+                                        <i class="bi @(_roleUpdateSuccess ? "bi-check-circle" : "bi-exclamation-circle") me-1"></i>
+                                        @_roleUpdateMessage
                                     </div>
                                 }
                             </div>
-                        </div>
+                        }
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <button class="btn btn-outline-secondary w-100" @onclick="GoToHome">
-                                    <span class="bi bi-house me-1"></span> Back to Home
-                                </button>
-                            </div>
-                            <div class="col-md-6">
-                                <button class="btn btn-outline-danger w-100" @onclick="HandleLogout">
-                                    <span class="bi bi-box-arrow-right me-1"></span> Logout
-                                </button>
-                            </div>
+                        <hr class="account-divider" />
+
+                        <div class="d-flex gap-2">
+                            <button class="btn-form-cancel flex-fill" @onclick="GoToHome">
+                                <i class="bi bi-house"></i> Back to Home
+                            </button>
+                            <button class="account-logout-btn flex-fill" @onclick="HandleLogout">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </button>
                         </div>
                     }
                 </div>
@@ -170,50 +166,46 @@
         StateHasChanged();
     }
 
-    private async Task UpdateUserRole()
+    private async Task SelectRole(string role)
     {
-        if (string.IsNullOrEmpty(_selectedRole) || _selectedRole == _userRole)
-        {
-            _roleUpdateMessage = "Please select a different role.";
-            _roleUpdateSuccess = false;
-            return;
-        }
+        if (role == _userRole) return;
 
-        _isUpdating = true;
+        _selectedRole = role;
         _roleUpdateMessage = string.Empty;
         StateHasChanged();
 
+        var token = await AuthService.GetTokenAsync();
+        Http.DefaultRequestHeaders.Authorization = 
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var encodedEmail = Uri.EscapeDataString(_userEmail);
+
         try
         {
-            var token = await AuthService.GetTokenAsync();
-            Http.DefaultRequestHeaders.Authorization = 
-                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var response = await Http.PutAsJsonAsync($"api/users/{encodedEmail}/role", new { Role = role });
 
-            var encodedEmail = Uri.EscapeDataString(_userEmail);
-            var response = await Http.PutAsJsonAsync($"api/users/{encodedEmail}/role", new { Role = _selectedRole });
-            
             if (response.IsSuccessStatusCode)
             {
-                _userRole = _selectedRole;
+                _userRole = role;
                 _roleUpdateSuccess = true;
-                _roleUpdateMessage = $"Role successfully updated to '{_selectedRole}'!";
+                _roleUpdateMessage = $"Role updated to '{role}'!";
                 _isEditingRole = false;
-                
-                // Update the role in localStorage
-                var roles = new List<string> { _selectedRole };
+
+                var roles = new List<string> { role };
                 await AuthService.UpdateRolesAsync(roles);
-                
-                // Refresh the authentication state
+
                 var customProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
                 customProvider.NotifyUserAuthentication(token, roles, _userEmail);
-                
+
+                AuthService.NotifyChanged();
+
                 StateHasChanged();
             }
             else
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
                 _roleUpdateSuccess = false;
-                
+
                 try
                 {
                     var errorObj = System.Text.Json.JsonSerializer.Deserialize<ErrorResponse>(errorContent);
@@ -223,20 +215,12 @@
                 {
                     _roleUpdateMessage = errorContent;
                 }
-                
-                Console.WriteLine($"Error response: {errorContent}");
             }
         }
         catch (Exception ex)
         {
             _roleUpdateSuccess = false;
             _roleUpdateMessage = $"Error: {ex.Message}";
-            Console.WriteLine($"Exception: {ex.Message}");
-        }
-        finally
-        {
-            _isUpdating = false;
-            StateHasChanged();
         }
     }
 

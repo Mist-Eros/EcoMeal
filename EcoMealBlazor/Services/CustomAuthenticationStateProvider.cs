@@ -41,7 +41,7 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
             {
                 foreach (var role in rolesResult.Value)
                 {
-                    claims.Add(new Claim(ClaimTypes.Role, role));
+                    claims.Add(new Claim(ClaimTypes.Role, role ?? "User"));
                 }
             }
 
@@ -51,7 +51,12 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         }
         catch (InvalidOperationException ex)
         {
-            _logger.LogWarning(ex, "Failed to retrieve authentication state from local storage.");
+            _logger.LogWarning(ex, "Failed to retrieve authentication state from local storage during prerendering.");
+            return new AuthenticationState(_anonymous);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error retrieving authentication state.");
             return new AuthenticationState(_anonymous);
         }
     }
@@ -60,14 +65,21 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, token),
-            new Claim(ClaimTypes.Name, email),
-            new Claim(ClaimTypes.Email, email)
+            new Claim(ClaimTypes.NameIdentifier, token ?? string.Empty),
+            new Claim(ClaimTypes.Name, email ?? "user"),
+            new Claim(ClaimTypes.Email, email ?? "user@example.com")
         };
         
-        foreach (var role in roles)
+        if (roles != null)
         {
-            claims.Add(new Claim(ClaimTypes.Role, role));
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role ?? "User"));
+            }
+        }
+        else
+        {
+            claims.Add(new Claim(ClaimTypes.Role, "User"));
         }
         
         var identity = new ClaimsIdentity(claims, "Bearer");

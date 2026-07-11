@@ -12,6 +12,9 @@ public partial class BusinessList
     
     [Inject]
     public required AuthenticationStateProvider AuthStateProvider { get; set; }
+    
+    [Inject]
+    public required NavigationManager NavigationManager { get; set; }
 
     private List<BusinessModel>? AllBusinesses;
     private List<BusinessModel>? FilteredBusinesses;
@@ -63,5 +66,10 @@ public partial class BusinessList
     private async Task RefreshList()
     {
         await LoadBusinesses();
+    }
+
+    private void NavigateToAddBusiness()
+    {
+        NavigationManager.NavigateTo("/business/create");
     }
 }

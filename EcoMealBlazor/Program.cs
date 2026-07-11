@@ -27,6 +27,8 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStat
 
 builder.Services.AddScoped<PermissionService>();
 
+builder.Services.AddScoped<DarkModeService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

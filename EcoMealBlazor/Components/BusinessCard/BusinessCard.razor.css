@@ -2,7 +2,7 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border-radius: 16px;
     overflow: hidden;
-    border: 1px solid rgba(45, 106, 79, 0.1);
+    border: 2px solid #2d6a4f !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     height: 100%;
     background: white;
@@ -13,33 +13,34 @@
 .card:hover {
     transform: translateY(-6px);
     box-shadow: 0 12px 40px rgba(26, 71, 42, 0.18) !important;
-    border-color: rgba(45, 106, 79, 0.2);
+    border-color: #1a472a !important;
 }
 
 .card img {
-    height: 180px !important;
+    height: 200px;
+    width: 100%;
     object-fit: cover;
     flex-shrink: 0;
 }
 
 .card-body {
-    padding: 1.5rem;
+    padding: 1.25rem;
     display: flex;
     flex-direction: column;
     flex: 1;
 }
 
 .card-title {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     margin-bottom: 0.5rem;
     color: #1a472a;
 }
 
 .card-text {
-    font-size: 0.95rem;
-    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
     color: #4a5568;
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 .card-text:last-of-type {
@@ -51,55 +52,142 @@
 }
 
 .btn {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     border-radius: 10px;
-    padding: 0.7rem 1rem;
+    padding: 0.5rem 1rem;
     transition: all 0.2s ease;
     font-weight: 600;
 }
 
-.btn-success {
-    background: linear-gradient(180deg, #1a472a 0%, #2d6a4f 40%, #40916c 100%) !important;
-    border: none !important;
-    box-shadow: 0 4px 16px rgba(45, 106, 79, 0.3);
-    color: white !important;
-}
-
-.btn-success:hover {
-    transform: scale(1.02);
-    box-shadow: 0 6px 24px rgba(45, 106, 79, 0.4);
-    background: linear-gradient(180deg, #0d3320 0%, #1a472a 40%, #2d6a4f 100%) !important;
-}
-
-.btn-outline-primary {
-    color: #2d6a4f;
-    border-color: #2d6a4f;
-    border-width: 2px;
+.business-card-order-btn {
     background: transparent;
+    color: #2d6a4f;
+    border: 2px solid #2d6a4f;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
-.btn-outline-primary:hover {
-    background: rgba(45, 106, 79, 0.1);
-    color: #1a472a;
-    border-color: #1a472a;
-}
-
-.btn-danger {
-    background: linear-gradient(135deg, #dc3545, #c82333);
-    border: none;
-    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.25);
-}
-
-.btn-danger:hover {
+.business-card-order-btn:hover {
+    background: linear-gradient(180deg, #1a472a 0%, #2d6a4f 40%, #40916c 100%);
+    color: white;
     transform: scale(1.02);
-    box-shadow: 0 4px 16px rgba(220, 53, 69, 0.35);
+    box-shadow: 0 4px 16px rgba(45, 106, 79, 0.3);
 }
 
 .badge {
-    font-size: 0.75rem;
-    padding: 0.4rem 0.8rem;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.8rem;
     flex-shrink: 0;
     background: linear-gradient(180deg, #1a472a 0%, #2d6a4f 40%, #40916c 100%) !important;
     color: white !important;
     border: none;
+}
+
+.business-card-edit-btn {
+    background: transparent;
+    color: #2d6a4f;
+    border: 2px solid #2d6a4f;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.business-card-edit-btn:hover {
+    background: linear-gradient(180deg, #1a472a 0%, #2d6a4f 40%, #40916c 100%);
+    color: white;
+    transform: scale(1.02);
+    box-shadow: 0 4px 16px rgba(45, 106, 79, 0.3);
+}
+
+.business-card-delete-btn {
+    background: transparent;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.business-card-delete-btn:hover {
+    background: #dc3545;
+    color: white;
+    transform: scale(1.02);
+    box-shadow: 0 4px 16px rgba(220, 53, 69, 0.3);
+}
+
+/* Dark mode */
+[data-theme="dark"] .card {
+    border-color: #40916c !important;
+    background: #1A1A1A !important;
+}
+
+[data-theme="dark"] .card:hover {
+    border-color: #9fe7d8 !important;
+}
+
+[data-theme="dark"] .card-title {
+    color: #9fe7d8;
+}
+
+[data-theme="dark"] .card-text {
+    color: #B0B0B0;
+}
+
+[data-theme="dark"] .card-body {
+    background: #1A1A1A !important;
+}
+
+[data-theme="dark"] .business-card-edit-btn {
+    color: #9fe7d8;
+    border-color: #9fe7d8;
+}
+
+[data-theme="dark"] .business-card-order-btn {
+    color: #9fe7d8;
+    border-color: #9fe7d8;
+}
+
+[data-theme="dark"] .business-card-order-btn:hover {
+    background: linear-gradient(180deg, #0a1f14 0%, #143d2a 40%, #1f5a3f 100%);
+    color: #9fe7d8;
+}
+
+[data-theme="dark"] .business-card-edit-btn:hover {
+    background: linear-gradient(180deg, #0a1f14 0%, #143d2a 40%, #1f5a3f 100%);
+    color: #9fe7d8;
+}
+
+[data-theme="dark"] .business-card-delete-btn {
+    color: #ff6b6b;
+    border-color: #ff6b6b;
+}
+
+[data-theme="dark"] .business-card-delete-btn:hover {
+    background: #dc3545;
+    color: white;
 }

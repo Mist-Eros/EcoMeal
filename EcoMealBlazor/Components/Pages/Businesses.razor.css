@@ -1,0 +1,62 @@
+.businesses-page {
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+}
+
+.businesses-header {
+    text-align: center;
+    padding: 1rem 1rem 0.5rem 1rem;
+}
+
+.businesses-title {
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #1a472a, #2d6a4f, #40916c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 24px rgba(26, 71, 42, 0.3);
+    margin: 0;
+}
+
+.businesses-subtitle {
+    color: #2d6a4f;
+    font-weight: 500;
+    font-size: 1.25rem;
+    margin: 0.5rem 0 0 0;
+}
+
+.businesses-divider {
+    width: 50%;
+    margin: 1rem auto;
+    border: none;
+    border-top: 2px solid #2d6a4f;
+    box-shadow: 0 2px 8px rgba(45, 106, 79, 0.2);
+    opacity: 0.5;
+}
+
+/* Dark mode */
+[data-theme="dark"] .businesses-title {
+    background: linear-gradient(135deg, #40916c, #9fe7d8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+[data-theme="dark"] .businesses-subtitle {
+    color: #9fe7d8;
+}
+
+[data-theme="dark"] .businesses-divider {
+    border-color: #40916c;
+    box-shadow: 0 2px 8px rgba(159, 231, 216, 0.2);
+}
+
+@media (max-width: 768px) {
+    .businesses-title {
+        font-size: 2rem;
+    }
+    
+    .businesses-subtitle {
+        font-size: 1rem;
+    }
+}
