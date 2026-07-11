@@ -103,5 +103,20 @@ public class AuthService
         NotifyStateChanged();
     }
 
+    // NEW METHOD - Add this
+    public async Task<string?> GetTokenAsync()
+    {
+        if (!string.IsNullOrEmpty(Token))
+            return Token;
+        
+        await LoadTokenAsync();
+        return Token;
+    }
+
+    public async Task UpdateRolesAsync(List<string> roles)
+    {
+        await _localStorage.SetAsync("userRoles", roles);
+    }
+
     private void NotifyStateChanged() => OnChange?.Invoke();
 }

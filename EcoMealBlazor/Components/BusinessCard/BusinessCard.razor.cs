@@ -1,6 +1,7 @@
 using EcoMeal.EcoMealBlazor.Models;
 using EcoMeal.EcoMealBlazor.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 
 namespace EcoMeal.EcoMealBlazor.Components.BusinessCard;
@@ -19,10 +20,21 @@ public partial class BusinessCard
     [Inject]
     public required IJSRuntime JSRuntime { get; set; }
     
+    [Inject]
+    public required AuthenticationStateProvider AuthStateProvider { get; set; }
+    
     [Parameter]
     public EventCallback OnDeleted { get; set; }
 
     private bool isDeleting = false;
+    private bool _isAdmin = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        _isAdmin = user.IsInRole("Admin");
+    }
 
     private string GetBusinessImage()
     {
@@ -65,5 +77,11 @@ public partial class BusinessCard
         }
         
         isDeleting = false;
+    }
+
+    private void OrderBusiness()
+    {
+        // Navigate to order page or open order modal
+        NavigationManager.NavigateTo($"/business/{Business.Id}/");
     }
 }

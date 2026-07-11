@@ -185,7 +185,12 @@
 
         try
         {
-            var response = await Http.PutAsJsonAsync($"api/users/{_userEmail}/role", new { Role = _selectedRole });
+            var token = await AuthService.GetTokenAsync();
+            Http.DefaultRequestHeaders.Authorization = 
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var encodedEmail = Uri.EscapeDataString(_userEmail);
+            var response = await Http.PutAsJsonAsync($"api/users/{encodedEmail}/role", new { Role = _selectedRole });
             
             if (response.IsSuccessStatusCode)
             {
@@ -193,7 +198,16 @@
                 _roleUpdateSuccess = true;
                 _roleUpdateMessage = $"Role successfully updated to '{_selectedRole}'!";
                 _isEditingRole = false;
-                await AuthService.LoadTokenAsync();
+                
+                // Update the role in localStorage
+                var roles = new List<string> { _selectedRole };
+                await AuthService.UpdateRolesAsync(roles);
+                
+                // Refresh the authentication state
+                var customProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
+                customProvider.NotifyUserAuthentication(token, roles, _userEmail);
+                
+                StateHasChanged();
             }
             else
             {

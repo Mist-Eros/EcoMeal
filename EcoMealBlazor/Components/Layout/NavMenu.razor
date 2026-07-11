@@ -29,25 +29,6 @@
                     </NavLink>
                 </li>
                 
-                @if (_isAdmin)
-                {
-                    <li class="nav-item">
-                        <NavLink class="nav-link text-white rounded-pill px-3 py-2" href="/admin/dashboard">
-                            <span class="bi bi-speedometer2 me-1"></span> Dashboard
-                        </NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link text-white rounded-pill px-3 py-2" href="/admin/businesses">
-                            <span class="bi bi-building me-1"></span> Manage Businesses
-                        </NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link text-white rounded-pill px-3 py-2" href="/admin/users">
-                            <span class="bi bi-people me-1"></span> Manage Users
-                        </NavLink>
-                    </li>
-                }
-                
                 <li class="nav-item">
                     <NavLink class="nav-link bg-white text-success rounded-pill px-4 py-2 fw-bold" href="/businesses" Match="NavLinkMatch.All">
                         <span class="bi bi-box-seam me-1" aria-hidden="true"></span> Order
