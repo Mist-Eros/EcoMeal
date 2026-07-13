@@ -1,14 +1,39 @@
 @page "/business/{BusinessId:int}/package/{PackageId:int}/order"
 @layout MainLayout
+@using EcoMeal.EcoMealBlazor.Services
+@inject OrderService OrderService
+@inject NavigationManager NavigationManager
 
 <div class="order-fixed-overlay">
     <div class="order-content">
-        <i class="bi bi-check-circle-fill text-success order-icon"></i>
-        <h1 class="order-title">Item Ordered!</h1>
-        <p class="order-subtitle">Your order has been placed successfully.</p>
-        <a href="/businesses" class="order-back-btn">
-            <i class="bi bi-arrow-left"></i> Back to Businesses
-        </a>
+        @if (_isPlacing)
+        {
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Placing order...</span>
+            </div>
+            <p class="order-subtitle mt-3">Placing your order...</p>
+        }
+        else if (_success)
+        {
+            <i class="bi bi-check-circle-fill text-success order-icon"></i>
+            <h1 class="order-title">Item Ordered!</h1>
+            <p class="order-subtitle">Your order has been placed successfully.</p>
+            <a href="/my-orders" class="order-back-btn">
+                <i class="bi bi-bag"></i> View My Orders
+            </a>
+            <a href="/businesses" class="order-back-btn mt-2">
+                <i class="bi bi-arrow-left"></i> Back to Businesses
+            </a>
+        }
+        else
+        {
+            <i class="bi bi-x-circle-fill text-danger order-icon"></i>
+            <h1 class="order-title">Order Failed</h1>
+            <p class="order-subtitle">@_errorMessage</p>
+            <button class="order-back-btn" @onclick="GoBack">
+                <i class="bi bi-arrow-left"></i> Go Back
+            </button>
+        }
     </div>
 </div>
 
@@ -18,4 +43,24 @@
 
     [Parameter]
     public int PackageId { get; set; }
+
+    private bool _isPlacing = true;
+    private bool _success = false;
+    private string _errorMessage = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        _success = await OrderService.PlaceOrderAsync(PackageId);
+        _isPlacing = false;
+
+        if (!_success)
+        {
+            _errorMessage = "Could not place order. The package may no longer be available.";
+        }
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo($"/business/{BusinessId}");
+    }
 }

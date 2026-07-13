@@ -1,0 +1,38 @@
+1. Business Details
+Add Order button
+
+2. Main Layout
+Order History button
+
+3. Orders.razor
+/orders page with order History
+
+4. OrederController 
+/placeOrder
+/getMyOrders
+
+5.
+
+
+ctrl.
+extract code to code behind
+
+
+TODO:
+
+- in the orders page
+have a button that says "Picked up" in the admin view
+admin view should see ALL PENDING ORDERS AND THE USER WHO ORDERED!
+also should have a second hardcoded admin account. That one should be user@ecomeal instead of admin@ecomeal
+Admin and user both can confirm "picked up" or cancel an order from their Orders tab.
+User can only see the orders they took, and on the right fo the My Orders title on MyOrders they should have OrderHistory
+OrderHistory should have all the orders that werent cancelled by either admin or user.
+
+- other perks and quirks
+
+RATING SYSTEM
+
+my cart
+offers based on things in cart
+guerillamail?
+idk find cool stuff

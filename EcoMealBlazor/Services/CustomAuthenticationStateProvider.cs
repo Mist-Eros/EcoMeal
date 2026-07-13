@@ -61,13 +61,13 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         }
     }
 
-    public void NotifyUserAuthentication(string token, List<string> roles, string email)
+    public void NotifyUserAuthentication(string token, List<string> roles)
     {
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, token ?? string.Empty),
-            new Claim(ClaimTypes.Name, email ?? "user"),
-            new Claim(ClaimTypes.Email, email ?? "user@example.com")
+            new Claim(ClaimTypes.Name, "user"),
+            //new Claim(ClaimTypes.Email, email ?? "user@example.com")
         };
         
         if (roles != null)

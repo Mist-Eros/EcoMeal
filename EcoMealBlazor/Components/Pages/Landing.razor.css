@@ -15,10 +15,21 @@
     padding: 0;
 }
 
+.home-logo-link {
+    display: inline-block;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.home-logo-link:hover {
+    transform: scale(1.02);
+}
+
 .home-logo {
     max-width: 600px;
     width: 100%;
     height: auto;
+    pointer-events: none;
 }
 
 .home-tagline {

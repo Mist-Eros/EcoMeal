@@ -6,6 +6,8 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager Navigation
 @inject HttpClient Http
+@inject OrderService OrderService
+@inject IJSRuntime JSRuntime
 
 <div class="container py-4">
     <div class="row justify-content-center">
@@ -81,6 +83,24 @@
 
                         <hr class="account-divider" />
 
+                        @if (!string.IsNullOrEmpty(_clearMessage))
+                        {
+                            <div class="mt-2 small @(_clearSuccess ? "text-success" : "text-danger")">
+                                <i class="bi @(_clearSuccess ? "bi-check-circle" : "bi-exclamation-circle") me-1"></i>
+                                @_clearMessage
+                            </div>
+                        }
+
+                        <button class="account-clear-btn mb-3" @onclick="HandleClearOrders" disabled="@_isClearing">
+                            @if (_isClearing)
+                            {
+                                <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                            }
+                            <i class="bi bi-trash3 me-1"></i> Clear My Order History
+                        </button>
+
+                        <hr class="account-divider" />
+
                         <div class="d-flex gap-2">
                             <button class="btn-form-cancel flex-fill" @onclick="GoToHome">
                                 <i class="bi bi-house"></i> Back to Home
@@ -107,6 +127,9 @@
     private string _selectedRole = string.Empty;
     private string _roleUpdateMessage = string.Empty;
     private List<string> _availableRoles = new() { "User", "Admin" };
+    private bool _isClearing = false;
+    private string _clearMessage = string.Empty;
+    private bool _clearSuccess = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -195,7 +218,7 @@
                 await AuthService.UpdateRolesAsync(roles);
 
                 var customProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
-                customProvider.NotifyUserAuthentication(token, roles, _userEmail);
+                customProvider.NotifyUserAuthentication(token, roles);
 
                 AuthService.NotifyChanged();
 
@@ -230,8 +253,27 @@
         Navigation.NavigateTo("/", forceLoad: true);
     }
 
+    private async Task HandleClearOrders()
+    {
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to clear all your order history? This cannot be undone.");
+        if (!confirmed) return;
+
+        _isClearing = true;
+        _clearMessage = string.Empty;
+        StateHasChanged();
+
+        var success = await OrderService.ClearOrderHistoryAsync();
+
+        _isClearing = false;
+        _clearSuccess = success;
+        _clearMessage = success
+            ? "Order history cleared successfully."
+            : "Failed to clear order history.";
+        StateHasChanged();
+    }
+
     private class ErrorResponse
     {
-        public string Message { get; set; }
+        public string? Message { get; set; }
     }
 }

@@ -164,6 +164,44 @@
     color: white;
 }
 
+.account-clear-btn {
+    width: 100%;
+    background: transparent;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    padding: 0.6rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.account-clear-btn:hover:not(:disabled) {
+    background: #dc3545;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(220, 53, 69, 0.3);
+}
+
+.account-clear-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+[data-theme="dark"] .account-clear-btn {
+    color: #ff6b6b;
+    border-color: #ff6b6b;
+}
+
+[data-theme="dark"] .account-clear-btn:hover:not(:disabled) {
+    background: #dc3545;
+    color: white;
+}
+
 [data-theme="dark"] .account-role-editor {
     background: #242424;
     border-color: #333;

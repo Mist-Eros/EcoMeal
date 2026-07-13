@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using System.Security.Cryptography;
 using EcoMeal.EcoMealBlazor.Models.Auth;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
@@ -55,7 +56,7 @@ public class AuthService
 
                 if (_authStateProvider is CustomAuthenticationStateProvider customProvider)
                 {
-                    customProvider.NotifyUserAuthentication(Token, roles, email);
+                    customProvider.NotifyUserAuthentication(Token, roles);
                 }
                 
                 NotifyStateChanged();
@@ -81,17 +82,18 @@ public class AuthService
 
                 if (_authStateProvider is CustomAuthenticationStateProvider customProvider)
                 {
-                    var emailResult = await _localStorage.GetAsync<string>("userEmail");
-                    var email = emailResult.Success ? emailResult.Value ?? "user@example.com" : "user@example.com";
-                    customProvider.NotifyUserAuthentication(Token, roles, email);
+                    customProvider.NotifyUserAuthentication(Token, roles);
                 }
             }
-            
-            NotifyStateChanged();
         }
-        catch (InvalidOperationException)
+        catch (CryptographicException)
         {
-            // Skip during prerendering - will retry on next render
+            // The stored token was encrypted with different Data Protection keys
+            // (e.g. after an app restart that regenerated the keys). Treat it as logged
+            // out and clear the invalid data instead of crashing the circuit.
+            Token = null;
+            await _localStorage.DeleteAsync("authToken");
+            await _localStorage.DeleteAsync("userRoles");
         }
     }
 

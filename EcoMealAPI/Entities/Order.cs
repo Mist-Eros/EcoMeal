@@ -15,6 +15,6 @@ public class Order
     public short Status { get; set;}
     public DateTime Date { get; set;}
     
-    public required User User { get; set; }
-    public required Package Package { get; set; }
+    public User User { get; set; }
+    public Package Package { get; set; }
 }

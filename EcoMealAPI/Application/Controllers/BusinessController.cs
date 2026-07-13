@@ -67,7 +67,9 @@ public class BusinessController : ControllerBase
                 Contact = b.Contact,
                 BusinessTypeName = b.BusinessType.Name,
                 BusinessTypeId = b.BusinessTypeId,
-                Packages = b.Packages.Select(p => new PackageDTO
+                Packages = b.Packages
+                .Where (p => p.Orders.Count == 0)
+                .Select (p => new PackageDTO
                 {
                     Id = p.Id,
                     Name = p.Name,

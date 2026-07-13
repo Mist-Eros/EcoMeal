@@ -1,0 +1,88 @@
+@page "/my-orders"
+@using EcoMeal.EcoMealBlazor.Services
+@using EcoMeal.EcoMealBlazor.Models
+@inject OrderService OrderService
+@inject NavigationManager NavigationManager
+
+<PageTitle>My Orders</PageTitle>
+
+<div class="myorders-container">
+    <div class="myorders-header">
+        <h1 class="myorders-title">
+            <i class="bi bi-bag-check me-2"></i>My Orders
+        </h1>
+    </div>
+
+    @if (MyOrdersList is null)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else if (!MyOrdersList.Any())
+    {
+        <div class="myorders-empty">
+            <i class="bi bi-box-seam myorders-empty-icon"></i>
+            <h5>No orders yet</h5>
+            <p>Browse businesses and order a package to get started.</p>
+            <button class="myorders-browse-btn" @onclick="GoToBusinesses">
+                <i class="bi bi-compass me-1"></i> Browse Businesses
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="myorders-list">
+            @foreach (var order in MyOrdersList)
+            {
+                <div class="myorders-card">
+                    <div class="myorders-card-left">
+                        <div class="myorders-card-icon">
+                            <i class="bi bi-box-seam"></i>
+                        </div>
+                    </div>
+                    <div class="myorders-card-body">
+                        <div class="myorders-card-top">
+                            <h5 class="myorders-package-name">@order.PackageName</h5>
+                            <span class="myorders-status-badge status-placed">Placed</span>
+                        </div>
+                        <div class="myorders-card-details">
+                            <span class="myorders-detail">
+                                <i class="bi bi-shop me-1"></i>@order.BusinessName
+                            </span>
+                            <span class="myorders-detail">
+                                <i class="bi bi-calendar3 me-1"></i>@order.Date.ToString("dd.MM.yyyy")
+                            </span>
+                            <span class="myorders-detail">
+                                <i class="bi bi-clock me-1"></i>@order.Date.ToString("HH:mm")
+                            </span>
+                        </div>
+                    </div>
+                    <div class="myorders-card-right">
+                        <div class="myorders-price">@order.Price.ToString("F2") RON</div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    public List<OrderGetModel>? MyOrdersList;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            MyOrdersList = await OrderService.GetMyOrderAsync();
+            StateHasChanged();
+        }
+    }
+
+    private void GoToBusinesses()
+    {
+        NavigationManager.NavigateTo("/businesses");
+    }
+}
