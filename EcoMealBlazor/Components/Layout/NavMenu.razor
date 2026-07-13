@@ -6,6 +6,7 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject DarkModeService DarkModeService
 @inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
 
 <nav class="navbar navbar-dark">
     <div class="navbar-content">
@@ -25,14 +26,11 @@
             else if (AuthService.IsAuthenticated)
             {
                 <li class="nav-item nav-item-account">
-                    <NavLink class="nav-link rounded-pill px-3 py-2" href="/account">
+                    <div class="nav-account-link rounded-pill px-3 py-2" @onclick="GoToAccount">
                         <span class="bi bi-person-circle me-1"></span> 
                         Welcome, @_userName!
-                        @if (!string.IsNullOrEmpty(_userRole))
-                        {
-                            <span class="nav-role-badge">@_userRole</span>
-                        }
-                    </NavLink>
+                        <span class="nav-role-badge">@_userRole</span>
+                    </div>
                 </li>
             }
             else
@@ -101,6 +99,11 @@
                 StateHasChanged();
             }
         }
+    }
+
+    private void GoToAccount()
+    {
+        NavigationManager.NavigateTo("/account");
     }
 
     private async void OnAuthStateChanged()
