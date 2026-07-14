@@ -13,7 +13,8 @@ public class Business
     [ForeignKey(nameof(BusinessType))]
     public int BusinessTypeId { get; set;}
     
-    public required BusinessType BusinessType { get; set;}
+    public BusinessType BusinessType { get; set;}
     
     public ICollection<Package> Packages { get; set; } = new List<Package>();
+    public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
 }

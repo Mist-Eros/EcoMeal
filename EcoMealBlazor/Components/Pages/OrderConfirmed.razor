@@ -1,4 +1,5 @@
 @page "/business/{BusinessId:int}/package/{PackageId:int}/order"
+@rendermode InteractiveServer
 @layout MainLayout
 @using EcoMeal.EcoMealBlazor.Services
 @inject OrderService OrderService
@@ -50,12 +51,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _success = await OrderService.PlaceOrderAsync(PackageId);
-        _isPlacing = false;
-
-        if (!_success)
+        try
         {
-            _errorMessage = "Could not place order. The package may no longer be available.";
+            _success = await OrderService.PlaceOrderAsync(PackageId);
+        }
+        catch (Exception ex)
+        {
+            _success = false;
+            _errorMessage = "Something went wrong. " + ex.Message;
+        }
+        finally
+        {
+            _isPlacing = false;
         }
     }
 

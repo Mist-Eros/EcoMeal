@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using EcoMeal.EcoMealBlazor.Models;
 
 namespace EcoMeal.EcoMealBlazor.Services;
@@ -5,10 +6,12 @@ namespace EcoMeal.EcoMealBlazor.Services;
 public class BusinessService
 {
     private readonly HttpClient _http;
+    private readonly AuthService _authService;
 
-    public BusinessService(HttpClient http)
+    public BusinessService(HttpClient http, AuthService authService)
     {
         _http = http;
+        _authService = authService;
     }
 
     public async Task<List<BusinessModel>> GetAllAsync()
@@ -122,6 +125,51 @@ public class BusinessService
         try
         {
             var response = await _http.PutAsJsonAsync($"api/package/{model.Id}", model);
+            return response.IsSuccessStatusCode;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> RateBusinessAsync(int businessId, int stars)
+    {
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, $"api/business/{businessId}/rate")
+            {
+                Content = JsonContent.Create(new { Stars = stars })
+            };
+
+            if (string.IsNullOrEmpty(_authService.Token))
+                await _authService.LoadTokenAsync();
+
+            if (!string.IsNullOrEmpty(_authService.Token))
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _authService.Token);
+
+            var response = await _http.SendAsync(request);
+            return response.IsSuccessStatusCode;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> ResetRatingsAsync(int businessId)
+    {
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"api/business/{businessId}/ratings");
+
+            if (string.IsNullOrEmpty(_authService.Token))
+                await _authService.LoadTokenAsync();
+
+            if (!string.IsNullOrEmpty(_authService.Token))
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _authService.Token);
+
+            var response = await _http.SendAsync(request);
             return response.IsSuccessStatusCode;
         }
         catch

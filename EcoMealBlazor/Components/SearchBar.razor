@@ -6,9 +6,9 @@
 <div class="search-container">
     <div class="search-wrapper">
         <span class="search-icon bi bi-search"></span>
-        <input type="text" 
-               class="search-input" 
-               placeholder="Search..." 
+        <input type="text"
+               class="search-input"
+               placeholder="Search..."
                @bind="SearchTerm"
                @bind:event="oninput"
                @bind:after="OnSearchTermChanged" />
@@ -17,17 +17,25 @@
         </button>
     </div>
     <div class="search-filters">
-        <select class="filter-select" @bind="SelectedType" @bind:after="OnSearchTermChanged">
-            <option value="">All Types</option>
+        <div class="filter-buttons">
+            <button class="filter-btn @(SelectedType == "" ? "active" : "")" @onclick="SetTypeAll">
+                <i class="fa-solid fa-infinity me-1"></i> All
+            </button>
             @foreach (var type in BusinessTypes)
             {
-                <option value="@type.Name">@type.Name</option>
+                <button class="filter-btn @(SelectedType == type.Name ? "active" : "")" @onclick="(() => SetTypeItem(type.Name))" >
+                    <i class="@GetTypeIcon(type.Name) me-1"></i> @type.Name
+                </button>
             }
-        </select>
-        <select class="filter-select" @bind="SearchBy" @bind:after="OnSearchTermChanged">
-            <option value="name">Name</option>
-            <option value="address">Address</option>
-        </select>
+        </div>
+        <div class="filter-buttons">
+            <button class="filter-btn @(SearchBy == "name" ? "active" : "")" @onclick="SetSearchByName">
+                <i class="bi bi-tag me-1"></i> Name
+            </button>
+            <button class="filter-btn @(SearchBy == "address" ? "active" : "")" @onclick="SetSearchByAddress">
+                <i class="bi bi-geo-alt me-1"></i> Address
+            </button>
+        </div>
     </div>
 </div>
 
@@ -47,6 +55,24 @@
     protected override async Task OnInitializedAsync()
     {
         BusinessTypes = await BusinessService.GetBusinessTypesAsync();
+    }
+
+    private async Task SetTypeAll() => await SetType("");
+    private async Task SetTypeItem(string type) => await SetType(type);
+
+    private async Task SetType(string type)
+    {
+        SelectedType = type;
+        await ApplySearch();
+    }
+
+    private async Task SetSearchByName() => await SetSearchBy("name");
+    private async Task SetSearchByAddress() => await SetSearchBy("address");
+
+    private async Task SetSearchBy(string by)
+    {
+        SearchBy = by;
+        await ApplySearch();
     }
 
     private async Task OnSearchTermChanged()
@@ -71,6 +97,15 @@
             SearchBy = SearchBy
         };
         await OnSearch.InvokeAsync(criteria);
+    }
+
+    private string GetTypeIcon(string typeName)
+    {
+        var t = typeName?.ToLower() ?? "";
+        if (t.Contains("restaurant")) return "fa-solid fa-pizza-slice";
+        if (t.Contains("fast food") || t.Contains("fast-food")) return "fa-solid fa-burger";
+        if (t.Contains("bakery")) return "fa-solid fa-cake-candles";
+        return "fa-solid fa-shop";
     }
 
     public class SearchCriteria

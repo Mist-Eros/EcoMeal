@@ -66,7 +66,7 @@
                                     {
                                         <button class="account-role-option @(_selectedRole == role ? "active" : "")"
                                                 @onclick="() => SelectRole(role)"
-                                                disabled="@_isUpdating">
+                                                disabled="@_isLoading">
                                             @role
                                         </button>
                                     }
@@ -99,6 +99,14 @@
                             <i class="bi bi-trash3 me-1"></i> Clear My Order History
                         </button>
 
+                        <button class="account-delete-btn mb-3" @onclick="HandleDeleteAccount" disabled="@_isDeleting">
+                            @if (_isDeleting)
+                            {
+                                <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                            }
+                            <i class="bi bi-person-x me-1"></i> Delete My Account
+                        </button>
+
                         <hr class="account-divider" />
 
                         <div class="d-flex gap-2">
@@ -119,7 +127,6 @@
 @code {
     private bool _isLoading = true;
     private bool _isEditingRole = false;
-    private bool _isUpdating = false;
     private bool _roleUpdateSuccess = false;
     private string _userEmail = string.Empty;
     private string _userName = string.Empty;
@@ -130,6 +137,7 @@
     private bool _isClearing = false;
     private string _clearMessage = string.Empty;
     private bool _clearSuccess = false;
+    private bool _isDeleting = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -157,8 +165,8 @@
             
             if (user.Identity?.IsAuthenticated == true)
             {
-                _userEmail = user.FindFirst(ClaimTypes.Email)?.Value ?? user.Identity?.Name ?? "Unknown";
-                _userName = user.FindFirst("Name")?.Value ?? user.Identity?.Name ?? "User";
+                _userEmail = user.FindFirst(ClaimTypes.Email)?.Value ?? "Unknown";
+                _userName = user.FindFirst(ClaimTypes.Name)?.Value ?? "User";
                 _userRole = user.FindFirst(ClaimTypes.Role)?.Value ?? "User";
                 _selectedRole = _userRole;
             }
@@ -209,20 +217,13 @@
 
             if (response.IsSuccessStatusCode)
             {
-                _userRole = role;
                 _roleUpdateSuccess = true;
-                _roleUpdateMessage = $"Role updated to '{role}'!";
-                _isEditingRole = false;
-
-                var roles = new List<string> { role };
-                await AuthService.UpdateRolesAsync(roles);
-
-                var customProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
-                customProvider.NotifyUserAuthentication(token, roles);
-
-                AuthService.NotifyChanged();
-
+                _roleUpdateMessage = $"Role updated to '{role}!'. Please log in again.";
                 StateHasChanged();
+
+                await Task.Delay(1500);
+                await AuthService.LogoutAsync();
+                Navigation.NavigateTo("/login", forceLoad: true);
             }
             else
             {
@@ -251,6 +252,27 @@
     {
         await AuthService.LogoutAsync();
         Navigation.NavigateTo("/", forceLoad: true);
+    }
+
+    private async Task HandleDeleteAccount()
+    {
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to permanently delete your account? This cannot be undone.");
+        if (!confirmed) return;
+
+        _isDeleting = true;
+        StateHasChanged();
+
+        var success = await AuthService.DeleteAccountAsync();
+        if (success)
+        {
+            await AuthService.LogoutAsync();
+            Navigation.NavigateTo("/", forceLoad: true);
+        }
+        else
+        {
+            _isDeleting = false;
+            StateHasChanged();
+        }
     }
 
     private async Task HandleClearOrders()

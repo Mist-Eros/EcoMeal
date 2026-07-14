@@ -15,6 +15,7 @@ public class EcoMealDBContext : IdentityDbContext<User, IdentityRole<int>, int>
     public DbSet<Business> Businesses { get; set;}
     public DbSet<Package> Package { get; set;}
     public DbSet<Order> Orders { get; set;}
+    public DbSet<Rating> Ratings { get; set;}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -60,19 +61,26 @@ public class EcoMealDBContext : IdentityDbContext<User, IdentityRole<int>, int>
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.Id);
-            
-            /*
-            // User -> Orders (One-to-Many)
-            entity.HasMany(u => u.Orders)
-                .WithOne(o => o.User)
-                .HasForeignKey(o => o.UserId);
-            */
         });
 
         // Order configuration
         modelBuilder.Entity<Order>(entity =>
         {
             entity.HasKey(e => e.Id);
+        });
+
+        // Rating configuration
+        modelBuilder.Entity<Rating>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.UserId);
+
+            entity.HasOne(r => r.Business)
+                .WithMany(b => b.Ratings)
+                .HasForeignKey(r => r.BusinessId);
         });
     }
 }

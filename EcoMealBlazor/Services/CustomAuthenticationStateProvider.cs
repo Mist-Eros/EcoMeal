@@ -24,25 +24,25 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
             var tokenResult = await _localStorage.GetAsync<string>("authToken");
             var rolesResult = await _localStorage.GetAsync<List<string>>("userRoles");
             var emailResult = await _localStorage.GetAsync<string>("userEmail");
+            var nameResult = await _localStorage.GetAsync<string>("userName");
 
             if (!tokenResult.Success || string.IsNullOrEmpty(tokenResult.Value))
-            {
                 return new AuthenticationState(_anonymous);
-            }
+
+            var name = nameResult.Success && !string.IsNullOrEmpty(nameResult.Value)
+                ? nameResult.Value : "User";
 
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, tokenResult.Value),
-                new Claim(ClaimTypes.Name, emailResult.Success ? emailResult.Value ?? "user" : "user"),
-                new Claim(ClaimTypes.Email, emailResult.Success ? emailResult.Value ?? "user@example.com" : "user@example.com")
+                new Claim(ClaimTypes.Name, name),
+                new Claim(ClaimTypes.Email, emailResult.Success ? emailResult.Value ?? "" : "")
             };
 
             if (rolesResult.Success && rolesResult.Value != null)
             {
                 foreach (var role in rolesResult.Value)
-                {
                     claims.Add(new Claim(ClaimTypes.Role, role ?? "User"));
-                }
             }
 
             var identity = new ClaimsIdentity(claims, "CustomAuth");
@@ -61,27 +61,25 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         }
     }
 
-    public void NotifyUserAuthentication(string token, List<string> roles)
+    public void NotifyUserAuthentication(string token, List<string>? roles = null, string? name = null)
     {
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, token ?? string.Empty),
-            new Claim(ClaimTypes.Name, "user"),
-            //new Claim(ClaimTypes.Email, email ?? "user@example.com")
+            new Claim(ClaimTypes.Name, name ?? "User"),
+            new Claim(ClaimTypes.Email, ""),
         };
-        
+
         if (roles != null)
         {
             foreach (var role in roles)
-            {
                 claims.Add(new Claim(ClaimTypes.Role, role ?? "User"));
-            }
         }
         else
         {
             claims.Add(new Claim(ClaimTypes.Role, "User"));
         }
-        
+
         var identity = new ClaimsIdentity(claims, "Bearer");
         var user = new ClaimsPrincipal(identity);
         var authState = Task.FromResult(new AuthenticationState(user));

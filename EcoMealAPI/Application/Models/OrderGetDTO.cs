@@ -11,4 +11,5 @@ public class OrderGetDTO
     public DateTime Date { get; set;}
     public string? UserName { get; set;}
     public string? UserContact { get; set;}
+    public string? UserEmail { get; set;}
 }

@@ -7,11 +7,60 @@
 
 .main-content {
     min-height: 100vh;
-    padding-top: 100px;
+    padding-top: 75px !important;
+    padding-bottom: 80px;
     width: 100%;
     padding-left: 0 !important;
     padding-right: 0 !important;
     margin: 0 !important;
     max-width: 100% !important;
     position: relative;
+}
+
+.orders-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #1a472a 0%, #2d6a4f 40%, #40916c 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(45, 106, 79, 0.4);
+    z-index: 999;
+    transition: all 0.3s ease;
+}
+
+.orders-fab:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(45, 106, 79, 0.5);
+    color: white;
+}
+
+@media (max-width: 575px) {
+    .main-content {
+        padding-top: 105px !important;
+    }
+
+    .orders-fab {
+        bottom: 18px;
+        right: 18px;
+        width: 52px;
+        height: 52px;
+        font-size: 1.3rem;
+    }
+}
+
+[data-theme="dark"] .orders-fab {
+    background: linear-gradient(180deg, #0a1f14 0%, #143d2a 40%, #1f5a3f 100%);
+    box-shadow: 0 6px 20px rgba(159, 231, 216, 0.25);
+}
+
+[data-theme="dark"] .orders-fab:hover {
+    box-shadow: 0 10px 30px rgba(159, 231, 216, 0.4);
 }

@@ -57,4 +57,19 @@ public class AuthController : ControllerBase
             Roles = roles
         });
     }
+
+    [HttpDelete("me")]
+    [Authorize]
+    public async Task<IActionResult> DeleteMe()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+            return NotFound();
+
+        var result = await _userManager.DeleteAsync(user);
+        if (result.Succeeded)
+            return Ok(new { Message = "Account deleted" });
+
+        return BadRequest(new { Errors = result.Errors.Select(e => e.Description) });
+    }
 }

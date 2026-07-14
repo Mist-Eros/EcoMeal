@@ -251,8 +251,8 @@ body {
     color: #9fe7d8 !important;
 }
 
-/* Remove top margin from main content */
-main, .page, .container, .container-fluid {
+/* Remove top margin from containers */
+.page, .container, .container-fluid {
     padding-top: 0 !important;
     margin-top: 0 !important;
 }

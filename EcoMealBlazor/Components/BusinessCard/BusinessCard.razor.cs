@@ -83,4 +83,25 @@ public partial class BusinessCard
     {
         NavigationManager.NavigateTo($"/business/{Business.Id}");
     }
+
+    private async Task ResetRatings()
+    {
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Reset all ratings for '{Business.Name}'?");
+        if (!confirmed) return;
+
+        var success = await BusinessService.ResetRatingsAsync(Business.Id);
+        if (success)
+        {
+            await OnDeleted.InvokeAsync();
+        }
+    }
+
+    private string GetTypeIcon()
+    {
+        var type = Business.BusinessTypeName?.ToLower() ?? "";
+        if (type.Contains("restaurant")) return "fa-solid fa-pizza-slice";
+        if (type.Contains("fast food") || type.Contains("fast-food")) return "fa-solid fa-burger";
+        if (type.Contains("bakery")) return "fa-solid fa-cake-candles";
+        return "fa-solid fa-shop";
+    }
 }

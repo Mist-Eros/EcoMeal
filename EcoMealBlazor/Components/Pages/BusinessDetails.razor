@@ -27,7 +27,7 @@
                     <h1 class="details-business-title">@Business.Name</h1>
                     <p class="details-business-description">@Business.Description</p>
                 </div>
-                <span class="details-business-badge">@Business.BusinessTypeName</span>
+                <span class="details-business-badge"><i class="@GetTypeIcon() me-1"></i>@Business.BusinessTypeName</span>
             </div>
             <hr class="details-divider" />
             <div class="details-business-info">
@@ -41,6 +41,40 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Rating Section -->
+    <div class="details-rating">
+        <div class="details-rating-stars">
+            @{
+                var fullStars = (int)Math.Floor(Business.AverageRating);
+                var remainder = Business.AverageRating - fullStars;
+                var hasHalf = remainder >= 0.25 && remainder < 0.75;
+                var extraFull = remainder >= 0.75;
+            }
+            @for (int i = 1; i <= 5; i++)
+            {
+                if (i <= fullStars)
+                {
+                    <span class="details-star filled"><i class="bi bi-star-fill"></i></span>
+                }
+                else if (i == fullStars + 1 && hasHalf)
+                {
+                    <span class="details-star filled"><i class="bi bi-star-half"></i></span>
+                }
+                else if (i == fullStars + 1 && extraFull)
+                {
+                    <span class="details-star filled"><i class="bi bi-star-fill"></i></span>
+                }
+                else
+                {
+                    <span class="details-star"><i class="bi bi-star"></i></span>
+                }
+            }
+        </div>
+        <span class="details-rating-text">
+            @Business.AverageRating.ToString("F1") (@Business.TotalRatings @(Business.TotalRatings == 1 ? "rating" : "ratings"))
+        </span>
     </div>
 
     <!-- Packages Section -->
@@ -105,8 +139,8 @@
                                 <button class="details-package-order-btn" @onclick="() => OrderPackage(package.Id)">
                                     <i class="bi bi-cart"></i> Order Now
                                 </button>
-                            }
-                        </div>
+        }
+    </div>
                     </div>
                 </div>
             }
@@ -213,5 +247,14 @@
     private void GoBack()
     {
         NavigationManager.NavigateTo("/businesses/");
+    }
+
+    private string GetTypeIcon()
+    {
+        var type = Business?.BusinessTypeName?.ToLower() ?? "";
+        if (type.Contains("restaurant")) return "fa-solid fa-pizza-slice";
+        if (type.Contains("fast food") || type.Contains("fast-food")) return "fa-solid fa-burger";
+        if (type.Contains("bakery")) return "fa-solid fa-cake-candles";
+        return "fa-solid fa-shop";
     }
 }

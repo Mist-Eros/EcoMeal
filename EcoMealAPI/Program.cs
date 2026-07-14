@@ -80,7 +80,87 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<EcoMealDBContext>();
-    await dbContext.Database.EnsureCreatedAsync();
+
+    var connection = dbContext.Database.GetDbConnection();
+    await connection.OpenAsync();
+
+    var cmd = connection.CreateCommand();
+
+    // Ensure __EFMigrationsHistory exists
+    cmd.CommandText = @"
+        IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+        BEGIN
+            CREATE TABLE __EFMigrationsHistory (
+                MigrationId nvarchar(150) NOT NULL PRIMARY KEY,
+                ProductVersion nvarchar(32) NOT NULL
+            )
+        END";
+    await cmd.ExecuteNonQueryAsync();
+
+    // If DB tables exist but no history records, seed old migrations
+    cmd.CommandText = "SELECT COUNT(*) FROM __EFMigrationsHistory";
+    var migrationCount = (int)(await cmd.ExecuteScalarAsync())!;
+
+    if (migrationCount == 0)
+    {
+        cmd.CommandText = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Businesses'";
+        var hasTables = (int)(await cmd.ExecuteScalarAsync())! > 0;
+
+        if (hasTables)
+        {
+            var existingMigrations = new[]
+            {
+                "20260703080028_InitialCreate",
+                "20260703083637_AddTypes",
+                "20260703084917_AddBusiness",
+                "20260703090319_AddedBetteerBusiness",
+                "20260703155111_Completed1AllTables",
+                "20260708134149_RenameNoPacktoName",
+                "20260710074028_AddIdentity",
+                "20260710080024_RenamedContactInUser",
+            };
+
+            foreach (var migId in existingMigrations)
+            {
+                cmd.CommandText = $"INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('{migId}', '10.0.9')";
+                await cmd.ExecuteNonQueryAsync();
+            }
+
+            // If Ratings already exists (from old raw SQL), mark it too
+            cmd.CommandText = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Ratings'";
+            var hasRatings = (int)(await cmd.ExecuteScalarAsync())! > 0;
+            if (hasRatings)
+            {
+                cmd.CommandText = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20260713131340_AddRatings', '10.0.9')";
+                await cmd.ExecuteNonQueryAsync();
+            }
+        }
+    }
+    else
+    {
+        // Check if Ratings table exists but AddRatings migration not yet applied
+        cmd.CommandText = "SELECT COUNT(*) FROM __EFMigrationsHistory WHERE MigrationId = '20260713131340_AddRatings'";
+        var ratingsApplied = (int)(await cmd.ExecuteScalarAsync())! > 0;
+
+        if (!ratingsApplied)
+        {
+            cmd.CommandText = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Ratings'";
+            var hasRatings = (int)(await cmd.ExecuteScalarAsync())! > 0;
+            if (hasRatings)
+            {
+                cmd.CommandText = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20260713131340_AddRatings', '10.0.9')";
+                await cmd.ExecuteNonQueryAsync();
+            }
+        }
+    }
+
+    await connection.CloseAsync();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<EcoMealDBContext>();
+    await dbContext.Database.MigrateAsync();
 }
 
 if (app.Environment.IsDevelopment())
@@ -107,7 +187,7 @@ app.MapPost("/login", async (UserManager<User> userManager, LoginRequest request
     var roles = await userManager.GetRolesAsync(user);
     var claims = new List<Claim>
     {
-        new Claim(ClaimTypes.Name, user.UserName),
+        new Claim(ClaimTypes.Name, user.Name ?? user.UserName!),
         new Claim(ClaimTypes.Email, user.Email),
         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
     };
@@ -144,6 +224,15 @@ using (var scope = app.Services.CreateScope())
         adminUser = new User { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
         await userManager.CreateAsync(adminUser, "Admin123!");
         await userManager.AddToRoleAsync(adminUser, UserRoles.Admin);
+    }
+
+    var secondAdminEmail = "user@ecomeal.com";
+    var secondAdminUser = await userManager.FindByEmailAsync(secondAdminEmail);
+    if (secondAdminUser == null)
+    {
+        secondAdminUser = new User { UserName = secondAdminEmail, Email = secondAdminEmail, EmailConfirmed = true };
+        await userManager.CreateAsync(secondAdminUser, "Admin123!");
+        await userManager.AddToRoleAsync(secondAdminUser, UserRoles.Admin);
     }
 }
 

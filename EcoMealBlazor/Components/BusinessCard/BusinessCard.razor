@@ -7,11 +7,50 @@
         <div>
             <div class="d-flex justify-content-between align-items-start mb-2">
                 <h5 class="card-title text-success fw-bold mb-0">@Business.Name</h5>
-                <span class="badge rounded-pill px-3 py-2" style="background: linear-gradient(180deg, #1a472a 0%, #2d6a4f 40%, #40916c 100%); color: white; border: none;">@Business.BusinessTypeName</span>
+                <span class="badge rounded-pill px-3 py-2 business-type-badge">
+                    <i class="@GetTypeIcon() me-1"></i>@Business.BusinessTypeName
+                </span>
             </div>
             <p class="card-text text-muted small">@Business.Description</p>
             <p class="card-text text-muted small"><i class="bi bi-geo-alt"></i> @Business.Address</p>
             <p class="card-text text-muted small"><i class="bi bi-telephone"></i> @Business.Contact</p>
+            <div class="card-rating">
+                @{
+                    var fullStars = (int)Math.Floor(Business.AverageRating);
+                    var remainder = Business.AverageRating - fullStars;
+                    var hasHalf = remainder >= 0.25 && remainder < 0.75;
+                    var extraFull = remainder >= 0.75;
+                }
+                @for (int i = 1; i <= 5; i++)
+                {
+                    if (i <= fullStars)
+                    {
+                        <i class="bi bi-star-fill card-star star-filled"></i>
+                    }
+                    else if (i == fullStars + 1 && hasHalf)
+                    {
+                        <i class="bi bi-star-half card-star star-filled"></i>
+                    }
+                    else if (i == fullStars + 1 && extraFull)
+                    {
+                        <i class="bi bi-star-fill card-star star-filled"></i>
+                    }
+                    else
+                    {
+                        <i class="bi bi-star card-star"></i>
+                    }
+                }
+                @if (Business.TotalRatings > 0)
+                {
+                    <span class="card-rating-count">@Business.AverageRating.ToString("F1") (@Business.TotalRatings)</span>
+                }
+                @if (_isAdmin)
+                {
+                    <button class="card-rating-reset" @onclick="ResetRatings" @onclick:stopPropagation="true" title="Reset ratings">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                    </button>
+                }
+            </div>
         </div>
         
         <div class="mt-auto pt-3">

@@ -10,12 +10,7 @@
 
 <nav class="navbar navbar-dark">
     <div class="navbar-content">
-        <div class="navbar-left">
-            <a class="navbar-brand fw-bold" href="/">EcoMeal</a>
-            <a class="nav-order-btn" href="/my-orders">
-                <span class="bi bi-box-seam me-1"></span> Orders
-            </a>
-        </div>
+        <a class="navbar-brand fw-bold" href="/">EcoMeal</a>
         <ul class="navbar-nav">
             @if (_isLoading)
             {
@@ -26,8 +21,8 @@
             else if (AuthService.IsAuthenticated)
             {
                 <li class="nav-item nav-item-account">
-                    <div class="nav-account-link rounded-pill px-3 py-2" @onclick="GoToAccount">
-                        <span class="bi bi-person-circle me-1"></span> 
+                    <div class="nav-account-link rounded-pill" @onclick="GoToAccount">
+                        <span class="bi bi-person-circle me-1"></span>
                         Welcome, @_userName!
                         <span class="nav-role-badge">@_userRole</span>
                     </div>
@@ -36,20 +31,19 @@
             else
             {
                 <li class="nav-item">
-                    <NavLink class="nav-link rounded-pill px-3 py-2" href="/login">
+                    <NavLink class="nav-link rounded-pill" href="/login">
                         <span class="bi bi-person me-1"></span> Login
                     </NavLink>
                 </li>
                 <li class="nav-item">
-                    <NavLink class="nav-link nav-link-register rounded-pill px-3 py-2" href="/register">
+                    <NavLink class="nav-link nav-link-register rounded-pill" href="/register">
                         <span class="bi bi-person-plus me-1"></span> Register
                     </NavLink>
                 </li>
             }
-            
-            <!-- Dark Mode Toggle -->
+
             <li class="nav-item">
-                <button class="dark-mode-toggle @(DarkModeService.IsDarkMode ? "dark" : "")" 
+                <button class="dark-mode-toggle @(DarkModeService.IsDarkMode ? "dark" : "")"
                         @onclick="ToggleDarkMode">
                     <span class="toggle-icon sun"><i class="bi bi-sun-fill"></i></span>
                     <span class="toggle-icon moon"><i class="bi bi-moon-fill"></i></span>
@@ -64,7 +58,6 @@
     private bool _isLoading = true;
     private string _userName = string.Empty;
     private string _userRole = string.Empty;
-    private bool _isAdmin = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -80,8 +73,7 @@
             {
                 await AuthService.LoadTokenAsync();
                 await LoadUserInfo();
-                
-                // Apply saved theme
+
                 var savedTheme = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "theme");
                 if (!string.IsNullOrEmpty(savedTheme))
                 {
@@ -130,10 +122,9 @@
         {
             var authState = await AuthStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
-            
+
             _userName = user.Identity?.Name ?? "User";
-            _isAdmin = user.IsInRole(UserRoles.Admin);
-            
+
             var roleClaim = user.FindFirst(ClaimTypes.Role);
             _userRole = roleClaim?.Value ?? UserRoles.User;
         }
@@ -141,7 +132,6 @@
         {
             _userName = string.Empty;
             _userRole = string.Empty;
-            _isAdmin = false;
         }
     }
 

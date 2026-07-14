@@ -57,7 +57,6 @@
     border-radius: 50%;
     transition: all 0.2s ease;
     font-size: 0.9rem;
-    display: none;
     align-items: center;
     justify-content: center;
 }
@@ -69,30 +68,58 @@
 
 .search-filters {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
 }
 
-.filter-select {
-    padding: 8px 16px;
-    border-radius: 50px;
-    border: 2px solid var(--border-color);
+.filter-buttons {
+    display: flex;
+    gap: 6px;
     background: var(--bg-card);
-    color: var(--text-primary);
-    font-size: 0.9rem;
+    border: 1px solid var(--border-color);
+    border-radius: 50px;
+    padding: 3px;
+}
+
+.filter-btn {
+    padding: 7px 16px;
+    border-radius: 50px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
-    min-width: 130px;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
 }
 
-.filter-select:focus {
-    border-color: #2d6a4f;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1);
+.filter-btn:hover {
+    color: var(--text-primary);
 }
 
-/* Dark mode */
+.filter-btn.active {
+    background: linear-gradient(180deg, #1a472a 0%, #2d6a4f 40%, #40916c 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(45, 106, 79, 0.25);
+}
+
+@media (max-width: 576px) {
+    .search-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
 [data-theme="dark"] .search-input::placeholder {
     color: #B0B0B0 !important;
 }
@@ -124,28 +151,11 @@
     color: #E8E8E8 !important;
 }
 
-[data-theme="dark"] .filter-select {
-    background: #1A1A1A !important;
-    color: #E8E8E8 !important;
-    border-color: #333333 !important;
+[data-theme="dark"] .filter-buttons {
+    background: #1A1A1A;
+    border-color: #333;
 }
 
-[data-theme="dark"] .filter-select option {
-    background: #1A1A1A !important;
-}
-
-/* Light mode */
-[data-theme="light"] .search-input::placeholder {
-    color: #5A5A5A !important;
-}
-
-@media (max-width: 576px) {
-    .search-filters {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .filter-select {
-        width: 100%;
-    }
+[data-theme="dark"] .filter-btn.active {
+    background: linear-gradient(180deg, #0a1f14 0%, #143d2a 40%, #1f5a3f 100%);
 }

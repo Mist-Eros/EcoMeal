@@ -47,6 +47,46 @@
     margin-bottom: 0;
 }
 
+.card-rating {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-top: 0.35rem;
+}
+
+.card-star {
+    font-size: 0.85rem;
+    color: #ccc;
+}
+
+.card-star.star-filled {
+    color: #f5a623;
+}
+
+.card-rating-count {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    margin-left: 4px;
+}
+
+.card-rating-reset {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    margin-left: 6px;
+    transition: all 0.2s ease;
+    line-height: 1;
+}
+
+.card-rating-reset:hover {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
 .mt-auto {
     margin-top: auto;
 }
@@ -87,6 +127,9 @@
     font-size: 0.7rem;
     padding: 0.3rem 0.8rem;
     flex-shrink: 0;
+}
+
+.business-type-badge {
     background: linear-gradient(180deg, #1a472a 0%, #2d6a4f 40%, #40916c 100%) !important;
     color: white !important;
     border: none;

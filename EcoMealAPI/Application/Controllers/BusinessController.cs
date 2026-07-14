@@ -1,8 +1,9 @@
 namespace EcoMeal.EcoMealAPI.Application.Controllers;
-using EcoMeal.EcoMealAPI.Application;
+using System.Security.Claims;
 using EcoMeal.EcoMealAPI.Entities;
 using EcoMeal.EcoMealAPI.Infrastructure;
 using EcoMeal.EcoMealAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 [Route("api/[controller]")]
 public class BusinessController : ControllerBase
 {
-    // to remember, convention says private variables have _ at the start
     private readonly EcoMealDBContext _context;
 
     public BusinessController(EcoMealDBContext context)
@@ -21,7 +21,7 @@ public class BusinessController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<BusinessDTO>>> GetAll()
     {
-        var businessDTOs = await _context.Businesses
+        var query = _context.Businesses
             .Include(b => b.BusinessType)
             .Select(b => new BusinessDTO
             {
@@ -30,9 +30,24 @@ public class BusinessController : ControllerBase
                 Address = b.Address,
                 Description = b.Description,
                 Contact = b.Contact,
-                BusinessTypeName = b.BusinessType.Name
-            })
-            .ToListAsync();
+                BusinessTypeName = b.BusinessType.Name,
+                AverageRating = 0,
+                TotalRatings = 0
+            });
+
+        var businessDTOs = await query.ToListAsync();
+
+        try
+        {
+            var ratings = await _context.Ratings.ToListAsync();
+            foreach (var b in businessDTOs)
+            {
+                var bizRatings = ratings.Where(r => r.BusinessId == b.Id).ToList();
+                b.TotalRatings = bizRatings.Count;
+                b.AverageRating = bizRatings.Count > 0 ? bizRatings.Average(r => r.Stars) : 0;
+            }
+        }
+        catch { }
 
         return Ok(businessDTOs);
     }
@@ -55,6 +70,9 @@ public class BusinessController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<BusinessDetailsDTO>> GetOneById(int id)
     {
+        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        int? userId = userIdValue != null ? int.Parse(userIdValue) : null;
+
         var business = await _context.Businesses
             .Include(b => b.Packages)
             .ThenInclude(p => p.PackageType)
@@ -84,8 +102,25 @@ public class BusinessController : ControllerBase
             .FirstOrDefaultAsync(b => b.Id == id);
             
         if (business is null)
-        {
             return NotFound();
+
+        try
+        {
+            var ratings = await _context.Ratings
+                .Where(r => r.BusinessId == id)
+                .ToListAsync();
+
+            business.TotalRatings = ratings.Count;
+            business.AverageRating = ratings.Count > 0 ? ratings.Average(r => r.Stars) : 0;
+            business.UserRating = userId.HasValue
+                ? ratings.FirstOrDefault(r => r.UserId == userId.Value)?.Stars
+                : null;
+        }
+        catch
+        {
+            business.AverageRating = 0;
+            business.TotalRatings = 0;
+            business.UserRating = null;
         }
 
         return Ok(business);
@@ -114,8 +149,7 @@ public class BusinessController : ControllerBase
             Address = businessDto.Address,
             Description = businessDto.Description,
             Contact = businessDto.Contact,
-            BusinessTypeId = businessDto.BusinessTypeId,
-            BusinessType = await _context.BusinessType.FindAsync(businessDto.BusinessTypeId)
+            BusinessTypeId = businessDto.BusinessTypeId
         };
 
         _context.Businesses.Add(business);
@@ -181,5 +215,59 @@ public class BusinessController : ControllerBase
         return NoContent();
     }
 
+    [HttpPost("{businessId}/rate")]
+    [Authorize]
+    public async Task<ActionResult> RateBusiness(int businessId, [FromBody] RateRequest request)
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
+        _context.Ratings.Add(new Rating
+        {
+            UserId = userId,
+            BusinessId = businessId,
+            Stars = request.Stars
+        });
+
+        await _context.SaveChangesAsync();
+        return Ok(new { Message = "Rating submitted" });
+    }
+
+    [HttpGet("{businessId}/rating")]
+    public async Task<ActionResult<object>> GetRating(int businessId)
+    {
+        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        int? userId = userIdValue != null ? int.Parse(userIdValue) : null;
+
+        var ratings = await _context.Ratings
+            .Where(r => r.BusinessId == businessId)
+            .ToListAsync();
+
+        var avg = ratings.Count > 0 ? ratings.Average(r => r.Stars) : 0;
+        var userRating = userId.HasValue
+            ? ratings.FirstOrDefault(r => r.UserId == userId.Value)?.Stars
+            : null;
+
+        return Ok(new
+        {
+            AverageRating = avg,
+            TotalRatings = ratings.Count,
+            UserRating = userRating
+        });
+    }
+
+    [HttpDelete("{businessId}/ratings")]
+    [Authorize(Roles = Constants.UserRoles.Admin)]
+    public async Task<ActionResult> ResetRatings(int businessId)
+    {
+        var ratings = await _context.Ratings
+            .Where(r => r.BusinessId == businessId)
+            .ToListAsync();
+
+        _context.Ratings.RemoveRange(ratings);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    public class RateRequest { public int Stars { get; set; } }
 }

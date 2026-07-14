@@ -1,67 +1,132 @@
 @page "/register"
-@using EcoMeal.EcoMealBlazor.Models
 @using EcoMeal.EcoMealBlazor.Models.Auth
 @using EcoMeal.EcoMealBlazor.Services
 @using Microsoft.AspNetCore.Components.Forms
 @inject AuthService AuthService
 @inject NavigationManager Navigation
 
-<h3>Register</h3>
+<PageTitle>Register - EcoMeal</PageTitle>
 
-@if (!string.IsNullOrEmpty(errorMessage))
-{
-    <div class="alert alert-danger">@errorMessage</div>
-}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card form-card">
+                <div class="card-body p-4">
+                    <h2 class="card-title fw-bold text-success mb-4">
+                        <i class="bi bi-person-plus me-2"></i>Create Account
+                    </h2>
 
-<EditForm Model="registerModel" OnValidSubmit="HandleRegister" FormName="registerForm">
-    <DataAnnotationsValidator />
+                    @if (!string.IsNullOrEmpty(_errorMessage))
+                    {
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            @_errorMessage
+                        </div>
+                    }
 
-    <div class="mb-3">
-        <label class="form-label">Email</label>
-        <InputText class="form-control" @bind-Value="registerModel.Email" />
-        <ValidationMessage For="() => registerModel.Email" />
+                    <EditForm Model="_model" OnValidSubmit="HandleRegister" FormName="registerForm">
+                        <DataAnnotationsValidator />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Name</label>
+                                <InputText class="form-control rounded-pill dark-input"
+                                           @bind-Value="_model.Name"
+                                           placeholder="Your name" />
+                                <ValidationMessage For="() => _model.Name" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Email</label>
+                                <InputText class="form-control rounded-pill dark-input"
+                                           @bind-Value="_model.Email"
+                                           placeholder="you@example.com" />
+                                <ValidationMessage For="() => _model.Email" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Contact Info</label>
+                            <InputText class="form-control rounded-pill dark-input"
+                                       @bind-Value="_model.Contact"
+                                       placeholder="Phone number" />
+                            <ValidationMessage For="() => _model.Contact" />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Password</label>
+                                <div class="position-relative">
+                                    <InputText type="@(_showPassword ? "text" : "password")"
+                                               class="form-control rounded-pill dark-input pe-5"
+                                               @bind-Value="_model.Password"
+                                               placeholder="Min 6 characters" />
+                                    <button type="button"
+                                            class="position-absolute top-50 end-0 translate-middle-y border-0 bg-transparent me-2 text-secondary"
+                                            @onclick="TogglePassword" tabindex="-1"
+                                            style="z-index:5;">
+                                        <i class="bi @(_showPassword ? "bi-eye-slash" : "bi-eye")"></i>
+                                    </button>
+                                </div>
+                                <ValidationMessage For="() => _model.Password" />
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-semibold">Confirm Password</label>
+                                <InputText type="@(_showPassword ? "text" : "password")"
+                                           class="form-control rounded-pill dark-input"
+                                           @bind-Value="_model.ConfirmPassword"
+                                           placeholder="Repeat your password" />
+                                <ValidationMessage For="() => _model.ConfirmPassword" />
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn-form-save" disabled="@_isSubmitting">
+                                @if (_isSubmitting)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                                }
+                                <i class="bi bi-person-check me-1"></i> Create Account
+                            </button>
+                            <button type="button" class="btn-form-cancel" @onclick="GoToLogin">
+                                Log In
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label class="form-label">Password</label>
-        <InputText type="password" class="form-control" @bind-Value="registerModel.Password" />
-        <ValidationMessage For="() => registerModel.Password" />
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Confirm Password</label>
-        <InputText type="password" class="form-control" @bind-Value="registerModel.ConfirmPassword" />
-        <ValidationMessage For="() => registerModel.ConfirmPassword" />
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Name</label>
-        <InputText class="form-control" @bind-Value="registerModel.Name" />
-        <ValidationMessage For="() => registerModel.Name" />
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Contact Info</label>
-        <InputText class="form-control" @bind-Value="registerModel.Contact" />
-        <ValidationMessage For="() => registerModel.Contact" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Register</button>
-</EditForm>
-
-<p class="mt-3">Already have an account? <a href="/login">Login</a></p>
+</div>
 
 @code {
-    private RegisterModel registerModel { get; set; } = new();
-    private string? errorMessage;
+    private RegisterModel _model = new();
+    private string? _errorMessage;
+    private bool _isSubmitting;
+    private bool _showPassword;
+
+    private void TogglePassword()
+    {
+        _showPassword = !_showPassword;
+    }
+
+    private void GoToLogin()
+    {
+        Navigation.NavigateTo("/login");
+    }
 
     private async Task HandleRegister()
     {
-        var result = await AuthService.RegisterAsync(registerModel.Email, registerModel.Password, registerModel.Name, registerModel.Contact);
+        _isSubmitting = true;
+        _errorMessage = null;
+
+        var result = await AuthService.RegisterAsync(
+            _model.Email, _model.Password, _model.Name, _model.Contact);
+
+        _isSubmitting = false;
 
         if (result.Success)
-            Navigation.NavigateTo("/login");
+            Navigation.NavigateTo("/login?registered=true");
         else
-            errorMessage = result.ErrorMessage;
+            _errorMessage = result.ErrorMessage;
     }
 }
