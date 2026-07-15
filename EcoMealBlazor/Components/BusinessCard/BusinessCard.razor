@@ -1,7 +1,13 @@
 @namespace EcoMeal.EcoMealBlazor.Components.BusinessCard
 @using Microsoft.Extensions.Localization
 @using EcoMeal.EcoMealBlazor.Resources
+@using EcoMeal.Components.Shared
 @inject IStringLocalizer<SharedResource> Loc
+
+<ConfirmDialog IsVisible="_showConfirm"
+               Message="@_confirmMessage"
+               ConfirmText="@Loc["Yes"]" CancelText="@Loc["No"]"
+               OnConfirm="ExecuteConfirm" OnCancel="() => _showConfirm = false" />
 
 <div class="card h-100 shadow-sm rounded-4 overflow-hidden" @onclick="NavigateToDetails" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
     <img src="@GetBusinessImage()" class="card-img-top" alt="@Business.Name" />

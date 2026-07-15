@@ -9,6 +9,12 @@
 @inject IJSRuntime JSRuntime
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IStringLocalizer<SharedResource> Loc
+@inject CurrencyService Currency
+
+<ConfirmDialog IsVisible="_showDeleteConfirm"
+               Message="@_confirmMessage"
+               ConfirmText="@Loc["Yes"]" CancelText="@Loc["No"]"
+               OnConfirm="ExecuteDeletePackage" OnCancel="() => _showDeleteConfirm = false" />
 
 @if (Business == null)
 {
@@ -96,10 +102,27 @@
 
     @if (Business.Packages != null && Business.Packages.Any())
     {
+        var visiblePackages = _isAdmin
+            ? Business.Packages
+            : Business.Packages.Where(p => p.Start_PickUp <= DateTime.Now && DateTime.Now <= p.End_PickUp).ToList();
+
+        @if (!visiblePackages.Any())
+        {
+            <div class="details-empty-state">
+                <i class="bi bi-box-seam details-empty-icon"></i>
+                <p class="details-empty-text">@Loc["No menu items"]</p>
+            </div>
+        }
+        else
+        {
         <div class="details-packages-grid">
-            @foreach (var package in Business.Packages)
+            @foreach (var package in visiblePackages)
             {
-                <div class="details-package-card">
+                var now = DateTime.Now;
+                var isExpired = package.End_PickUp <= now;
+                var isAvailable = package.Start_PickUp <= now && now <= package.End_PickUp;
+                var statusClass = isExpired ? "expired" : isAvailable ? "available" : "upcoming";
+                <div class="details-package-card @statusClass">
                     <div class="details-package-image-wrapper">
                         <img src="@GetPackageImage(package.PackageTypeName)" class="details-package-image" alt="@package.Name" />
                     </div>
@@ -113,7 +136,7 @@
                         
                         <div class="details-package-footer">
                             <div class="details-package-price-row">
-                                <span class="details-package-price">@package.Price.ToString("C")</span>
+                                <span class="details-package-price">@Currency.Format(package.Price)</span>
                                 <div class="details-package-times">
                                     <div class="details-package-time-row">
                                         <i class="bi bi-clock"></i>
@@ -142,12 +165,13 @@
                                 <button class="details-package-order-btn" @onclick="() => OrderPackage(package.Id)">
                                     <i class="bi bi-cart"></i> @Loc["Order Now"]
                                 </button>
-        }
-    </div>
+                            }
+                        </div>
                     </div>
                 </div>
             }
         </div>
+        }
     }
     else
     {
@@ -178,6 +202,10 @@
 
     private BusinessDetailsModel? Business;
     private bool _isAdmin = false;
+
+    private bool _showDeleteConfirm = false;
+    private string _confirmMessage = "";
+    private int _deletePackageId = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -228,17 +256,21 @@
         NavigationManager.NavigateTo($"/business/{Id}/package/{packageId}/edit");
     }
 
-    private async Task DeletePackage(int packageId)
+    private void DeletePackage(int packageId)
     {
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", Loc["Confirm delete package"].Value);
-        if (confirmed)
+        _deletePackageId = packageId;
+        _confirmMessage = Loc["Confirm delete package"].Value;
+        _showDeleteConfirm = true;
+    }
+
+    private async Task ExecuteDeletePackage()
+    {
+        _showDeleteConfirm = false;
+        var success = await BusinessService.DeletePackageAsync(_deletePackageId);
+        if (success)
         {
-            var success = await BusinessService.DeletePackageAsync(packageId);
-            if (success)
-            {
-                Business = await BusinessService.GetOneById(Id);
-                StateHasChanged();
-            }
+            Business = await BusinessService.GetOneById(Id);
+            StateHasChanged();
         }
     }
 

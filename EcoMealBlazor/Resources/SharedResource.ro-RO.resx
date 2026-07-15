@@ -86,7 +86,7 @@
   <data name="Account deleted" xml:space="preserve"><value>Cont șters</value></data>
   <data name="Signing in" xml:space="preserve"><value>Se autentifică...</value></data>
   <data name="Creating account" xml:space="preserve"><value>Se creează contul...</value></data>
-  <data name="Role updated" xml:space="preserve"><value>Rol actualizat la '{0}'. Te rog să te autentifici din nou.</value></data>
+  <data name="Role updated" xml:space="preserve"><value>Rol actualizat la '{0}'.</value></data>
   <data name="Restaurant" xml:space="preserve"><value>Restaurant</value></data>
   <data name="Bakery" xml:space="preserve"><value>Brutărie</value></data>
   <data name="Fast Food" xml:space="preserve"><value>Fast-Food</value></data>
@@ -103,4 +103,9 @@
   <data name="ToS Title4" xml:space="preserve"><value>Comenzi și Plăți</value></data>
   <data name="ToS Title5" xml:space="preserve"><value>Limitarea Răspunderii</value></data>
   <data name="ToS Title6" xml:space="preserve"><value>Modificări ale Termenilor</value></data>
+  <data name="Language" xml:space="preserve"><value>Limbă</value></data>
+  <data name="Select Language" xml:space="preserve"><value>Selectează Limba</value></data>
+  <data name="Find your meal!" xml:space="preserve"><value>Găsește-ți masa!</value></data>
+  <data name="Yes" xml:space="preserve"><value>Da</value></data>
+  <data name="No" xml:space="preserve"><value>Nu</value></data>
 </root>

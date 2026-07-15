@@ -35,6 +35,7 @@ builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<PermissionService>();
 builder.Services.AddScoped<DarkModeService>();
+builder.Services.AddScoped<CurrencyService>();
 
 var app = builder.Build();
 
@@ -48,7 +49,7 @@ app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages:
 app.UseHttpsRedirection();
 app.UseAntiforgery();
 
-var supportedCultures = new[] { "en-US", "ro-RO", "de-DE", "fr-FR" };
+var supportedCultures = new[] { "en-US", "en-GB", "ro-RO", "de-DE", "fr-FR", "sr-RS", "fi-FI", "ja-JP", "ar-SA" };
 app.UseRequestLocalization(new RequestLocalizationOptions()
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures)

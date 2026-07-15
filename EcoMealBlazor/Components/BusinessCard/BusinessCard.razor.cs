@@ -31,6 +31,10 @@ public partial class BusinessCard
     private bool isDeleting = false;
     private bool _isAdmin = false;
 
+    private bool _showConfirm = false;
+    private string _confirmMessage = "";
+    private Func<Task>? _confirmAction = null;
+
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
@@ -62,22 +66,23 @@ public partial class BusinessCard
         NavigationManager.NavigateTo($"/business/{Business.Id}/edit");
     }
 
-    private async Task DeleteBusiness()
+    private void DeleteBusiness()
     {
         if (isDeleting) return;
-        
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", string.Format(Loc["Confirm delete business"].Value, Business.Name));
-        if (!confirmed) return;
-        
+        _confirmMessage = string.Format(Loc["Confirm delete business"].Value, Business.Name);
+        _confirmAction = ExecuteDeleteBusiness;
+        _showConfirm = true;
+    }
+
+    private async Task ExecuteDeleteBusiness()
+    {
+        _showConfirm = false;
         isDeleting = true;
-        
         var success = await BusinessService.DeleteAsync(Business.Id);
-        
         if (success)
         {
             await OnDeleted.InvokeAsync();
         }
-        
         isDeleting = false;
     }
 
@@ -86,16 +91,27 @@ public partial class BusinessCard
         NavigationManager.NavigateTo($"/business/{Business.Id}");
     }
 
-    private async Task ResetRatings()
+    private void ResetRatings()
     {
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", Loc["Reset all ratings"].Value);
-        if (!confirmed) return;
+        _confirmMessage = Loc["Reset all ratings"].Value;
+        _confirmAction = ExecuteResetRatings;
+        _showConfirm = true;
+    }
 
+    private async Task ExecuteResetRatings()
+    {
+        _showConfirm = false;
         var success = await BusinessService.ResetRatingsAsync(Business.Id);
         if (success)
         {
             await OnDeleted.InvokeAsync();
         }
+    }
+
+    private async Task ExecuteConfirm()
+    {
+        if (_confirmAction != null)
+            await _confirmAction();
     }
 
     private string GetTypeIcon()

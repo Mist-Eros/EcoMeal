@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="Login" xml:space="preserve"><value>Kirjaudu</value></data>
+  <data name="Register" xml:space="preserve"><value>Rekisteröidy</value></data>
+  <data name="Log In" xml:space="preserve"><value>Kirjaudu sisään</value></data>
+  <data name="Welcome" xml:space="preserve"><value>Tervetuloa</value></data>
+  <data name="My Orders" xml:space="preserve"><value>Tilaukseni</value></data>
+  <data name="Order History" xml:space="preserve"><value>Tilaushistoria</value></data>
+  <data name="Orders" xml:space="preserve"><value>Tilaukset</value></data>
+  <data name="Loading" xml:space="preserve"><value>Ladataan...</value></data>
+  <data name="No pending orders" xml:space="preserve"><value>Ei odottavia tilauksia</value></data>
+  <data name="No order history" xml:space="preserve"><value>Ei tilaushistoriaa</value></data>
+  <data name="Browse Businesses" xml:space="preserve"><value>Selaa yrityksiä</value></data>
+  <data name="Placed" xml:space="preserve"><value>Tilattu</value></data>
+  <data name="Picked Up" xml:space="preserve"><value>Noudettu</value></data>
+  <data name="Cancelled" xml:space="preserve"><value>Peruttu</value></data>
+  <data name="Pick Up All Packages" xml:space="preserve"><value>Nouda kaikki paketit</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Peruuta</value></data>
+  <data name="Loyalty Discount" xml:space="preserve"><value>Kanta-asiakasalennus</value></data>
+  <data name="Total price" xml:space="preserve"><value>Kokonaishinta</value></data>
+  <data name="You save" xml:space="preserve"><value>Säästät</value></data>
+  <data name="Final price" xml:space="preserve"><value>Lopullinen hinta</value></data>
+  <data name="Create Account" xml:space="preserve"><value>Luo tili</value></data>
+  <data name="Welcome Back" xml:space="preserve"><value>Tervetuloa takaisin</value></data>
+  <data name="Account Settings" xml:space="preserve"><value>Tilin asetukset</value></data>
+  <data name="Clear My Order History" xml:space="preserve"><value>Tyhjennä tilaushistoria</value></data>
+  <data name="Delete My Account" xml:space="preserve"><value>Poista tilini</value></data>
+  <data name="Back to Home" xml:space="preserve"><value>Takaisin etusivulle</value></data>
+  <data name="Logout" xml:space="preserve"><value>Kirjaudu ulos</value></data>
+  <data name="Item Ordered" xml:space="preserve"><value>Tuote tilattu!</value></data>
+  <data name="View My Orders" xml:space="preserve"><value>Näytä tilaukseni</value></data>
+  <data name="Back to Businesses" xml:space="preserve"><value>Takaisin yrityksiin</value></data>
+  <data name="Order Failed" xml:space="preserve"><value>Tilaus epäonnistui</value></data>
+  <data name="Go Back" xml:space="preserve"><value>Palaa takaisin</value></data>
+  <data name="Placing your order" xml:space="preserve"><value>Tilataan...</value></data>
+  <data name="Could not place order" xml:space="preserve"><value>Tilausta ei voitu tehdä. Paketti ei ehkä ole enää saatavilla.</value></data>
+  <data name="How was your experience" xml:space="preserve"><value>Millainen kokemuksesi oli?</value></data>
+  <data name="Rate" xml:space="preserve"><value>Arvioi</value></data>
+  <data name="Next" xml:space="preserve"><value>Seuraava</value></data>
+  <data name="Done" xml:space="preserve"><value>Valmis</value></data>
+  <data name="Saving" xml:space="preserve"><value>Tallennetaan...</value></data>
+  <data name="Failed to save rating" xml:space="preserve"><value>Arvioinnin tallennus epäonnistui. Yritä uudelleen.</value></data>
+  <data name="Search" xml:space="preserve"><value>Hae...</value></data>
+  <data name="All Types" xml:space="preserve"><value>Kaikki tyypit</value></data>
+  <data name="Bakery" xml:space="preserve"><value>Leipomo</value></data>
+  <data name="Name" xml:space="preserve"><value>Nimi</value></data>
+  <data name="Address" xml:space="preserve"><value>Osoite</value></data>
+  <data name="Add Package" xml:space="preserve"><value>Lisää paketti</value></data>
+  <data name="Add First Package" xml:space="preserve"><value>Lisää ensimmäinen paketti</value></data>
+  <data name="Edit" xml:space="preserve"><value>Muokkaa</value></data>
+  <data name="Delete" xml:space="preserve"><value>Poista</value></data>
+  <data name="Save" xml:space="preserve"><value>Tallenna</value></data>
+  <data name="Order Now" xml:space="preserve"><value>Tilaa nyt</value></data>
+  <data name="Back" xml:space="preserve"><value>Takaisin</value></data>
+  <data name="Menu" xml:space="preserve"><value>Ruokalista</value></data>
+  <data name="No menu items" xml:space="preserve"><value>Ei ruokalistan kohteita.</value></data>
+  <data name="Password" xml:space="preserve"><value>Salasana</value></data>
+  <data name="Confirm Password" xml:space="preserve"><value>Vahvista salasana</value></data>
+  <data name="Contact Info" xml:space="preserve"><value>Yhteystiedot</value></data>
+  <data name="Already have an account" xml:space="preserve"><value>Onko sinulla jo tili?</value></data>
+  <data name="Don't have an account" xml:space="preserve"><value>Eikö sinulla ole tiliä?</value></data>
+  <data name="Account created" xml:space="preserve"><value>Tili luotu onnistuneesti! Voit nyt kirjautua sisään.</value></data>
+  <data name="Role" xml:space="preserve"><value>Rooli</value></data>
+  <data name="Change Role" xml:space="preserve"><value>Vaihda rooli</value></data>
+  <data name="Order history cleared" xml:space="preserve"><value>Tilaushistoria tyhjennetty.</value></data>
+  <data name="Failed to clear orders" xml:space="preserve"><value>Tilaushistorian tyhjennys epäonnistui.</value></data>
+  <data name="Get Started" xml:space="preserve"><value>Aloita</value></data>
+  <data name="Email" xml:space="preserve"><value>Sähköposti</value></data>
+  <data name="Invalid email or password" xml:space="preserve"><value>Virheellinen sähköposti tai salasana.</value></data>
+  <data name="Something went wrong" xml:space="preserve"><value>Jotain meni pieleen. Yritä uudelleen.</value></data>
+  <data name="Rating" xml:space="preserve"><value>arviointi</value></data>
+  <data name="Ratings" xml:space="preserve"><value>arviointia</value></data>
+  <data name="Rating submitted" xml:space="preserve"><value>Arviointi lähetetty</value></data>
+  <data name="Reset all ratings" xml:space="preserve"><value>Nollataanko kaikki arvioinnit tälle yritykselle?</value></data>
+  <data name="Mark picked up" xml:space="preserve"><value>Merkitäänkö tilaus noudetuksi?</value></data>
+  <data name="Confirm cancel" xml:space="preserve"><value>Peruutetaanko tilaus? Tätä toimintoa ei voi perua.</value></data>
+  <data name="Confirm pick up all" xml:space="preserve"><value>Noudetaanko {0} pakettia hintaan {1} RON ({2}% alennus)?</value></data>
+  <data name="Confirm delete account" xml:space="preserve"><value>Haluatko varmasti poistaa tilisi pysyvästi? Tätä ei voi perua.</value></data>
+  <data name="Confirm clear orders" xml:space="preserve"><value>Haluatko varmasti tyhjentää tilaushistoriasi? Tätä ei voi perua.</value></data>
+  <data name="Confirm delete package" xml:space="preserve"><value>Haluatko varmasti poistaa tämän paketin?</value></data>
+  <data name="Confirm delete business" xml:space="preserve"><value>Haluatko varmasti poistaa yrityksen '{0}'?</value></data>
+  <data name="Account deleted" xml:space="preserve"><value>Tili poistettu</value></data>
+  <data name="Signing in" xml:space="preserve"><value>Kirjaudutaan...</value></data>
+  <data name="Creating account" xml:space="preserve"><value>Luodaan tiliä...</value></data>
+  <data name="Role updated" xml:space="preserve"><value>Rooli vaihdettu muotoon '{0}'.</value></data>
+  <data name="Restaurant" xml:space="preserve"><value>Ravintola</value></data>
+  <data name="Bakery" xml:space="preserve"><value>Leipomo</value></data>
+  <data name="Fast Food" xml:space="preserve"><value>Pikaruoka</value></data>
+  <data name="Terms of Service" xml:space="preserve"><value>Käyttöehdot</value></data>
+  <data name="ToS Intro" xml:space="preserve"><value>Käyttämällä EcoMeal-sovellusta hyväksyt nämä ehdot. Jos et hyväksy, älä käytä sovellusta.</value></data>
+  <data name="ToS Service" xml:space="preserve"><value>EcoMeal on alusta, joka yhdistää käyttäjät paikallisiin yrityksiin ruokapakettien tilaamiseksi alennettuun hintaan, auttaen vähentämään ruokahävikkiä.</value></data>
+  <data name="ToS Accounts" xml:space="preserve"><value>Käyttäjät vastaavat kirjautumistietojensa luottamuksellisuudesta. EcoMeal ei vastaa tililläsi tapahtuvista toimista.</value></data>
+  <data name="ToS Orders" xml:space="preserve"><value>Tilaukset ovat riippuvaisia saatavuudesta. Hinnat voivat vaihdella. Tekemällä tilauksen vahvistat antamiesi tietojen oikeellisuuden.</value></data>
+  <data name="ToS Liability" xml:space="preserve"><value>EcoMeal ei vastaa kumppaniyritysten tuotteiden laadusta. Laatukiistat ratkaistaan suoraan yrityksen kanssa.</value></data>
+  <data name="ToS Changes" xml:space="preserve"><value>Pidätämme oikeuden muuttaa ehtoja milloin tahansa. Käyttäjille ilmoitetaan merkittävistä muutoksista.</value></data>
+  <data name="ToS Title1" xml:space="preserve"><value>Ehtojen hyväksyminen</value></data>
+  <data name="ToS Title2" xml:space="preserve"><value>Palvelun kuvaus</value></data>
+  <data name="ToS Title3" xml:space="preserve"><value>Käyttäjätilit</value></data>
+  <data name="ToS Title4" xml:space="preserve"><value>Tilaukset ja maksut</value></data>
+  <data name="ToS Title5" xml:space="preserve"><value>Vastuunrajoitus</value></data>
+  <data name="ToS Title6" xml:space="preserve"><value>Ehtojen muutokset</value></data>
+  <data name="Language" xml:space="preserve"><value>Kieli</value></data>
+  <data name="Select Language" xml:space="preserve"><value>Valitse kieli</value></data>
+  <data name="Find your meal!" xml:space="preserve"><value>Löydä ateriasi!</value></data>
+  <data name="Yes" xml:space="preserve"><value>Kyllä</value></data>
+  <data name="No" xml:space="preserve"><value>Ei</value></data>
+</root>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="Login" xml:space="preserve"><value>تسجيل الدخول</value></data>
+  <data name="Register" xml:space="preserve"><value>تسجيل</value></data>
+  <data name="Log In" xml:space="preserve"><value>تسجيل الدخول</value></data>
+  <data name="Welcome" xml:space="preserve"><value>مرحباً</value></data>
+  <data name="My Orders" xml:space="preserve"><value>طلباتي</value></data>
+  <data name="Order History" xml:space="preserve"><value>سجل الطلبات</value></data>
+  <data name="Orders" xml:space="preserve"><value>الطلبات</value></data>
+  <data name="Loading" xml:space="preserve"><value>جار التحميل...</value></data>
+  <data name="No pending orders" xml:space="preserve"><value>لا توجد طلبات معلقة</value></data>
+  <data name="No order history" xml:space="preserve"><value>لا يوجد سجل طلبات</value></data>
+  <data name="Browse Businesses" xml:space="preserve"><value>تصفح المتاجر</value></data>
+  <data name="Placed" xml:space="preserve"><value>تم الطلب</value></data>
+  <data name="Picked Up" xml:space="preserve"><value>تم الاستلام</value></data>
+  <data name="Cancelled" xml:space="preserve"><value>ملغي</value></data>
+  <data name="Pick Up All Packages" xml:space="preserve"><value>استلام جميع الحزم</value></data>
+  <data name="Cancel" xml:space="preserve"><value>إلغاء</value></data>
+  <data name="Loyalty Discount" xml:space="preserve"><value>خصم الولاء</value></data>
+  <data name="Total price" xml:space="preserve"><value>السعر الإجمالي</value></data>
+  <data name="You save" xml:space="preserve"><value>التوفير</value></data>
+  <data name="Final price" xml:space="preserve"><value>السعر النهائي</value></data>
+  <data name="Create Account" xml:space="preserve"><value>إنشاء حساب</value></data>
+  <data name="Welcome Back" xml:space="preserve"><value>مرحباً بعودتك</value></data>
+  <data name="Account Settings" xml:space="preserve"><value>إعدادات الحساب</value></data>
+  <data name="Clear My Order History" xml:space="preserve"><value>مسح سجل الطلبات</value></data>
+  <data name="Delete My Account" xml:space="preserve"><value>حذف حسابي</value></data>
+  <data name="Back to Home" xml:space="preserve"><value>العودة للرئيسية</value></data>
+  <data name="Logout" xml:space="preserve"><value>تسجيل الخروج</value></data>
+  <data name="Item Ordered" xml:space="preserve"><value>تم الطلب!</value></data>
+  <data name="View My Orders" xml:space="preserve"><value>عرض طلباتي</value></data>
+  <data name="Back to Businesses" xml:space="preserve"><value>العودة للمتاجر</value></data>
+  <data name="Order Failed" xml:space="preserve"><value>فشل الطلب</value></data>
+  <data name="Go Back" xml:space="preserve"><value>رجوع</value></data>
+  <data name="Placing your order" xml:space="preserve"><value>جار تقديم الطلب...</value></data>
+  <data name="Could not place order" xml:space="preserve"><value>تعذر تقديم الطلب. قد لا تكون الحزمة متاحة بعد الآن.</value></data>
+  <data name="How was your experience" xml:space="preserve"><value>كيف كانت تجربتك؟</value></data>
+  <data name="Rate" xml:space="preserve"><value>تقييم</value></data>
+  <data name="Next" xml:space="preserve"><value>التالي</value></data>
+  <data name="Done" xml:space="preserve"><value>تم</value></data>
+  <data name="Saving" xml:space="preserve"><value>جار الحفظ...</value></data>
+  <data name="Failed to save rating" xml:space="preserve"><value>فشل حفظ التقييم. يرجى المحاولة مرة أخرى.</value></data>
+  <data name="Search" xml:space="preserve"><value>بحث...</value></data>
+  <data name="All Types" xml:space="preserve"><value>جميع الأنواع</value></data>
+  <data name="Bakery" xml:space="preserve"><value>مخبز</value></data>
+  <data name="Name" xml:space="preserve"><value>الاسم</value></data>
+  <data name="Address" xml:space="preserve"><value>العنوان</value></data>
+  <data name="Add Package" xml:space="preserve"><value>إضافة حزمة</value></data>
+  <data name="Add First Package" xml:space="preserve"><value>إضافة الحزمة الأولى</value></data>
+  <data name="Edit" xml:space="preserve"><value>تعديل</value></data>
+  <data name="Delete" xml:space="preserve"><value>حذف</value></data>
+  <data name="Save" xml:space="preserve"><value>حفظ</value></data>
+  <data name="Order Now" xml:space="preserve"><value>اطلب الآن</value></data>
+  <data name="Back" xml:space="preserve"><value>رجوع</value></data>
+  <data name="Menu" xml:space="preserve"><value>القائمة</value></data>
+  <data name="No menu items" xml:space="preserve"><value>لا توجد عناصر في القائمة.</value></data>
+  <data name="Password" xml:space="preserve"><value>كلمة المرور</value></data>
+  <data name="Confirm Password" xml:space="preserve"><value>تأكيد كلمة المرور</value></data>
+  <data name="Contact Info" xml:space="preserve"><value>معلومات الاتصال</value></data>
+  <data name="Already have an account" xml:space="preserve"><value>هل لديك حساب بالفعل؟</value></data>
+  <data name="Don't have an account" xml:space="preserve"><value>ليس لديك حساب؟</value></data>
+  <data name="Account created" xml:space="preserve"><value>تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.</value></data>
+  <data name="Role" xml:space="preserve"><value>الدور</value></data>
+  <data name="Change Role" xml:space="preserve"><value>تغيير الدور</value></data>
+  <data name="Order history cleared" xml:space="preserve"><value>تم مسح سجل الطلبات.</value></data>
+  <data name="Failed to clear orders" xml:space="preserve"><value>فشل مسح سجل الطلبات.</value></data>
+  <data name="Get Started" xml:space="preserve"><value>ابدأ</value></data>
+  <data name="Email" xml:space="preserve"><value>البريد الإلكتروني</value></data>
+  <data name="Invalid email or password" xml:space="preserve"><value>بريد إلكتروني أو كلمة مرور غير صالحة.</value></data>
+  <data name="Something went wrong" xml:space="preserve"><value>حدث خطأ ما. يرجى المحاولة مرة أخرى.</value></data>
+  <data name="Rating" xml:space="preserve"><value>تقييم</value></data>
+  <data name="Ratings" xml:space="preserve"><value>تقييمات</value></data>
+  <data name="Rating submitted" xml:space="preserve"><value>تم إرسال التقييم</value></data>
+  <data name="Reset all ratings" xml:space="preserve"><value>إعادة تعيين جميع التقييمات لهذا المتجر؟</value></data>
+  <data name="Mark picked up" xml:space="preserve"><value>تعليم هذا الطلب كمستلم؟</value></data>
+  <data name="Confirm cancel" xml:space="preserve"><value>إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.</value></data>
+  <data name="Confirm pick up all" xml:space="preserve"><value>استلام جميع الحزم {0} مقابل {1} RON (خصم {2}٪)؟</value></data>
+  <data name="Confirm delete account" xml:space="preserve"><value>هل أنت متأكد من حذف حسابك نهائياً؟ لا يمكن التراجع عن هذا.</value></data>
+  <data name="Confirm clear orders" xml:space="preserve"><value>هل أنت متأكد من مسح سجل الطلبات؟ لا يمكن التراجع عن هذا.</value></data>
+  <data name="Confirm delete package" xml:space="preserve"><value>هل أنت متأكد من حذف هذه الحزمة؟</value></data>
+  <data name="Confirm delete business" xml:space="preserve"><value>هل أنت متأكد من حذف '{0}'؟</value></data>
+  <data name="Account deleted" xml:space="preserve"><value>تم حذف الحساب</value></data>
+  <data name="Signing in" xml:space="preserve"><value>جار تسجيل الدخول...</value></data>
+  <data name="Creating account" xml:space="preserve"><value>جار إنشاء الحساب...</value></data>
+  <data name="Role updated" xml:space="preserve"><value>تم تحديث الدور إلى '{0}'.</value></data>
+  <data name="Restaurant" xml:space="preserve"><value>مطعم</value></data>
+  <data name="Bakery" xml:space="preserve"><value>مخبز</value></data>
+  <data name="Fast Food" xml:space="preserve"><value>وجبات سريعة</value></data>
+  <data name="Terms of Service" xml:space="preserve"><value>شروط الخدمة</value></data>
+  <data name="ToS Intro" xml:space="preserve"><value>باستخدام تطبيق EcoMeal، فإنك توافق على هذه الشروط. إذا كنت لا توافق، يرجى عدم استخدام التطبيق.</value></data>
+  <data name="ToS Service" xml:space="preserve"><value>EcoMeal هي منصة تربط المستخدمين بالمتاجر المحلية لطلب حزم الطعام بأسعار مخفضة، مما يساعد في تقليل هدر الطعام.</value></data>
+  <data name="ToS Accounts" xml:space="preserve"><value>المستخدمون مسؤولون عن الحفاظ على سرية بيانات تسجيل الدخول. EcoMeal غير مسؤولة عن الأنشطة التي تحدث تحت حسابك.</value></data>
+  <data name="ToS Orders" xml:space="preserve"><value>الطلبات خاضعة للتوفر. قد تختلف الأسعار. بتقديم الطلب، تؤكد أن المعلومات المقدمة صحيحة وكاملة.</value></data>
+  <data name="ToS Liability" xml:space="preserve"><value>لا تتحمل EcoMeal أي مسؤولية عن جودة المنتجات المقدمة من المتاجر الشريكة. يجب حل نزاعات الجودة مباشرة مع المتجر المعني.</value></data>
+  <data name="ToS Changes" xml:space="preserve"><value>نحتفظ بالحق في تعديل هذه الشروط في أي وقت. سيتم إخطار المستخدمين بالتغييرات الهامة.</value></data>
+  <data name="ToS Title1" xml:space="preserve"><value>قبول الشروط</value></data>
+  <data name="ToS Title2" xml:space="preserve"><value>وصف الخدمة</value></data>
+  <data name="ToS Title3" xml:space="preserve"><value>حسابات المستخدمين</value></data>
+  <data name="ToS Title4" xml:space="preserve"><value>الطلبات والمدفوعات</value></data>
+  <data name="ToS Title5" xml:space="preserve"><value>تحديد المسؤولية</value></data>
+  <data name="ToS Title6" xml:space="preserve"><value>تغييرات الشروط</value></data>
+  <data name="Language" xml:space="preserve"><value>اللغة</value></data>
+  <data name="Select Language" xml:space="preserve"><value>اختر اللغة</value></data>
+  <data name="Find your meal!" xml:space="preserve"><value>اعثر على وجبتك!</value></data>
+  <data name="Yes" xml:space="preserve"><value>نعم</value></data>
+  <data name="No" xml:space="preserve"><value>لا</value></data>
+</root>

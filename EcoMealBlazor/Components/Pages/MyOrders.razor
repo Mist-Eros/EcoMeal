@@ -11,6 +11,12 @@
 @inject IJSRuntime JSRuntime
 @inject BusinessService BusinessService
 @inject IStringLocalizer<SharedResource> Loc
+@inject CurrencyService Currency
+
+<ConfirmDialog IsVisible="_showCancelConfirm" 
+               Message="@_confirmMessage"
+               ConfirmText="@Loc["Yes"]" CancelText="@Loc["No"]"
+               OnConfirm="ConfirmCancel" OnCancel="() => _showCancelConfirm = false" />
 
 <PageTitle>@Loc["My Orders"]</PageTitle>
 
@@ -128,7 +134,7 @@
                             </div>
                         </div>
                         <div class="myorders-card-right">
-                            <div class="myorders-price">@order.Price.ToString("F2") RON</div>
+                            <div class="myorders-price">@Currency.Format(order.Price)</div>
                         </div>
                     </div>
                     @if (_activeTab == "orders" && order.Status == 1)
@@ -162,15 +168,15 @@
                     <div class="myorders-discount-rows">
                         <div class="myorders-discount-row">
                             <span>@Loc["Total price"]</span>
-                            <span class="myorders-discount-old">@_totalPrice.ToString("F2") RON</span>
+                            <span class="myorders-discount-old">@Currency.Format(_totalPrice)</span>
                         </div>
                         <div class="myorders-discount-row">
                             <span>@Loc["You save"] (@_discountPercent%)</span>
-                            <span class="myorders-discount-save">-@_savedAmount.ToString("F2") RON</span>
+                            <span class="myorders-discount-save">-@Currency.Format(_savedAmount)</span>
                         </div>
                         <div class="myorders-discount-row myorders-discount-final">
                             <span>@Loc["Final price"]</span>
-                            <span>@_finalPrice.ToString("F2") RON</span>
+                            <span>@Currency.Format(_finalPrice)</span>
                         </div>
                     </div>
                 }
@@ -204,6 +210,10 @@
     private int _ratingHover = 0;
     private bool _ratingSubmitting = false;
     private string _ratingError = "";
+
+    private bool _showCancelConfirm = false;
+    private string _confirmMessage = "";
+    private int _cancelOrderId = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -252,9 +262,6 @@
 
     private async Task HandlePickup(int orderId, int businessId, string businessName)
     {
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", Loc["Mark picked up"].ToString());
-        if (!confirmed) return;
-
         var success = await OrderService.MarkPickedUpAsync(orderId);
         if (success)
         {
@@ -265,10 +272,15 @@
 
     private async Task HandleCancel(int orderId)
     {
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", Loc["Confirm cancel"].ToString());
-        if (!confirmed) return;
+        _cancelOrderId = orderId;
+        _confirmMessage = Loc["Confirm cancel"].ToString();
+        _showCancelConfirm = true;
+    }
 
-        var success = await OrderService.CancelOrderAsync(orderId);
+    private async Task ConfirmCancel()
+    {
+        _showCancelConfirm = false;
+        var success = await OrderService.CancelOrderAsync(_cancelOrderId);
         if (success)
         {
             await LoadOrders();
@@ -278,10 +290,6 @@
 
     private async Task HandlePickUpAll()
     {
-        var msg = string.Format(Loc["Confirm pick up all"].ToString(), _orderCount, _finalPrice.ToString("F2"), _discountPercent);
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", msg);
-        if (!confirmed) return;
-
         var pending = _orders.Where(o => o.Status == 1).ToList();
         var uniqueBusinesses = pending
             .Select(o => (o.businessId, o.BusinessName))

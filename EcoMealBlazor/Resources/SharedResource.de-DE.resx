@@ -86,7 +86,7 @@
   <data name="Account deleted" xml:space="preserve"><value>Konto gelöscht</value></data>
   <data name="Signing in" xml:space="preserve"><value>Anmeldung...</value></data>
   <data name="Creating account" xml:space="preserve"><value>Konto wird erstellt...</value></data>
-  <data name="Role updated" xml:space="preserve"><value>Rolle auf '{0}' geändert. Bitte melde dich erneut an.</value></data>
+  <data name="Role updated" xml:space="preserve"><value>Rolle auf '{0}' geändert.</value></data>
   <data name="Restaurant" xml:space="preserve"><value>Restaurant</value></data>
   <data name="Bakery" xml:space="preserve"><value>Bäckerei</value></data>
   <data name="Fast Food" xml:space="preserve"><value>Schnellimbiss</value></data>
@@ -103,4 +103,9 @@
   <data name="ToS Title4" xml:space="preserve"><value>Bestellungen und Zahlungen</value></data>
   <data name="ToS Title5" xml:space="preserve"><value>Haftungsbeschränkung</value></data>
   <data name="ToS Title6" xml:space="preserve"><value>Änderungen der AGB</value></data>
+  <data name="Language" xml:space="preserve"><value>Sprache</value></data>
+  <data name="Select Language" xml:space="preserve"><value>Sprache auswählen</value></data>
+  <data name="Find your meal!" xml:space="preserve"><value>Finde dein Essen!</value></data>
+  <data name="Yes" xml:space="preserve"><value>Ja</value></data>
+  <data name="No" xml:space="preserve"><value>Nein</value></data>
 </root>

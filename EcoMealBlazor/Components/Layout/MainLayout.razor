@@ -3,6 +3,7 @@
 @using EcoMeal.EcoMealBlazor.Services
 @inject AuthService AuthService
 @inject NavigationManager Navigation
+@inject IJSRuntime JS
 
 <div class="page">
     <NavMenu />
@@ -27,6 +28,13 @@
             <i class="bi bi-bag-check"></i>
         </a>
     }
+
+    @if (!_isHomePage)
+    {
+        <button class="back-fab" @onclick="GoBack" title="Back">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+    }
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>
@@ -36,9 +44,13 @@
 </div>
 
 @code {
-    protected override async Task OnInitializedAsync()
+    private bool _isHomePage = true;
+
+    protected override void OnInitialized()
     {
         AuthService.OnChange += StateHasChanged;
+        Navigation.LocationChanged += OnLocationChanged;
+        _isHomePage = IsHomePageUri(Navigation.Uri);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -57,8 +69,23 @@
         }
     }
 
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        _isHomePage = IsHomePageUri(e.Location);
+        StateHasChanged();
+    }
+
+    private bool IsHomePageUri(string uri) =>
+        uri == Navigation.BaseUri || uri == Navigation.BaseUri.TrimEnd('/');
+
+    private async void GoBack()
+    {
+        await JS.InvokeVoidAsync("history.back");
+    }
+
     public void Dispose()
     {
         AuthService.OnChange -= StateHasChanged;
+        Navigation.LocationChanged -= OnLocationChanged;
     }
 }

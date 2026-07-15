@@ -1,0 +1,24 @@
+@if (IsVisible)
+{
+    <div class="confirm-overlay" @onclick="OnCancel">
+        <div class="confirm-dialog" @onclick:stopPropagation="true">
+            <div class="confirm-icon">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
+            <p class="confirm-message">@Message</p>
+            <div class="confirm-actions">
+                <button class="confirm-btn-cancel" @onclick="OnCancel">@CancelText</button>
+                <button class="confirm-btn-ok" @onclick="OnConfirm">@ConfirmText</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public string Message { get; set; } = "Are you sure?";
+    [Parameter] public string ConfirmText { get; set; } = "Confirm";
+    [Parameter] public string CancelText { get; set; } = "Cancel";
+    [Parameter] public EventCallback OnConfirm { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+}

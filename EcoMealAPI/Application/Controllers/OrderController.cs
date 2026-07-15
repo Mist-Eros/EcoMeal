@@ -116,7 +116,7 @@ public class OrderController : ControllerBase
         var isAdmin = User.IsInRole(UserRoles.Admin);
 
         var query = _context.Orders
-            .Where(o => o.Status != 0);
+            .Where(o => o.Status == 2);
 
         if (!isAdmin)
             query = query.Where(o => o.UserId == userId);
@@ -214,9 +214,22 @@ public class OrderController : ControllerBase
     public async Task<ActionResult> ClearMyOrders()
     {
         var userId = GetCurrentUserId();
+
+        var packageIds = await _context.Orders
+            .Where(o => o.UserId == userId)
+            .Select(o => o.PackageId)
+            .ToListAsync();
+
         await _context.Orders
             .Where(o => o.UserId == userId)
             .ExecuteDeleteAsync();
+
+        if (packageIds.Count > 0)
+        {
+            await _context.Package
+                .Where(p => packageIds.Contains(p.Id))
+                .ExecuteDeleteAsync();
+        }
 
         return NoContent();
     }

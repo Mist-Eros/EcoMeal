@@ -12,6 +12,11 @@
 @inject IJSRuntime JSRuntime
 @inject IStringLocalizer<SharedResource> Loc
 
+<ConfirmDialog IsVisible="_showConfirm"
+               Message="@_confirmMessage"
+               ConfirmText="@Loc["Yes"]" CancelText="@Loc["No"]"
+               OnConfirm="ExecuteConfirm" OnCancel="() => _showConfirm = false" />
+
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-lg-7 col-md-9">
@@ -142,6 +147,10 @@
     private bool _clearSuccess = false;
     private bool _isDeleting = false;
 
+    private bool _showConfirm = false;
+    private string _confirmMessage = "";
+    private Func<Task>? _confirmAction = null;
+
     protected override async Task OnInitializedAsync()
     {
         try
@@ -222,11 +231,12 @@
             {
                 _roleUpdateSuccess = true;
                 _roleUpdateMessage = string.Format(Loc["Role updated"].Value, role);
-                StateHasChanged();
+                _userRole = role;
 
-                await Task.Delay(1500);
-                await AuthService.LogoutAsync();
-                Navigation.NavigateTo("/login", forceLoad: true);
+                await AuthService.UpdateRolesAsync(new List<string> { role });
+                AuthService.NotifyChanged();
+
+                StateHasChanged();
             }
             else
             {
@@ -257,11 +267,16 @@
         Navigation.NavigateTo("/", forceLoad: true);
     }
 
-    private async Task HandleDeleteAccount()
+    private void HandleDeleteAccount()
     {
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", Loc["Confirm delete account"].Value);
-        if (!confirmed) return;
+        _confirmMessage = Loc["Confirm delete account"].Value;
+        _confirmAction = ExecuteDeleteAccount;
+        _showConfirm = true;
+    }
 
+    private async Task ExecuteDeleteAccount()
+    {
+        _showConfirm = false;
         _isDeleting = true;
         StateHasChanged();
 
@@ -278,11 +293,16 @@
         }
     }
 
-    private async Task HandleClearOrders()
+    private void HandleClearOrders()
     {
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", Loc["Confirm clear orders"].Value);
-        if (!confirmed) return;
+        _confirmMessage = Loc["Confirm clear orders"].Value;
+        _confirmAction = ExecuteClearOrders;
+        _showConfirm = true;
+    }
 
+    private async Task ExecuteClearOrders()
+    {
+        _showConfirm = false;
         _isClearing = true;
         _clearMessage = string.Empty;
         StateHasChanged();
@@ -295,6 +315,12 @@
             ? Loc["Order history cleared"].Value
             : Loc["Failed to clear orders"].Value;
         StateHasChanged();
+    }
+
+    private async Task ExecuteConfirm()
+    {
+        if (_confirmAction != null)
+            await _confirmAction();
     }
 
     private class ErrorResponse

@@ -320,6 +320,37 @@
     box-shadow: 0 4px 16px rgba(220, 53, 69, 0.3);
 }
 
+/* Expired package — pickup time passed */
+.details-package-card.expired .details-package-title {
+    color: #dc3545;
+}
+
+.details-package-card.expired .details-package-price {
+    color: #dc3545;
+}
+
+/* Available package — within pickup window */
+.details-package-card.available .details-package-title {
+    color: #2d6a4f;
+}
+
+.details-package-card.available .details-package-price {
+    color: #2d6a4f;
+}
+
+/* Upcoming package — pickup not yet started */
+.details-package-card.upcoming .details-package-title {
+    color: #999;
+}
+
+.details-package-card.upcoming .details-package-price {
+    color: #999;
+}
+
+.details-package-card.upcoming .details-package-time-row {
+    color: #999;
+}
+
 /* Empty State */
 .details-empty-state {
     text-align: center;
@@ -527,4 +558,32 @@
 
 [data-theme="dark"] .details-rating-yours {
     color: #9fe7d8;
+}
+
+[data-theme="dark"] .details-package-card.expired .details-package-title {
+    color: #ff6b6b;
+}
+
+[data-theme="dark"] .details-package-card.expired .details-package-price {
+    color: #ff6b6b;
+}
+
+[data-theme="dark"] .details-package-card.available .details-package-title {
+    color: #9fe7d8;
+}
+
+[data-theme="dark"] .details-package-card.available .details-package-price {
+    color: #9fe7d8;
+}
+
+[data-theme="dark"] .details-package-card.upcoming .details-package-title {
+    color: #666;
+}
+
+[data-theme="dark"] .details-package-card.upcoming .details-package-price {
+    color: #666;
+}
+
+[data-theme="dark"] .details-package-card.upcoming .details-package-time-row {
+    color: #888;
 }
