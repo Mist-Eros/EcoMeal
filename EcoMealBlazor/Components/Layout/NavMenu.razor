@@ -2,11 +2,15 @@
 @using EcoMeal.EcoMealBlazor.Models
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Extensions.Localization
+@using EcoMeal.EcoMealBlazor.Resources
+@using EcoMeal.EcoMealBlazor.CultureSelector
 @inject AuthService AuthService
 @inject AuthenticationStateProvider AuthStateProvider
 @inject DarkModeService DarkModeService
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<SharedResource> Loc
 
 <nav class="navbar navbar-dark">
     <div class="navbar-content">
@@ -15,7 +19,7 @@
             @if (_isLoading)
             {
                 <li class="nav-item">
-                    <span class="nav-link nav-link-loading">Loading...</span>
+                    <span class="nav-link nav-link-loading">@Loc["Loading"]</span>
                 </li>
             }
             else if (AuthService.IsAuthenticated)
@@ -23,7 +27,7 @@
                 <li class="nav-item nav-item-account">
                     <div class="nav-account-link rounded-pill" @onclick="GoToAccount">
                         <span class="bi bi-person-circle me-1"></span>
-                        Welcome, @_userName!
+                        @Loc["Welcome"], @_userName!
                         <span class="nav-role-badge">@_userRole</span>
                     </div>
                 </li>
@@ -32,12 +36,12 @@
             {
                 <li class="nav-item">
                     <NavLink class="nav-link rounded-pill" href="/login">
-                        <span class="bi bi-person me-1"></span> Login
+                        <span class="bi bi-person me-1"></span> @Loc["Login"]
                     </NavLink>
                 </li>
                 <li class="nav-item">
                     <NavLink class="nav-link nav-link-register rounded-pill" href="/register">
-                        <span class="bi bi-person-plus me-1"></span> Register
+                        <span class="bi bi-person-plus me-1"></span> @Loc["Register"]
                     </NavLink>
                 </li>
             }
@@ -49,6 +53,10 @@
                     <span class="toggle-icon moon"><i class="bi bi-moon-fill"></i></span>
                     <div class="toggle-ball"></div>
                 </button>
+            </li>
+
+            <li class="nav-item">
+                <CultureSelector />
             </li>
         </ul>
     </div>

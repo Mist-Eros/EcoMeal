@@ -1,17 +1,28 @@
 @namespace EcoMeal.EcoMealBlazor.Components
 @using EcoMeal.EcoMealBlazor.Models
 @using EcoMeal.EcoMealBlazor.Services
+@using Microsoft.Extensions.Localization
+@using EcoMeal.EcoMealBlazor.Resources
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<SharedResource> Loc
 
 <div class="search-container">
     <div class="search-wrapper">
         <span class="search-icon bi bi-search"></span>
         <input type="text"
                class="search-input"
-               placeholder="Search..."
+               placeholder="@Loc["Search"]"
                @bind="SearchTerm"
                @bind:event="oninput"
                @bind:after="OnSearchTermChanged" />
+        <div class="search-by-toggle">
+            <button class="search-by-btn @(SearchBy == "name" ? "active" : "")" @onclick="SetSearchByName">
+                <i class="bi bi-tag me-1"></i>@Loc["Name"]
+            </button>
+            <button class="search-by-btn @(SearchBy == "address" ? "active" : "")" @onclick="SetSearchByAddress">
+                <i class="bi bi-geo-alt me-1"></i>@Loc["Address"]
+            </button>
+        </div>
         <button class="search-clear" @onclick="ClearSearch" style="@(_searchTermVisible ? "display: flex;" : "display: none;")">
             <span class="bi bi-x-lg"></span>
         </button>
@@ -19,22 +30,14 @@
     <div class="search-filters">
         <div class="filter-buttons">
             <button class="filter-btn @(SelectedType == "" ? "active" : "")" @onclick="SetTypeAll">
-                <i class="fa-solid fa-infinity me-1"></i> All
+                <i class="fa-solid fa-infinity me-1"></i> @Loc["All Types"]
             </button>
             @foreach (var type in BusinessTypes)
             {
                 <button class="filter-btn @(SelectedType == type.Name ? "active" : "")" @onclick="(() => SetTypeItem(type.Name))" >
-                    <i class="@GetTypeIcon(type.Name) me-1"></i> @type.Name
+                    <i class="@GetTypeIcon(type.Name) me-1"></i> @LocTypeName(type.Name)
                 </button>
             }
-        </div>
-        <div class="filter-buttons">
-            <button class="filter-btn @(SearchBy == "name" ? "active" : "")" @onclick="SetSearchByName">
-                <i class="bi bi-tag me-1"></i> Name
-            </button>
-            <button class="filter-btn @(SearchBy == "address" ? "active" : "")" @onclick="SetSearchByAddress">
-                <i class="bi bi-geo-alt me-1"></i> Address
-            </button>
         </div>
     </div>
 </div>
@@ -106,6 +109,15 @@
         if (t.Contains("fast food") || t.Contains("fast-food")) return "fa-solid fa-burger";
         if (t.Contains("bakery")) return "fa-solid fa-cake-candles";
         return "fa-solid fa-shop";
+    }
+
+    private string LocTypeName(string typeName)
+    {
+        var t = typeName?.ToLower() ?? "";
+        if (t.Contains("restaurant")) return Loc["Restaurant"];
+        if (t.Contains("fast food") || t.Contains("fast-food")) return Loc["Fast Food"];
+        if (t.Contains("bakery")) return Loc["Bakery"];
+        return typeName;
     }
 
     public class SearchCriteria

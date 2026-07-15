@@ -1,0 +1,44 @@
+@page "/terms"
+@using Microsoft.Extensions.Localization
+@using EcoMeal.EcoMealBlazor.Resources
+@inject IStringLocalizer<SharedResource> Loc
+
+<PageTitle>@Loc["Terms of Service"] - EcoMeal</PageTitle>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card form-card">
+                <div class="card-body p-4">
+                    <h2 class="fw-bold text-success mb-4">
+                        <i class="bi bi-file-text me-2"></i>@Loc["Terms of Service"]
+                    </h2>
+
+                    <h5 class="fw-bold mt-4">1. @Loc["ToS Title1"]</h5>
+                    <p>@Loc["ToS Intro"]</p>
+
+                    <h5 class="fw-bold mt-4">2. @Loc["ToS Title2"]</h5>
+                    <p>@Loc["ToS Service"]</p>
+
+                    <h5 class="fw-bold mt-4">3. @Loc["ToS Title3"]</h5>
+                    <p>@Loc["ToS Accounts"]</p>
+
+                    <h5 class="fw-bold mt-4">4. @Loc["ToS Title4"]</h5>
+                    <p>@Loc["ToS Orders"]</p>
+
+                    <h5 class="fw-bold mt-4">5. @Loc["ToS Title5"]</h5>
+                    <p>@Loc["ToS Liability"]</p>
+
+                    <h5 class="fw-bold mt-4">6. @Loc["ToS Title6"]</h5>
+                    <p>@Loc["ToS Changes"]</p>
+
+                    <div class="mt-4">
+                        <a href="/" class="btn-form-save">
+                            <i class="bi bi-arrow-left me-1"></i> @Loc["Back to Home"]
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

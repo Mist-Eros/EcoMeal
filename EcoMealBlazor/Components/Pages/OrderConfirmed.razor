@@ -2,37 +2,40 @@
 @rendermode InteractiveServer
 @layout MainLayout
 @using EcoMeal.EcoMealBlazor.Services
+@using Microsoft.Extensions.Localization
+@using EcoMeal.EcoMealBlazor.Resources
 @inject OrderService OrderService
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<SharedResource> Loc
 
 <div class="order-fixed-overlay">
     <div class="order-content">
         @if (_isPlacing)
         {
             <div class="spinner-border text-success" role="status">
-                <span class="visually-hidden">Placing order...</span>
+                <span class="visually-hidden">@Loc["Placing your order"]</span>
             </div>
-            <p class="order-subtitle mt-3">Placing your order...</p>
+            <p class="order-subtitle mt-3">@Loc["Placing your order"]</p>
         }
         else if (_success)
         {
             <i class="bi bi-check-circle-fill text-success order-icon"></i>
-            <h1 class="order-title">Item Ordered!</h1>
+            <h1 class="order-title">@Loc["Item Ordered"]</h1>
             <p class="order-subtitle">Your order has been placed successfully.</p>
             <a href="/my-orders" class="order-back-btn">
-                <i class="bi bi-bag"></i> View My Orders
+                <i class="bi bi-bag"></i> @Loc["View My Orders"]
             </a>
             <a href="/businesses" class="order-back-btn mt-2">
-                <i class="bi bi-arrow-left"></i> Back to Businesses
+                <i class="bi bi-arrow-left"></i> @Loc["Back to Businesses"]
             </a>
         }
         else
         {
             <i class="bi bi-x-circle-fill text-danger order-icon"></i>
-            <h1 class="order-title">Order Failed</h1>
+            <h1 class="order-title">@Loc["Order Failed"]</h1>
             <p class="order-subtitle">@_errorMessage</p>
             <button class="order-back-btn" @onclick="GoBack">
-                <i class="bi bi-arrow-left"></i> Go Back
+                <i class="bi bi-arrow-left"></i> @Loc["Go Back"]
             </button>
         }
     </div>
@@ -55,10 +58,10 @@
         {
             _success = await OrderService.PlaceOrderAsync(PackageId);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             _success = false;
-            _errorMessage = "Something went wrong. " + ex.Message;
+            _errorMessage = Loc["Could not place order"].Value;
         }
         finally
         {

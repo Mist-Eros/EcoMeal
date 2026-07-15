@@ -178,6 +178,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
+app.UseRequestLocalization(new RequestLocalizationOptions()
+    .AddSupportedCultures(new[] { "en-GB", "ro" })
+    .AddSupportedUICultures(new[] { "en-GB", "ro" }));
+
 app.MapPost("/login", async (UserManager<User> userManager, LoginRequest request) =>
 {
     var user = await userManager.FindByEmailAsync(request.Email);

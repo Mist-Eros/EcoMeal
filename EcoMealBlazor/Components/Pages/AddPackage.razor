@@ -3,8 +3,11 @@
 @using EcoMeal.EcoMealBlazor.Models
 @using System.ComponentModel.DataAnnotations
 @using EcoMeal.EcoMealBlazor.Services
+@using Microsoft.Extensions.Localization
+@using EcoMeal.EcoMealBlazor.Resources
 @inject NavigationManager NavigationManager
 @inject BusinessService BusinessService
+@inject IStringLocalizer<SharedResource> Loc
 
 <div class="container my-4">
     <div class="row justify-content-center">
@@ -12,7 +15,7 @@
             <div class="card form-card">
                 <div class="card-body p-4">
                     <h2 class="card-title fw-bold text-success mb-4">
-                        <i class="bi bi-plus-circle me-2"></i>Add Package
+                        <i class="bi bi-plus-circle me-2"></i>@Loc["Add Package"]
                     </h2>
 
                     <EditForm Model="Model" OnValidSubmit="HandleSubmit">
@@ -20,7 +23,7 @@
                         <ValidationSummary class="alert alert-danger" />
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Name</label>
+                            <label class="form-label fw-semibold">@Loc["Name"]</label>
                             <InputText class="form-control rounded-pill dark-input" @bind-Value="Model.Name" placeholder="Package name..." />
                             <ValidationMessage For="@(() => Model.Name)" class="text-danger small" />
                         </div>
@@ -76,10 +79,10 @@
                                 {
                                     <span class="spinner-border spinner-border-sm me-1" role="status"></span>
                                 }
-                                <i class="bi bi-check-lg me-1"></i> Save
+                                <i class="bi bi-check-lg me-1"></i> @Loc["Save"]
                             </button>
                             <button type="button" class="btn-form-cancel" @onclick="GoBack">
-                                Cancel
+                                @Loc["Cancel"]
                             </button>
                         </div>
                     </EditForm>
@@ -129,7 +132,7 @@
         }
         else
         {
-            ErrorMessage = "Something went wrong. Please try again.";
+            ErrorMessage = Loc["Something went wrong"].Value;
             IsSubmitting = false;
         }
     }

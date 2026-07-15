@@ -2,10 +2,13 @@
 @using EcoMeal.EcoMealBlazor.Models.Auth
 @using EcoMeal.EcoMealBlazor.Services
 @using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Extensions.Localization
+@using EcoMeal.EcoMealBlazor.Resources
 @inject AuthService AuthService
 @inject NavigationManager Navigation
+@inject IStringLocalizer<SharedResource> Loc
 
-<PageTitle>Login - EcoMeal</PageTitle>
+<PageTitle>@Loc["Log In"] - EcoMeal</PageTitle>
 
 <div class="container my-5">
     <div class="row justify-content-center">
@@ -13,14 +16,14 @@
             <div class="card form-card">
                 <div class="card-body p-4">
                     <h2 class="card-title fw-bold text-success mb-4">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Log In
+                        <i class="bi bi-box-arrow-in-right me-2"></i>@Loc["Log In"]
                     </h2>
 
                     @if (_showSuccess)
                     {
                         <div class="alert alert-success d-flex align-items-center" role="alert">
                             <i class="bi bi-check-circle-fill me-2"></i>
-                            Account created successfully! You can now log in.
+                            @Loc["Account created"]
                         </div>
                     }
 
@@ -36,7 +39,7 @@
                         <DataAnnotationsValidator />
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Email</label>
+                            <label class="form-label fw-semibold">@Loc["Email"]</label>
                             <InputText class="form-control rounded-pill dark-input"
                                        @bind-Value="_model.Email"
                                        placeholder="you@example.com" />
@@ -44,7 +47,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">Password</label>
+                            <label class="form-label fw-semibold">@Loc["Password"]</label>
                             <div class="position-relative">
                                 <InputText type="@(_showPassword ? "text" : "password")"
                                            class="form-control rounded-pill dark-input pe-5"
@@ -66,10 +69,10 @@
                                 {
                                     <span class="spinner-border spinner-border-sm me-1" role="status"></span>
                                 }
-                                <i class="bi bi-box-arrow-in-right me-1"></i> Log In
+                                <i class="bi bi-box-arrow-in-right me-1"></i> @Loc["Log In"]
                             </button>
                             <button type="button" class="btn-form-cancel" @onclick="GoToRegister">
-                                Register
+                                @Loc["Register"]
                             </button>
                         </div>
                     </EditForm>
@@ -93,15 +96,8 @@
         _showSuccess = query["registered"] == "true";
     }
 
-    private void TogglePassword()
-    {
-        _showPassword = !_showPassword;
-    }
-
-    private void GoToRegister()
-    {
-        Navigation.NavigateTo("/register");
-    }
+    private void TogglePassword() { _showPassword = !_showPassword; }
+    private void GoToRegister() { Navigation.NavigateTo("/register"); }
 
     private async Task HandleLogin()
     {
@@ -115,6 +111,6 @@
         if (result.Success)
             Navigation.NavigateTo("/");
         else
-            _errorMessage = result.ErrorMessage;
+            _errorMessage = Loc["Invalid email or password"];
     }
 }

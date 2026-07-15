@@ -2,10 +2,13 @@
 @using EcoMeal.EcoMealBlazor.Models.Auth
 @using EcoMeal.EcoMealBlazor.Services
 @using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Extensions.Localization
+@using EcoMeal.EcoMealBlazor.Resources
 @inject AuthService AuthService
 @inject NavigationManager Navigation
+@inject IStringLocalizer<SharedResource> Loc
 
-<PageTitle>Register - EcoMeal</PageTitle>
+<PageTitle>@Loc["Register"] - EcoMeal</PageTitle>
 
 <div class="container my-5">
     <div class="row justify-content-center">
@@ -13,7 +16,7 @@
             <div class="card form-card">
                 <div class="card-body p-4">
                     <h2 class="card-title fw-bold text-success mb-4">
-                        <i class="bi bi-person-plus me-2"></i>Create Account
+                        <i class="bi bi-person-plus me-2"></i>@Loc["Create Account"]
                     </h2>
 
                     @if (!string.IsNullOrEmpty(_errorMessage))
@@ -29,14 +32,14 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-semibold">Name</label>
+                                <label class="form-label fw-semibold">@Loc["Name"]</label>
                                 <InputText class="form-control rounded-pill dark-input"
                                            @bind-Value="_model.Name"
                                            placeholder="Your name" />
                                 <ValidationMessage For="() => _model.Name" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-semibold">Email</label>
+                                <label class="form-label fw-semibold">@Loc["Email"]</label>
                                 <InputText class="form-control rounded-pill dark-input"
                                            @bind-Value="_model.Email"
                                            placeholder="you@example.com" />
@@ -45,7 +48,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Contact Info</label>
+                            <label class="form-label fw-semibold">@Loc["Contact Info"]</label>
                             <InputText class="form-control rounded-pill dark-input"
                                        @bind-Value="_model.Contact"
                                        placeholder="Phone number" />
@@ -54,7 +57,7 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-semibold">Password</label>
+                                <label class="form-label fw-semibold">@Loc["Password"]</label>
                                 <div class="position-relative">
                                     <InputText type="@(_showPassword ? "text" : "password")"
                                                class="form-control rounded-pill dark-input pe-5"
@@ -70,7 +73,7 @@
                                 <ValidationMessage For="() => _model.Password" />
                             </div>
                             <div class="col-md-6 mb-4">
-                                <label class="form-label fw-semibold">Confirm Password</label>
+                                <label class="form-label fw-semibold">@Loc["Confirm Password"]</label>
                                 <InputText type="@(_showPassword ? "text" : "password")"
                                            class="form-control rounded-pill dark-input"
                                            @bind-Value="_model.ConfirmPassword"
@@ -85,10 +88,10 @@
                                 {
                                     <span class="spinner-border spinner-border-sm me-1" role="status"></span>
                                 }
-                                <i class="bi bi-person-check me-1"></i> Create Account
+                                <i class="bi bi-person-check me-1"></i> @Loc["Create Account"]
                             </button>
                             <button type="button" class="btn-form-cancel" @onclick="GoToLogin">
-                                Log In
+                                @Loc["Log In"]
                             </button>
                         </div>
                     </EditForm>
@@ -104,15 +107,8 @@
     private bool _isSubmitting;
     private bool _showPassword;
 
-    private void TogglePassword()
-    {
-        _showPassword = !_showPassword;
-    }
-
-    private void GoToLogin()
-    {
-        Navigation.NavigateTo("/login");
-    }
+    private void TogglePassword() { _showPassword = !_showPassword; }
+    private void GoToLogin() { Navigation.NavigateTo("/login"); }
 
     private async Task HandleRegister()
     {

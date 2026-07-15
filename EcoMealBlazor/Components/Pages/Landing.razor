@@ -1,5 +1,8 @@
 @page "/"
 @rendermode InteractiveServer
+@using Microsoft.Extensions.Localization
+@using EcoMeal.EcoMealBlazor.Resources
+@inject IStringLocalizer<SharedResource> Loc
 
 <PageTitle>EcoMeal</PageTitle>
 
@@ -14,8 +17,11 @@
             </h4>
             <p class="home-subtext mt-3">.NET app developed by Raine, while in NetRom Summer{Camp}</p>
             <a href="/businesses" class="btn btn-success rounded-pill px-5 py-2 mt-3 home-btn">
-                Get Started
+                @Loc["Get Started"]
             </a>
+            <div class="mt-3">
+                <a href="/terms" class="home-tos-link">@Loc["Terms of Service"]</a>
+            </div>
         </div>
     </div>
 </div>

@@ -1,0 +1,60 @@
+@rendermode InteractiveServer
+@namespace EcoMeal.EcoMealBlazor.CultureSelector
+@using System.Globalization
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+
+<div class="lang-dropdown @(_open ? "open" : "")">
+    <button class="lang-dropdown-btn" @onclick="ToggleOpen">
+        <i class="fa-solid fa-earth-americas"></i>
+        <span>@_languages[CurrentIndex].name</span>
+    </button>
+    @if (_open)
+    {
+        <div class="lang-dropdown-menu">
+            @for (int i = 0; i < _languages.Length; i++)
+            {
+                var idx = i;
+                <button class="lang-dropdown-item @(CurrentIndex == idx ? "active" : "")"
+                        @onclick="() => SelectLanguage(idx)">
+                    <span class="lang-item-code">@_languages[idx].code</span>
+                    <span>@_languages[idx].name</span>
+                </button>
+            }
+        </div>
+    }
+</div>
+
+@code
+{
+    private (string code, string name, string culture)[] _languages = new[]
+    {
+        ("EN", "English", "en-US"),
+        ("RO", "Română", "ro-RO"),
+        ("DE", "Deutsch", "de-DE"),
+        ("FR", "Français", "fr-FR"),
+    };
+
+    private bool _open;
+
+    private int CurrentIndex
+    {
+        get
+        {
+            var current = CultureInfo.CurrentCulture.Name;
+            for (int i = 0; i < _languages.Length; i++)
+                if (_languages[i].culture == current) return i;
+            return 0;
+        }
+    }
+
+    private void ToggleOpen() { _open = !_open; }
+
+    private async Task SelectLanguage(int idx)
+    {
+        _open = false;
+        if (idx == CurrentIndex) return;
+        await JS.InvokeVoidAsync("blazorCulture.set", _languages[idx].culture);
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+    }
+}

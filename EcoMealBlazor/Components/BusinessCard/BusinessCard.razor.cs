@@ -1,7 +1,9 @@
 using EcoMeal.EcoMealBlazor.Models;
 using EcoMeal.EcoMealBlazor.Services;
+using EcoMeal.EcoMealBlazor.Resources;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 
 namespace EcoMeal.EcoMealBlazor.Components.BusinessCard;
@@ -64,7 +66,7 @@ public partial class BusinessCard
     {
         if (isDeleting) return;
         
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete '{Business.Name}'?");
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", string.Format(Loc["Confirm delete business"].Value, Business.Name));
         if (!confirmed) return;
         
         isDeleting = true;
@@ -86,7 +88,7 @@ public partial class BusinessCard
 
     private async Task ResetRatings()
     {
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Reset all ratings for '{Business.Name}'?");
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", Loc["Reset all ratings"].Value);
         if (!confirmed) return;
 
         var success = await BusinessService.ResetRatingsAsync(Business.Id);
@@ -103,5 +105,14 @@ public partial class BusinessCard
         if (type.Contains("fast food") || type.Contains("fast-food")) return "fa-solid fa-burger";
         if (type.Contains("bakery")) return "fa-solid fa-cake-candles";
         return "fa-solid fa-shop";
+    }
+
+    private string LocTypeName()
+    {
+        var t = Business.BusinessTypeName?.ToLower() ?? "";
+        if (t.Contains("restaurant")) return Loc["Restaurant"];
+        if (t.Contains("fast food") || t.Contains("fast-food")) return Loc["Fast Food"];
+        if (t.Contains("bakery")) return Loc["Bakery"];
+        return Business.BusinessTypeName ?? "";
     }
 }

@@ -3,14 +3,17 @@
 @using EcoMeal.EcoMealBlazor.Models
 @using EcoMeal.EcoMealBlazor.Services
 @using System.ComponentModel.DataAnnotations
+@using Microsoft.Extensions.Localization
+@using EcoMeal.EcoMealBlazor.Resources
 @inject NavigationManager NavigationManager
 @inject BusinessService BusinessService
+@inject IStringLocalizer<SharedResource> Loc
 
 @if (EditModel == null || string.IsNullOrEmpty(EditModel.Name))
 {
     <div class="container my-4 text-center">
         <div class="spinner-border text-success" role="status">
-            <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">@Loc["Loading"]</span>
         </div>
     </div>
     return;
@@ -30,13 +33,13 @@
                         <ValidationSummary class="alert alert-danger" />
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Name</label>
+                            <label class="form-label fw-semibold">@Loc["Name"]</label>
                             <InputText class="form-control rounded-pill dark-input" @bind-Value="EditModel.Name" placeholder="Business name..." />
                             <ValidationMessage For="@(() => EditModel.Name)" class="text-danger small" />
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Address</label>
+                            <label class="form-label fw-semibold">@Loc["Address"]</label>
                             <InputText class="form-control rounded-pill dark-input" @bind-Value="EditModel.Address" placeholder="Business address..." />
                             <ValidationMessage For="@(() => EditModel.Address)" class="text-danger small" />
                         </div>
@@ -47,7 +50,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Contact</label>
+                            <label class="form-label fw-semibold">@Loc["Contact Info"]</label>
                             <InputText class="form-control rounded-pill dark-input" @bind-Value="EditModel.Contact" placeholder="Phone or email..." />
                             <ValidationMessage For="@(() => EditModel.Contact)" class="text-danger small" />
                         </div>
@@ -75,10 +78,10 @@
                                 {
                                     <span class="spinner-border spinner-border-sm me-1" role="status"></span>
                                 }
-                                <i class="bi bi-check-lg me-1"></i> Save
+                                <i class="bi bi-check-lg me-1"></i> @Loc["Save"]
                             </button>
                             <button type="button" class="btn-form-cancel" @onclick="GoBack">
-                                Cancel
+                                @Loc["Cancel"]
                             </button>
                         </div>
                     </EditForm>
@@ -127,7 +130,7 @@
         }
         else
         {
-            ErrorMessage = "Something went wrong. Please try again.";
+            ErrorMessage = Loc["Something went wrong"].Value;
             IsSubmitting = false;
         }
     }

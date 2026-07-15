@@ -3,24 +3,27 @@
 @using EcoMeal.EcoMealBlazor.Models
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
+@using Microsoft.Extensions.Localization
+@using EcoMeal.EcoMealBlazor.Resources
 @inject OrderService OrderService
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IJSRuntime JSRuntime
 @inject BusinessService BusinessService
+@inject IStringLocalizer<SharedResource> Loc
 
-<PageTitle>My Orders</PageTitle>
+<PageTitle>@Loc["My Orders"]</PageTitle>
 
 <div class="myorders-container">
     <div class="myorders-header">
         <div class="myorders-tabs">
             <button class="myorders-tab @(_activeTab == "orders" ? "active" : "")"
                     @onclick="SwitchToOrders">
-                <i class="bi bi-bag-check me-1"></i>My Orders
+                <i class="bi bi-bag-check me-1"></i>@Loc["My Orders"]
             </button>
             <button class="myorders-tab @(_activeTab == "history" ? "active" : "")"
                     @onclick="SwitchToHistory">
-                <i class="bi bi-clock-history me-1"></i>Order History
+                <i class="bi bi-clock-history me-1"></i>@Loc["Order History"]
             </button>
         </div>
     </div>
@@ -29,7 +32,7 @@
     {
         <div class="text-center py-5">
             <div class="spinner-border text-success" role="status">
-                <span class="visually-hidden">Loading...</span>
+                <span class="visually-hidden">@Loc["Loading"]</span>
             </div>
         </div>
     }
@@ -38,9 +41,9 @@
         <div class="myorders-rating-overlay">
             <div class="myorders-rating-card">
                 <h4 class="myorders-rating-title">
-                    <i class="fa-solid fa-pizza-slice me-1"></i> Rate @_ratingBusinessName
+                    <i class="fa-solid fa-pizza-slice me-1"></i> @Loc["Rate"] @_ratingBusinessName
                 </h4>
-                <p class="myorders-rating-sub">How was your experience?</p>
+                <p class="myorders-rating-sub">@Loc["How was your experience"]</p>
                 <div class="myorders-rating-stars">
                     @for (int i = 1; i <= 5; i++)
                     {
@@ -57,15 +60,15 @@
                     @if (_ratingSubmitting)
                     {
                         <span class="spinner-border spinner-border-sm me-1" role="status"></span>
-                        <span>Saving...</span>
+                        <span>@Loc["Saving"]</span>
                     }
                     else if (_ratingIndex < _ratingBusinesses.Count - 1)
                     {
-                        <span>Next <i class="bi bi-arrow-right ms-1"></i></span>
+                        <span>@Loc["Next"] <i class="bi bi-arrow-right ms-1"></i></span>
                     }
                     else
                     {
-                        <span>Done <i class="bi bi-check-lg ms-1"></i></span>
+                        <span>@Loc["Done"] <i class="bi bi-check-lg ms-1"></i></span>
                     }
                 </button>
                 @if (!string.IsNullOrEmpty(_ratingError))
@@ -79,12 +82,12 @@
     {
         <div class="myorders-empty">
             <i class="bi @(_activeTab == "history" ? "bi-clock-history" : "bi-box-seam") myorders-empty-icon"></i>
-            <h5>@(_activeTab == "history" ? "No order history" : "No pending orders")</h5>
-            <p>@(_activeTab == "history" ? "Your completed orders will appear here." : "Browse businesses and order a package to get started.")</p>
+            <h5>@(_activeTab == "history" ? Loc["No order history"] : Loc["No pending orders"])</h5>
+            <p>@(_activeTab == "history" ? Loc["No order history"] : Loc["No pending orders"])</p>
             @if (_activeTab == "orders")
             {
                 <button class="myorders-browse-btn" @onclick="GoToBusinesses">
-                    <i class="bi bi-compass me-1"></i> Browse Businesses
+                    <i class="bi bi-compass me-1"></i> @Loc["Browse Businesses"]
                 </button>
             }
         </div>
@@ -104,7 +107,7 @@
                         <div class="myorders-card-body">
                             <div class="myorders-card-top">
                                 <h5 class="myorders-package-name">@order.PackageName</h5>
-                                <span class="myorders-status-badge @StatusClass(order.Status)">@StatusLabel(order.Status)</span>
+                                <span class="myorders-status-badge @StatusClass(order.Status)">@Loc[StatusLabel(order.Status)]</span>
                             </div>
                             <div class="myorders-card-details">
                                 <span class="myorders-detail">
@@ -134,12 +137,12 @@
                             <button class="myorders-pickup-btn"
                                     @onclick="() => HandlePickup(order.Id, order.businessId, order.BusinessName)"
                                     @onclick:stopPropagation="true">
-                                <i class="bi bi-check-lg"></i> Picked Up
+                                <i class="bi bi-check-lg"></i> @Loc["Picked Up"]
                             </button>
                             <button class="myorders-cancel-btn"
                                     @onclick="() => HandleCancel(order.Id)"
                                     @onclick:stopPropagation="true">
-                                <i class="bi bi-x-lg"></i> Cancel
+                                <i class="bi bi-x-lg"></i> @Loc["Cancel"]
                             </button>
                         </div>
                     }
@@ -152,21 +155,21 @@
             <div class="myorders-discount">
                 <div class="myorders-discount-header">
                     <i class="bi bi-star-fill"></i>
-                    <span>Loyalty Discount — @_discountPercent% off (@_orderCount package@(_orderCount != 1 ? "s" : ""))</span>
+                    <span>@Loc["Loyalty Discount"] — @_discountPercent% off (@_orderCount package@(_orderCount != 1 ? "s" : ""))</span>
                 </div>
                 @if (_discountPercent > 0)
                 {
                     <div class="myorders-discount-rows">
                         <div class="myorders-discount-row">
-                            <span>Total price</span>
+                            <span>@Loc["Total price"]</span>
                             <span class="myorders-discount-old">@_totalPrice.ToString("F2") RON</span>
                         </div>
                         <div class="myorders-discount-row">
-                            <span>You save (@_discountPercent%)</span>
+                            <span>@Loc["You save"] (@_discountPercent%)</span>
                             <span class="myorders-discount-save">-@_savedAmount.ToString("F2") RON</span>
                         </div>
                         <div class="myorders-discount-row myorders-discount-final">
-                            <span>Final price</span>
+                            <span>@Loc["Final price"]</span>
                             <span>@_finalPrice.ToString("F2") RON</span>
                         </div>
                     </div>
@@ -174,7 +177,7 @@
                 @if (!_isAdmin && _orderCount > 0)
                 {
                     <button class="myorders-pickup-all-btn" @onclick="HandlePickUpAll">
-                        <i class="bi bi-check2-all me-1"></i> Pick Up All Packages
+                        <i class="bi bi-check2-all me-1"></i> @Loc["Pick Up All Packages"]
                     </button>
                 }
             </div>
@@ -249,7 +252,7 @@
 
     private async Task HandlePickup(int orderId, int businessId, string businessName)
     {
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Mark this order as picked up?");
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", Loc["Mark picked up"].ToString());
         if (!confirmed) return;
 
         var success = await OrderService.MarkPickedUpAsync(orderId);
@@ -262,7 +265,7 @@
 
     private async Task HandleCancel(int orderId)
     {
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Cancel this order? This action cannot be undone.");
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", Loc["Confirm cancel"].ToString());
         if (!confirmed) return;
 
         var success = await OrderService.CancelOrderAsync(orderId);
@@ -275,7 +278,8 @@
 
     private async Task HandlePickUpAll()
     {
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Pick up all {_orderCount} packages for {_finalPrice:F2} RON ({_discountPercent}% off)?");
+        var msg = string.Format(Loc["Confirm pick up all"].ToString(), _orderCount, _finalPrice.ToString("F2"), _discountPercent);
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", msg);
         if (!confirmed) return;
 
         var pending = _orders.Where(o => o.Status == 1).ToList();
@@ -316,15 +320,8 @@
         _ratingHover = 0;
     }
 
-    private void HoverStar(int star)
-    {
-        _ratingHover = star;
-    }
-
-    private void ResetHover()
-    {
-        _ratingHover = 0;
-    }
+    private void HoverStar(int star) { _ratingHover = star; }
+    private void ResetHover() { _ratingHover = 0; }
 
     private async Task ConfirmRating()
     {
@@ -339,7 +336,7 @@
 
         if (!success)
         {
-            _ratingError = "Failed to save rating. Please try again.";
+            _ratingError = Loc["Failed to save rating"].ToString();
             _ratingSubmitting = false;
             StateHasChanged();
             return;

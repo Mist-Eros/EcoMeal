@@ -2,12 +2,15 @@
 @using EcoMeal.EcoMealBlazor.Services
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
+@using Microsoft.Extensions.Localization
+@using EcoMeal.EcoMealBlazor.Resources
 @inject AuthService AuthService
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager Navigation
 @inject HttpClient Http
 @inject OrderService OrderService
 @inject IJSRuntime JSRuntime
+@inject IStringLocalizer<SharedResource> Loc
 
 <div class="container py-4">
     <div class="row justify-content-center">
@@ -15,14 +18,14 @@
             <div class="card form-card">
                 <div class="card-body p-4">
                     <h2 class="fw-bold text-success mb-4">
-                        <i class="bi bi-person-gear me-2"></i>Account Settings
+                        <i class="bi bi-person-gear me-2"></i>@Loc["Account Settings"]
                     </h2>
 
                     @if (_isLoading)
                     {
                         <div class="text-center py-5">
                             <div class="spinner-border text-success" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                                <span class="visually-hidden">@Loc["Loading"]</span>
                             </div>
                         </div>
                     }
@@ -32,21 +35,21 @@
                             <div class="account-info-row">
                                 <div class="account-info-icon"><i class="bi bi-envelope"></i></div>
                                 <div>
-                                    <div class="account-info-label">Email</div>
+                                    <div class="account-info-label">@Loc["Email"]</div>
                                     <div class="account-info-value">@_userEmail</div>
                                 </div>
                             </div>
                             <div class="account-info-row">
                                 <div class="account-info-icon"><i class="bi bi-person"></i></div>
                                 <div>
-                                    <div class="account-info-label">Name</div>
+                                    <div class="account-info-label">@Loc["Name"]</div>
                                     <div class="account-info-value">@_userName</div>
                                 </div>
                             </div>
                             <div class="account-info-row">
                                 <div class="account-info-icon"><i class="bi bi-shield-check"></i></div>
                                 <div>
-                                    <div class="account-info-label">Role</div>
+                                    <div class="account-info-label">@Loc["Role"]</div>
                                     <div class="d-flex align-items-center gap-2">
                                         <span class="account-role-badge">@_userRole</span>
                                         <button class="account-edit-btn" @onclick="ToggleEditRole">
@@ -60,7 +63,7 @@
                         @if (_isEditingRole)
                         {
                             <div class="account-role-editor">
-                                <label class="form-label fw-semibold">Change Role</label>
+                                <label class="form-label fw-semibold">@Loc["Change Role"]</label>
                                 <div class="account-role-picker">
                                     @foreach (var role in _availableRoles)
                                     {
@@ -96,7 +99,7 @@
                             {
                                 <span class="spinner-border spinner-border-sm me-1" role="status"></span>
                             }
-                            <i class="bi bi-trash3 me-1"></i> Clear My Order History
+                            <i class="bi bi-trash3 me-1"></i> @Loc["Clear My Order History"]
                         </button>
 
                         <button class="account-delete-btn mb-3" @onclick="HandleDeleteAccount" disabled="@_isDeleting">
@@ -104,17 +107,17 @@
                             {
                                 <span class="spinner-border spinner-border-sm me-1" role="status"></span>
                             }
-                            <i class="bi bi-person-x me-1"></i> Delete My Account
+                            <i class="bi bi-person-x me-1"></i> @Loc["Delete My Account"]
                         </button>
 
                         <hr class="account-divider" />
 
                         <div class="d-flex gap-2">
                             <button class="btn-form-cancel flex-fill" @onclick="GoToHome">
-                                <i class="bi bi-house"></i> Back to Home
+                                <i class="bi bi-house"></i> @Loc["Back to Home"]
                             </button>
                             <button class="account-logout-btn flex-fill" @onclick="HandleLogout">
-                                <i class="bi bi-box-arrow-right"></i> Logout
+                                <i class="bi bi-box-arrow-right"></i> @Loc["Logout"]
                             </button>
                         </div>
                     }
@@ -218,7 +221,7 @@
             if (response.IsSuccessStatusCode)
             {
                 _roleUpdateSuccess = true;
-                _roleUpdateMessage = $"Role updated to '{role}!'. Please log in again.";
+                _roleUpdateMessage = string.Format(Loc["Role updated"].Value, role);
                 StateHasChanged();
 
                 await Task.Delay(1500);
@@ -256,7 +259,7 @@
 
     private async Task HandleDeleteAccount()
     {
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to permanently delete your account? This cannot be undone.");
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", Loc["Confirm delete account"].Value);
         if (!confirmed) return;
 
         _isDeleting = true;
@@ -277,7 +280,7 @@
 
     private async Task HandleClearOrders()
     {
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to clear all your order history? This cannot be undone.");
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", Loc["Confirm clear orders"].Value);
         if (!confirmed) return;
 
         _isClearing = true;
@@ -289,8 +292,8 @@
         _isClearing = false;
         _clearSuccess = success;
         _clearMessage = success
-            ? "Order history cleared successfully."
-            : "Failed to clear order history.";
+            ? Loc["Order history cleared"].Value
+            : Loc["Failed to clear orders"].Value;
         StateHasChanged();
     }
 

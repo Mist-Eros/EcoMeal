@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter</value></resheader>
+
+  <data name="Login" xml:space="preserve"><value>Anmelden</value></data>
+  <data name="Register" xml:space="preserve"><value>Registrieren</value></data>
+  <data name="Log In" xml:space="preserve"><value>Anmelden</value></data>
+  <data name="Welcome" xml:space="preserve"><value>Willkommen</value></data>
+  <data name="My Orders" xml:space="preserve"><value>Meine Bestellungen</value></data>
+  <data name="Order History" xml:space="preserve"><value>Bestellverlauf</value></data>
+  <data name="Orders" xml:space="preserve"><value>Bestellungen</value></data>
+  <data name="Loading" xml:space="preserve"><value>Lädt...</value></data>
+  <data name="No pending orders" xml:space="preserve"><value>Keine ausstehenden Bestellungen</value></data>
+  <data name="No order history" xml:space="preserve"><value>Kein Bestellverlauf</value></data>
+  <data name="Browse Businesses" xml:space="preserve"><value>Betriebe durchsuchen</value></data>
+  <data name="Placed" xml:space="preserve"><value>Platziert</value></data>
+  <data name="Picked Up" xml:space="preserve"><value>Abgeholt</value></data>
+  <data name="Cancelled" xml:space="preserve"><value>Storniert</value></data>
+  <data name="Pick Up All Packages" xml:space="preserve"><value>Alle Pakete abholen</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="Loyalty Discount" xml:space="preserve"><value>Treuerabatt</value></data>
+  <data name="Total price" xml:space="preserve"><value>Gesamtpreis</value></data>
+  <data name="You save" xml:space="preserve"><value>Du sparst</value></data>
+  <data name="Final price" xml:space="preserve"><value>Endpreis</value></data>
+  <data name="Create Account" xml:space="preserve"><value>Konto erstellen</value></data>
+  <data name="Welcome Back" xml:space="preserve"><value>Willkommen zurück</value></data>
+  <data name="Account Settings" xml:space="preserve"><value>Kontoeinstellungen</value></data>
+  <data name="Clear My Order History" xml:space="preserve"><value>Bestellverlauf löschen</value></data>
+  <data name="Delete My Account" xml:space="preserve"><value>Konto löschen</value></data>
+  <data name="Back to Home" xml:space="preserve"><value>Zurück zur Startseite</value></data>
+  <data name="Logout" xml:space="preserve"><value>Abmelden</value></data>
+  <data name="Item Ordered" xml:space="preserve"><value>Artikel bestellt!</value></data>
+  <data name="View My Orders" xml:space="preserve"><value>Meine Bestellungen anzeigen</value></data>
+  <data name="Back to Businesses" xml:space="preserve"><value>Zurück zu den Betrieben</value></data>
+  <data name="Order Failed" xml:space="preserve"><value>Bestellung fehlgeschlagen</value></data>
+  <data name="Go Back" xml:space="preserve"><value>Zurück</value></data>
+  <data name="Placing your order" xml:space="preserve"><value>Bestellung wird aufgegeben...</value></data>
+  <data name="Could not place order" xml:space="preserve"><value>Bestellung konnte nicht aufgegeben werden.</value></data>
+  <data name="How was your experience" xml:space="preserve"><value>Wie war deine Erfahrung?</value></data>
+  <data name="Rate" xml:space="preserve"><value>Bewerte</value></data>
+  <data name="Next" xml:space="preserve"><value>Weiter</value></data>
+  <data name="Done" xml:space="preserve"><value>Fertig</value></data>
+  <data name="Saving" xml:space="preserve"><value>Speichern...</value></data>
+  <data name="Failed to save rating" xml:space="preserve"><value>Bewertung konnte nicht gespeichert werden.</value></data>
+  <data name="Search" xml:space="preserve"><value>Suchen...</value></data>
+  <data name="All Types" xml:space="preserve"><value>Alle Typen</value></data>
+  <data name="Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Address" xml:space="preserve"><value>Adresse</value></data>
+  <data name="Add Package" xml:space="preserve"><value>Paket hinzufügen</value></data>
+  <data name="Add First Package" xml:space="preserve"><value>Erstes Paket hinzufügen</value></data>
+  <data name="Edit" xml:space="preserve"><value>Bearbeiten</value></data>
+  <data name="Delete" xml:space="preserve"><value>Löschen</value></data>
+  <data name="Save" xml:space="preserve"><value>Speichern</value></data>
+  <data name="Order Now" xml:space="preserve"><value>Jetzt bestellen</value></data>
+  <data name="Back" xml:space="preserve"><value>Zurück</value></data>
+  <data name="Menu" xml:space="preserve"><value>Menü</value></data>
+  <data name="No menu items" xml:space="preserve"><value>Noch keine Menüpunkte verfügbar.</value></data>
+  <data name="Password" xml:space="preserve"><value>Passwort</value></data>
+  <data name="Confirm Password" xml:space="preserve"><value>Passwort bestätigen</value></data>
+  <data name="Contact Info" xml:space="preserve"><value>Kontaktinformationen</value></data>
+  <data name="Already have an account" xml:space="preserve"><value>Hast du bereits ein Konto?</value></data>
+  <data name="Don't have an account" xml:space="preserve"><value>Noch kein Konto?</value></data>
+  <data name="Account created" xml:space="preserve"><value>Konto erfolgreich erstellt! Du kannst dich jetzt anmelden.</value></data>
+  <data name="Role" xml:space="preserve"><value>Rolle</value></data>
+  <data name="Change Role" xml:space="preserve"><value>Rolle ändern</value></data>
+  <data name="Order history cleared" xml:space="preserve"><value>Bestellverlauf gelöscht.</value></data>
+  <data name="Failed to clear orders" xml:space="preserve"><value>Löschen des Verlaufs fehlgeschlagen.</value></data>
+  <data name="Get Started" xml:space="preserve"><value>Los geht's</value></data>
+  <data name="Email" xml:space="preserve"><value>E-Mail</value></data>
+  <data name="Invalid email or password" xml:space="preserve"><value>Ungültige E-Mail oder Passwort.</value></data>
+  <data name="Something went wrong" xml:space="preserve"><value>Etwas ist schiefgelaufen. Bitte versuche es erneut.</value></data>
+  <data name="Rating" xml:space="preserve"><value>Bewertung</value></data>
+  <data name="Ratings" xml:space="preserve"><value>Bewertungen</value></data>
+  <data name="Rating submitted" xml:space="preserve"><value>Bewertung gesendet</value></data>
+  <data name="Reset all ratings" xml:space="preserve"><value>Alle Bewertungen zurücksetzen?</value></data>
+  <data name="Mark picked up" xml:space="preserve"><value>Als abgeholt markieren?</value></data>
+  <data name="Confirm cancel" xml:space="preserve"><value>Bestellung stornieren? Dies kann nicht rückgängig gemacht werden.</value></data>
+  <data name="Confirm pick up all" xml:space="preserve"><value>Alle {0} Pakete für {1} RON ({2}% Rabatt) abholen?</value></data>
+  <data name="Confirm delete account" xml:space="preserve"><value>Bist du sicher, dass du dein Konto dauerhaft löschen möchtest?</value></data>
+  <data name="Confirm clear orders" xml:space="preserve"><value>Gesamten Bestellverlauf löschen? Dies kann nicht rückgängig gemacht werden.</value></data>
+  <data name="Confirm delete package" xml:space="preserve"><value>Dieses Paket löschen?</value></data>
+  <data name="Confirm delete business" xml:space="preserve"><value>'{0}' wirklich löschen?</value></data>
+  <data name="Account deleted" xml:space="preserve"><value>Konto gelöscht</value></data>
+  <data name="Signing in" xml:space="preserve"><value>Anmeldung...</value></data>
+  <data name="Creating account" xml:space="preserve"><value>Konto wird erstellt...</value></data>
+  <data name="Role updated" xml:space="preserve"><value>Rolle auf '{0}' geändert. Bitte melde dich erneut an.</value></data>
+  <data name="Restaurant" xml:space="preserve"><value>Restaurant</value></data>
+  <data name="Bakery" xml:space="preserve"><value>Bäckerei</value></data>
+  <data name="Fast Food" xml:space="preserve"><value>Schnellimbiss</value></data>
+  <data name="Terms of Service" xml:space="preserve"><value>AGB</value></data>
+  <data name="ToS Intro" xml:space="preserve"><value>Durch die Nutzung der EcoMeal-App stimmst du diesen AGB zu. Wenn du nicht zustimmst, nutze die App bitte nicht.</value></data>
+  <data name="ToS Service" xml:space="preserve"><value>EcoMeal ist eine Plattform, die Nutzer mit lokalen Betrieben verbindet, um Lebensmittelpakete zu vergünstigten Preisen zu bestellen und Lebensmittelverschwendung zu reduzieren.</value></data>
+  <data name="ToS Accounts" xml:space="preserve"><value>Nutzer sind für die Vertraulichkeit ihrer Zugangsdaten verantwortlich. EcoMeal haftet nicht für Aktivitäten unter deinem Konto.</value></data>
+  <data name="ToS Orders" xml:space="preserve"><value>Bestellungen sind verfügbarkeitsabhängig. Preise können variieren. Mit der Bestellung bestätigst du die Richtigkeit der Angaben.</value></data>
+  <data name="ToS Liability" xml:space="preserve"><value>EcoMeal übernimmt keine Haftung für die Qualität der von Partnerbetrieben gelieferten Produkte.</value></data>
+  <data name="ToS Changes" xml:space="preserve"><value>Wir behalten uns das Recht vor, diese AGB jederzeit zu ändern. Über wesentliche Änderungen wirst du informiert.</value></data>
+  <data name="ToS Title1" xml:space="preserve"><value>Annahme der AGB</value></data>
+  <data name="ToS Title2" xml:space="preserve"><value>Leistungsbeschreibung</value></data>
+  <data name="ToS Title3" xml:space="preserve"><value>Benutzerkonten</value></data>
+  <data name="ToS Title4" xml:space="preserve"><value>Bestellungen und Zahlungen</value></data>
+  <data name="ToS Title5" xml:space="preserve"><value>Haftungsbeschränkung</value></data>
+  <data name="ToS Title6" xml:space="preserve"><value>Änderungen der AGB</value></data>
+</root>
