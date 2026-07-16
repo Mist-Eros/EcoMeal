@@ -1,4 +1,5 @@
 @page "/business/{BusinessId:int}/addpackage"
+@inherits AddPackageBase
 @rendermode InteractiveServer
 @using EcoMeal.EcoMealBlazor.Models
 @using System.ComponentModel.DataAnnotations
@@ -92,53 +93,3 @@
     </div>
 </div>
 
-@code {
-    [Parameter]
-    public int BusinessId { get; set; }
-
-    private PackageAddModel Model = new();
-    private List<PackageTypeModel> PackageTypes = new();
-    private bool IsSubmitting = false;
-    private string? ErrorMessage;
-
-    private DateOnly? _pickupDate = DateOnly.FromDateTime(DateTime.Now);
-    private TimeOnly? _startTime = TimeOnly.FromDateTime(DateTime.Now);
-    private TimeOnly? _endTime = TimeOnly.FromDateTime(DateTime.Now.AddHours(2));
-
-    protected override async Task OnInitializedAsync()
-    {
-        PackageTypes = await BusinessService.GetPackageTypesAsync();
-    }
-
-    private void ApplyDateTime()
-    {
-        if (_pickupDate.HasValue && _startTime.HasValue && _endTime.HasValue)
-        {
-            Model.Start_PickUp = _pickupDate.Value.ToDateTime(_startTime.Value);
-            Model.End_PickUp = _pickupDate.Value.ToDateTime(_endTime.Value);
-        }
-    }
-
-    private async Task HandleSubmit()
-    {
-        IsSubmitting = true;
-        ErrorMessage = null;
-        ApplyDateTime();
-
-        var success = await BusinessService.AddPackageToBusinessAsync(BusinessId, Model);
-        if (success)
-        {
-            NavigationManager.NavigateTo($"/business/{BusinessId}");
-        }
-        else
-        {
-            ErrorMessage = Loc["Something went wrong"].Value;
-            IsSubmitting = false;
-        }
-    }
-
-    private void GoBack()
-    {
-        NavigationManager.NavigateTo($"/business/{BusinessId}");
-    }
-}

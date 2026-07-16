@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace EcoMeal.EcoMealBlazor.Services;
 
+// manages JWT token in localStorage, login/logout/register
 public class AuthService
 {
     private readonly HttpClient _http;
@@ -38,6 +39,7 @@ public class AuthService
         return AuthResult.Fail(error);
     }
 
+    // POST /login — stores token on success
     public async Task<AuthResult> LoginAsync(string email, string password)
     {
         var request = new AuthRequest { Email = email, Password = password };
@@ -94,9 +96,6 @@ public class AuthService
         }
         catch (CryptographicException)
         {
-            // The stored token was encrypted with different Data Protection keys
-            // (e.g. after an app restart that regenerated the keys). Treat it as logged
-            // out and clear the invalid data instead of crashing the circuit.
             Token = null;
             await _localStorage.DeleteAsync("authToken");
             await _localStorage.DeleteAsync("userRoles");
@@ -136,8 +135,7 @@ public class AuthService
     public async Task<bool> DeleteAccountAsync()
     {
         var request = new HttpRequestMessage(HttpMethod.Delete, "api/auth/me");
-        await Task.Run(() => {}); // placeholder
-        // Use _http directly with auth header
+        await Task.Run(() => {});
         if (string.IsNullOrEmpty(Token))
             await LoadTokenAsync();
 

@@ -1,3 +1,4 @@
+/* /businesses landing page */
 .businesses-page {
     padding: 0;
     width: 100%;
@@ -9,6 +10,7 @@
     padding: 1rem 1rem 0.5rem 1rem;
 }
 
+/* gradient EcoMeal heading */
 .businesses-title {
     font-size: 3rem;
     font-weight: 700;
@@ -35,7 +37,6 @@
     opacity: 0.5;
 }
 
-/* Dark mode */
 [data-theme="dark"] .businesses-title {
     background: linear-gradient(135deg, #40916c, #9fe7d8);
     -webkit-background-clip: text;

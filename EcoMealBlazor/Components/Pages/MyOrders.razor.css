@@ -1,3 +1,4 @@
+/* /my-orders page */
 .myorders-container {
     max-width: 860px;
     margin: 0 auto;
@@ -8,6 +9,7 @@
     margin-bottom: 1.5rem;
 }
 
+/* toggle between active orders / history */
 .myorders-tabs {
     display: flex;
     gap: 0;
@@ -41,6 +43,7 @@
     box-shadow: 0 2px 8px rgba(45, 106, 79, 0.25);
 }
 
+/* no orders placeholder */
 .myorders-empty {
     text-align: center;
     padding: 3rem 1.5rem;
@@ -91,7 +94,6 @@
     gap: 0.85rem;
 }
 
-/* Card */
 .myorders-card {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -108,7 +110,6 @@
     border-color: #2d6a4f40;
 }
 
-/* Main row: icon | body | price */
 .myorders-card-main {
     display: flex;
     align-items: flex-start;
@@ -211,7 +212,6 @@
     white-space: nowrap;
 }
 
-/* Actions row — separate from main row */
 .myorders-card-actions {
     display: flex;
     gap: 0.5rem;
@@ -268,7 +268,6 @@
     box-shadow: 0 4px 12px rgba(220, 53, 69, 0.25);
 }
 
-/* Mobile: stack vertically, actions always at bottom */
 @media (max-width: 575px) {
     .myorders-container {
         padding: 1rem 0.75rem;
@@ -341,7 +340,6 @@
     }
 }
 
-/* Dark mode */
 [data-theme="dark"] .myorders-card-icon {
     background: rgba(159, 231, 216, 0.12);
     color: #9fe7d8;
@@ -405,7 +403,6 @@
     border-top-color: #333;
 }
 
-/* Loyalty discount */
 .myorders-discount {
     margin-top: 1.5rem;
     background: linear-gradient(135deg, rgba(26, 71, 42, 0.06) 0%, rgba(45, 106, 79, 0.12) 100%);
@@ -510,7 +507,6 @@
     background: linear-gradient(180deg, #0a1f14 0%, #143d2a 40%, #1f5a3f 100%);
 }
 
-/* Rating overlay */
 .myorders-rating-overlay {
     display: flex;
     align-items: center;

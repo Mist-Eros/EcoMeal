@@ -1,5 +1,6 @@
 namespace EcoMeal.EcoMealBlazor.Services;
 
+// persists dark mode state across pages via event
 public class DarkModeService
 {
     public event Action? OnChange;

@@ -1,4 +1,5 @@
 @page "/register"
+@inherits RegisterBase
 @using EcoMeal.EcoMealBlazor.Models.Auth
 @using EcoMeal.EcoMealBlazor.Services
 @using Microsoft.AspNetCore.Components.Forms
@@ -101,28 +102,5 @@
     </div>
 </div>
 
-@code {
-    private RegisterModel _model = new();
-    private string? _errorMessage;
-    private bool _isSubmitting;
-    private bool _showPassword;
 
-    private void TogglePassword() { _showPassword = !_showPassword; }
-    private void GoToLogin() { Navigation.NavigateTo("/login"); }
 
-    private async Task HandleRegister()
-    {
-        _isSubmitting = true;
-        _errorMessage = null;
-
-        var result = await AuthService.RegisterAsync(
-            _model.Email, _model.Password, _model.Name, _model.Contact);
-
-        _isSubmitting = false;
-
-        if (result.Success)
-            Navigation.NavigateTo("/login?registered=true");
-        else
-            _errorMessage = result.ErrorMessage;
-    }
-}

@@ -1,4 +1,6 @@
 @page "/last-chance"
+@inherits LastChanceBase
+<!-- /last-chance: all expiring packages sorted by expiry -->
 @rendermode InteractiveServer
 @using EcoMeal.EcoMealBlazor.Models
 @using EcoMeal.EcoMealBlazor.Services
@@ -70,30 +72,5 @@
     }
 </div>
 
-@code {
-    private List<ExpiringPackageModel>? _packages;
 
-    protected override async Task OnInitializedAsync()
-    {
-        _packages = await BusinessService.GetExpiringPackagesAsync();
-    }
 
-    private void GoToBusiness(int businessId)
-    {
-        NavigationManager.NavigateTo($"/business/{businessId}");
-    }
-
-    private void GoBack()
-    {
-        NavigationManager.NavigateTo("/businesses");
-    }
-
-    private string GetTimeRemaining(DateTime endPickup)
-    {
-        var remaining = endPickup - DateTime.Now;
-        if (remaining.TotalMinutes <= 0) return "Expired";
-        if (remaining.TotalHours < 1) return $"{(int)remaining.TotalMinutes}m left";
-        if (remaining.TotalHours < 24) return $"{(int)remaining.TotalHours}h {(int)remaining.Minutes}m left";
-        return $"{(int)remaining.TotalDays}d left";
-    }
-}

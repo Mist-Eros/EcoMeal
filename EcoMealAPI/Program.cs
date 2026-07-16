@@ -86,7 +86,6 @@ using (var scope = app.Services.CreateScope())
 
     var cmd = connection.CreateCommand();
 
-    // Ensure __EFMigrationsHistory exists
     cmd.CommandText = @"
         IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
         BEGIN
@@ -97,7 +96,6 @@ using (var scope = app.Services.CreateScope())
         END";
     await cmd.ExecuteNonQueryAsync();
 
-    // If DB tables exist but no history records, seed old migrations
     cmd.CommandText = "SELECT COUNT(*) FROM __EFMigrationsHistory";
     var migrationCount = (int)(await cmd.ExecuteScalarAsync())!;
 
@@ -126,7 +124,6 @@ using (var scope = app.Services.CreateScope())
                 await cmd.ExecuteNonQueryAsync();
             }
 
-            // If Ratings already exists (from old raw SQL), mark it too
             cmd.CommandText = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Ratings'";
             var hasRatings = (int)(await cmd.ExecuteScalarAsync())! > 0;
             if (hasRatings)
@@ -138,7 +135,6 @@ using (var scope = app.Services.CreateScope())
     }
     else
     {
-        // Check if Ratings table exists but AddRatings migration not yet applied
         cmd.CommandText = "SELECT COUNT(*) FROM __EFMigrationsHistory WHERE MigrationId = '20260713131340_AddRatings'";
         var ratingsApplied = (int)(await cmd.ExecuteScalarAsync())! > 0;
 

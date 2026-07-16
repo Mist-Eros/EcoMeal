@@ -1,9 +1,11 @@
+/* /last-chance page: expiring packages grid */
 .lastchance-page {
     max-width: 960px;
     margin: 0 auto;
     padding: 1.5rem 1rem;
 }
 
+/* header with alarm icon + gradient text */
 .lastchance-header {
     text-align: center;
     margin-bottom: 2rem;
@@ -71,12 +73,14 @@
     font-size: 0.9rem;
 }
 
+/* package cards ordered by expiry time */
 .lastchance-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
 }
 
+/* single expiring package card */
 .lastchance-card {
     background: var(--bg-card);
     border-radius: 16px;
@@ -175,6 +179,7 @@
     box-shadow: 0 4px 12px rgba(230, 126, 34, 0.3);
 }
 
+/* nothing expiring state */
 .lastchance-empty {
     text-align: center;
     padding: 4rem 1.5rem;
@@ -218,7 +223,6 @@
     transform: translateY(-2px);
 }
 
-/* Dark mode */
 [data-theme="dark"] .lastchance-card {
     border-color: #d4833a !important;
 }

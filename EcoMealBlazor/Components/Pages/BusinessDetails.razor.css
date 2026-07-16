@@ -4,7 +4,7 @@
     max-width: 100%;
 }
 
-/* Business Card */
+/* main business card with image header */
 .details-business-card {
     border-radius: 16px;
     overflow: hidden;
@@ -24,7 +24,6 @@
     padding: 1.5rem;
 }
 
-/* Info row — address/contact left, QR right */
 .details-info-row {
     display: flex;
     align-items: flex-start;
@@ -36,6 +35,7 @@
     min-width: 0;
 }
 
+/* QR thumbnail, click to enlarge */
 .details-qr-thumb {
     width: 56px;
     height: 56px;
@@ -117,7 +117,7 @@
     font-size: 1.1rem;
 }
 
-/* QR Lightbox */
+/* fullscreen QR lightbox overlay */
 .qr-overlay {
     position: fixed;
     inset: 0;
@@ -130,6 +130,7 @@
     padding: 1rem;
 }
 
+/* lightbox card with banner + QR */
 .qr-lightbox {
     background: var(--bg-card);
     border-radius: 16px;
@@ -216,6 +217,8 @@
     to { transform: scale(1); opacity: 1; }
 }
 
+/* dark mode overrides */
+
 [data-theme="dark"] .qr-lightbox {
     background: #1A1A1A;
     border-color: #40916c !important;
@@ -234,7 +237,6 @@
     box-shadow: 0 4px 12px rgba(159, 231, 216, 0.3);
 }
 
-/* Packages Section */
 .details-packages-header {
     display: flex;
     justify-content: space-between;
@@ -277,7 +279,7 @@
     box-shadow: 0 4px 16px rgba(45, 106, 79, 0.3);
 }
 
-/* Package Grid */
+/* package cards in 3-col grid */
 .details-packages-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -285,7 +287,6 @@
     margin-bottom: 2rem;
 }
 
-/* Package Card */
 .details-package-card {
     border-radius: 16px;
     overflow: hidden;
@@ -474,7 +475,7 @@
     box-shadow: 0 4px 16px rgba(220, 53, 69, 0.3);
 }
 
-/* Expired package — pickup time passed */
+/* past pickup window */
 .details-package-card.expired .details-package-title {
     color: #dc3545;
 }
@@ -483,7 +484,7 @@
     color: #dc3545;
 }
 
-/* Available package — within pickup window */
+/* within pickup window — can order */
 .details-package-card.available .details-package-title {
     color: #2d6a4f;
 }
@@ -492,7 +493,7 @@
     color: #2d6a4f;
 }
 
-/* Upcoming package — pickup not yet started */
+/* pickup not yet started */
 .details-package-card.upcoming .details-package-title {
     color: #999;
 }
@@ -505,7 +506,7 @@
     color: #999;
 }
 
-/* Empty State */
+/* shown when no packages */
 .details-empty-state {
     text-align: center;
     padding: 3rem;
@@ -529,7 +530,6 @@
     margin: 0 auto;
 }
 
-/* Back Button */
 .details-back-section {
     margin-top: 1rem;
 }
@@ -553,7 +553,6 @@
     transform: translateY(-2px);
 }
 
-/* Responsive */
 @media (max-width: 992px) {
     .details-packages-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -578,7 +577,7 @@
     }
 }
 
-/* Rating */
+/* star rating inside card */
 .details-rating {
     display: flex;
     align-items: center;
@@ -619,7 +618,6 @@
     font-weight: 600;
 }
 
-/* Dark Mode */
 [data-theme="dark"] .details-business-card {
     border-color: #40916c !important;
     background: #1A1A1A !important;

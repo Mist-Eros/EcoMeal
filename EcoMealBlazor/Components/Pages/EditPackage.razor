@@ -1,4 +1,5 @@
 @page "/business/{BusinessId:int}/package/{PackageId:int}/edit"
+@inherits EditPackageBase
 @rendermode InteractiveServer
 @using EcoMeal.EcoMealBlazor.Models
 @using EcoMeal.EcoMealBlazor.Services
@@ -102,75 +103,3 @@
     </div>
 </div>
 
-@code {
-    [Parameter]
-    public int BusinessId { get; set; }
-
-    [Parameter]
-    public int PackageId { get; set; }
-
-    private PackageEditModel EditModel = new();
-    private List<PackageTypeModel> PackageTypes = new();
-    private bool IsSubmitting = false;
-    private string? ErrorMessage;
-    private bool _isLoading = true;
-
-    private DateOnly? _pickupDate;
-    private TimeOnly? _startTime;
-    private TimeOnly? _endTime;
-
-    protected override async Task OnInitializedAsync()
-    {
-        var package = await BusinessService.GetPackageByIdAsync(PackageId);
-        if (package != null)
-        {
-            EditModel = new PackageEditModel
-            {
-                Id = package.Id,
-                Name = package.Name,
-                Description = package.Description,
-                Price = package.Price,
-                Start_PickUp = package.Start_PickUp,
-                End_PickUp = package.End_PickUp,
-                PackageTypeId = package.PackageTypeId
-            };
-            _pickupDate = DateOnly.FromDateTime(package.Start_PickUp);
-            _startTime = TimeOnly.FromDateTime(package.Start_PickUp);
-            _endTime = TimeOnly.FromDateTime(package.End_PickUp);
-        }
-        PackageTypes = await BusinessService.GetPackageTypesAsync();
-        _isLoading = false;
-    }
-
-    private void ApplyDateTime()
-    {
-        if (_pickupDate.HasValue && _startTime.HasValue && _endTime.HasValue)
-        {
-            EditModel.Start_PickUp = _pickupDate.Value.ToDateTime(_startTime.Value);
-            EditModel.End_PickUp = _pickupDate.Value.ToDateTime(_endTime.Value);
-        }
-    }
-
-    private async Task HandleSubmit()
-    {
-        IsSubmitting = true;
-        ErrorMessage = null;
-        ApplyDateTime();
-
-        var success = await BusinessService.UpdatePackageAsync(EditModel);
-        if (success)
-        {
-            NavigationManager.NavigateTo($"/business/{BusinessId}");
-        }
-        else
-        {
-            ErrorMessage = Loc["Something went wrong"].Value;
-            IsSubmitting = false;
-        }
-    }
-
-    private void GoBack()
-    {
-        NavigationManager.NavigateTo($"/business/{BusinessId}");
-    }
-}

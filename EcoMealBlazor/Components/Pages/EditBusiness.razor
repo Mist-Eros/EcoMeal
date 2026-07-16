@@ -1,4 +1,5 @@
 @page "/business/{Id:int}/edit"
+@inherits EditBusinessBase
 @rendermode InteractiveServer
 @using EcoMeal.EcoMealBlazor.Models
 @using EcoMeal.EcoMealBlazor.Services
@@ -91,52 +92,3 @@
     </div>
 </div>
 
-@code {
-    [Parameter]
-    public int Id { get; set; }
-
-    private BusinessEditModel EditModel = new();
-    private List<BusinessTypeModel> BusinessTypes = new();
-    private bool IsSubmitting = false;
-    private string? ErrorMessage;
-
-    protected override async Task OnInitializedAsync()
-    {
-        var business = await BusinessService.GetOneById(Id);
-        if (business != null)
-        {
-            EditModel = new BusinessEditModel
-            {
-                Id = business.Id,
-                Name = business.Name,
-                Address = business.Address,
-                Description = business.Description,
-                Contact = business.Contact,
-                BusinessTypeId = business.BusinessTypeId
-            };
-        }
-        BusinessTypes = await BusinessService.GetBusinessTypesAsync();
-    }
-
-    private async Task HandleSubmit()
-    {
-        IsSubmitting = true;
-        ErrorMessage = null;
-
-        var success = await BusinessService.UpdateBusinessAsync(EditModel);
-        if (success)
-        {
-            NavigationManager.NavigateTo("/businesses/");
-        }
-        else
-        {
-            ErrorMessage = Loc["Something went wrong"].Value;
-            IsSubmitting = false;
-        }
-    }
-
-    private void GoBack()
-    {
-        NavigationManager.NavigateTo("/businesses/");
-    }
-}

@@ -183,7 +183,6 @@
     box-shadow: 0 4px 16px rgba(220, 53, 69, 0.3);
 }
 
-/* Dark mode */
 [data-theme="dark"] .card {
     border-color: #40916c !important;
     background: #1A1A1A !important;

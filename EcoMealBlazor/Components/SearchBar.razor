@@ -1,4 +1,5 @@
 @namespace EcoMeal.EcoMealBlazor.Components
+@inherits SearchBarBase
 @using EcoMeal.EcoMealBlazor.Models
 @using EcoMeal.EcoMealBlazor.Services
 @using Microsoft.Extensions.Localization
@@ -42,88 +43,5 @@
     </div>
 </div>
 
-@code {
-    [Parameter]
-    public EventCallback<SearchCriteria> OnSearch { get; set; }
 
-    private string SearchTerm = "";
-    private string SelectedType = "";
-    private string SearchBy = "name";
-    private bool _searchTermVisible = false;
-    private List<BusinessTypeModel> BusinessTypes = new();
 
-    [Inject]
-    public required BusinessService BusinessService { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        BusinessTypes = await BusinessService.GetBusinessTypesAsync();
-    }
-
-    private async Task SetTypeAll() => await SetType("");
-    private async Task SetTypeItem(string type) => await SetType(type);
-
-    private async Task SetType(string type)
-    {
-        SelectedType = type;
-        await ApplySearch();
-    }
-
-    private async Task SetSearchByName() => await SetSearchBy("name");
-    private async Task SetSearchByAddress() => await SetSearchBy("address");
-
-    private async Task SetSearchBy(string by)
-    {
-        SearchBy = by;
-        await ApplySearch();
-    }
-
-    private async Task OnSearchTermChanged()
-    {
-        _searchTermVisible = !string.IsNullOrEmpty(SearchTerm);
-        await ApplySearch();
-    }
-
-    private async Task ClearSearch()
-    {
-        SearchTerm = "";
-        _searchTermVisible = false;
-        await ApplySearch();
-    }
-
-    private async Task ApplySearch()
-    {
-        var criteria = new SearchCriteria
-        {
-            Term = SearchTerm,
-            Type = SelectedType,
-            SearchBy = SearchBy
-        };
-        await OnSearch.InvokeAsync(criteria);
-    }
-
-    private string GetTypeIcon(string typeName)
-    {
-        var t = typeName?.ToLower() ?? "";
-        if (t.Contains("restaurant")) return "fa-solid fa-pizza-slice";
-        if (t.Contains("fast food") || t.Contains("fast-food")) return "fa-solid fa-burger";
-        if (t.Contains("bakery")) return "fa-solid fa-cake-candles";
-        return "fa-solid fa-shop";
-    }
-
-    private string LocTypeName(string typeName)
-    {
-        var t = typeName?.ToLower() ?? "";
-        if (t.Contains("restaurant")) return Loc["Restaurant"];
-        if (t.Contains("fast food") || t.Contains("fast-food")) return Loc["Fast Food"];
-        if (t.Contains("bakery")) return Loc["Bakery"];
-        return typeName;
-    }
-
-    public class SearchCriteria
-    {
-        public string Term { get; set; } = "";
-        public string Type { get; set; } = "";
-        public string SearchBy { get; set; } = "name";
-    }
-}

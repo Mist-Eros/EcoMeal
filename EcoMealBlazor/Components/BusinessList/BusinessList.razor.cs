@@ -2,6 +2,7 @@ using EcoMeal.EcoMealBlazor.Models;
 using EcoMeal.EcoMealBlazor.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using EcoMeal.Components;
 
 namespace EcoMeal.EcoMealBlazor.Components.BusinessList;
 

@@ -2,6 +2,7 @@ using System.Security.Claims;
 
 namespace EcoMeal.EcoMealBlazor.Services
 {
+    // checks if current user is admin
     public class PermissionService
     {
         public bool CanEdit(ClaimsPrincipal user) => user.IsInRole("Admin");

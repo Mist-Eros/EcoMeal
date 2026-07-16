@@ -1,3 +1,4 @@
+@inherits ConfirmDialogBase
 @if (IsVisible)
 {
     <div class="confirm-overlay" @onclick="OnCancel">
@@ -14,11 +15,5 @@
     </div>
 }
 
-@code {
-    [Parameter] public bool IsVisible { get; set; }
-    [Parameter] public string Message { get; set; } = "Are you sure?";
-    [Parameter] public string ConfirmText { get; set; } = "Confirm";
-    [Parameter] public string CancelText { get; set; } = "Cancel";
-    [Parameter] public EventCallback OnConfirm { get; set; }
-    [Parameter] public EventCallback OnCancel { get; set; }
-}
+
+

@@ -2,6 +2,7 @@ using System.Globalization;
 
 namespace EcoMeal.EcoMealBlazor.Services;
 
+// converts RON prices based on thread culture
 public class CurrencyService
 {
     private static readonly Dictionary<string, (decimal Rate, string Symbol)> Rates = new()

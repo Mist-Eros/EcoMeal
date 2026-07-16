@@ -3,6 +3,7 @@ using EcoMeal.EcoMealBlazor.Models;
 
 namespace EcoMeal.EcoMealBlazor.Services;
 
+// fetches businesses, packages, ratings, and expiring packages from API
 public class BusinessService
 {
     private readonly HttpClient _http;
@@ -14,6 +15,7 @@ public class BusinessService
         _authService = authService;
     }
 
+    // GET /api/business
     public async Task<List<BusinessModel>> GetAllAsync()
     {
         var businesses = await _http.GetFromJsonAsync<List<BusinessModel>>("api/business");
@@ -26,6 +28,7 @@ public class BusinessService
         return response.IsSuccessStatusCode;
     }
 
+    // GET /api/business/{id} — includes packages + ratings
     public async Task<BusinessDetailsModel?> GetOneById(int Id)
     {
         var business = await _http.GetFromJsonAsync<BusinessDetailsModel>($"api/business/{Id}");
@@ -133,6 +136,7 @@ public class BusinessService
         }
     }
 
+    // GET /api/package/expiring — sorted by soonest expiry
     public async Task<List<ExpiringPackageModel>> GetExpiringPackagesAsync()
     {
         try
@@ -146,6 +150,7 @@ public class BusinessService
         }
     }
 
+    // POST /api/business/{id}/rate
     public async Task<bool> RateBusinessAsync(int businessId, int stars)
     {
         try

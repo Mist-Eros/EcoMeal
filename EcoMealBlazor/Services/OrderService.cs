@@ -3,6 +3,7 @@ using EcoMeal.EcoMealBlazor.Models;
 
 namespace EcoMeal.EcoMealBlazor.Services;
 
+// CRUD for orders: place, pickup, cancel, history, discount
 public class OrderService
 {
     private readonly HttpClient _http;
@@ -26,6 +27,7 @@ public class OrderService
         return response.IsSuccessStatusCode;
     }
 
+    // GET /api/order/my — active orders only
     public async Task<List<OrderGetModel>> GetMyOrderAsync()
     {
         try
