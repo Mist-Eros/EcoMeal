@@ -27,7 +27,7 @@
 }
 
 <div class="details-container">
-    <!-- Business Card -->
+    <!-- Business Card with Rating + QR -->
     <div class="details-business-card">
         <img src="@GetBusinessImage()" class="details-business-image" alt="@Business.Name" />
         <div class="details-business-body">
@@ -39,51 +39,56 @@
                 <span class="details-business-badge"><i class="@GetTypeIcon() me-1"></i>@LocTypeName()</span>
             </div>
             <hr class="details-divider" />
-            <div class="details-business-info">
-                <div class="details-info-item">
-                    <i class="bi bi-geo-alt details-info-icon"></i>
-                    <span>@Business.Address</span>
+            <div class="details-info-row">
+                <div class="details-business-info">
+                    <div class="details-info-item">
+                        <i class="bi bi-geo-alt details-info-icon"></i>
+                        <span>@Business.Address</span>
+                    </div>
+                    <div class="details-info-item">
+                        <i class="bi bi-telephone details-info-icon"></i>
+                        <span>@Business.Contact</span>
+                    </div>
                 </div>
-                <div class="details-info-item">
-                    <i class="bi bi-telephone details-info-icon"></i>
-                    <span>@Business.Contact</span>
+                <div class="details-qr-thumb" @onclick="() => _showQrModal = true" title="@Loc["Tap to enlarge"]">
+                    <img src="@GetQRUrl()" alt="QR Code" />
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Rating Section -->
-    <div class="details-rating">
-        <div class="details-rating-stars">
-            @{
-                var fullStars = (int)Math.Floor(Business.AverageRating);
-                var remainder = Business.AverageRating - fullStars;
-                var hasHalf = remainder >= 0.25 && remainder < 0.75;
-                var extraFull = remainder >= 0.75;
-            }
-            @for (int i = 1; i <= 5; i++)
-            {
-                if (i <= fullStars)
-                {
-                    <span class="details-star filled"><i class="bi bi-star-fill"></i></span>
-                }
-                else if (i == fullStars + 1 && hasHalf)
-                {
-                    <span class="details-star filled"><i class="bi bi-star-half"></i></span>
-                }
-                else if (i == fullStars + 1 && extraFull)
-                {
-                    <span class="details-star filled"><i class="bi bi-star-fill"></i></span>
-                }
-                else
-                {
-                    <span class="details-star"><i class="bi bi-star"></i></span>
-                }
-            }
+            <!-- Rating -->
+            <div class="details-rating">
+                <div class="details-rating-stars">
+                    @{
+                        var fullStars = (int)Math.Floor(Business.AverageRating);
+                        var remainder = Business.AverageRating - fullStars;
+                        var hasHalf = remainder >= 0.25 && remainder < 0.75;
+                        var extraFull = remainder >= 0.75;
+                    }
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        if (i <= fullStars)
+                        {
+                            <span class="details-star filled"><i class="bi bi-star-fill"></i></span>
+                        }
+                        else if (i == fullStars + 1 && hasHalf)
+                        {
+                            <span class="details-star filled"><i class="bi bi-star-half"></i></span>
+                        }
+                        else if (i == fullStars + 1 && extraFull)
+                        {
+                            <span class="details-star filled"><i class="bi bi-star-fill"></i></span>
+                        }
+                        else
+                        {
+                            <span class="details-star"><i class="bi bi-star"></i></span>
+                        }
+                    }
+                </div>
+                <span class="details-rating-text">
+                    @Business.AverageRating.ToString("F1") (@Business.TotalRatings @(Business.TotalRatings == 1 ? Loc["Rating"].Value : Loc["Ratings"].Value))
+                </span>
+            </div>
         </div>
-        <span class="details-rating-text">
-            @Business.AverageRating.ToString("F1") (@Business.TotalRatings @(Business.TotalRatings == 1 ? Loc["Rating"].Value : Loc["Ratings"].Value))
-        </span>
     </div>
 
     <!-- Packages Section -->
@@ -196,6 +201,22 @@
     </div>
 </div>
 
+<!-- QR Lightbox -->
+@if (_showQrModal)
+{
+    <div class="qr-overlay" @onclick="() => _showQrModal = false">
+        <div class="qr-lightbox" @onclick:stopPropagation>
+            <button class="qr-close-btn" @onclick="() => _showQrModal = false">&times;</button>
+            <img src="@GetBusinessImage()" class="qr-lightbox-banner" alt="@Business?.Name" />
+            <div class="qr-lightbox-body">
+                <h2 class="qr-lightbox-name">@Business?.Name</h2>
+                <img src="@GetQRUrl()" alt="QR Code for @Business?.Name" class="qr-lightbox-img" />
+                <p class="qr-lightbox-hint">Scan to share this business</p>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     [Parameter]
     public int Id { get; set; }
@@ -206,6 +227,7 @@
     private bool _showDeleteConfirm = false;
     private string _confirmMessage = "";
     private int _deletePackageId = 0;
+    private bool _showQrModal = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -214,6 +236,12 @@
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         _isAdmin = user.IsInRole("Admin");
+    }
+
+    private string GetQRUrl()
+    {
+        var url = NavigationManager.Uri;
+        return $"https://api.qrserver.com/v1/create-qr-code/?size=180x180&data={Uri.EscapeDataString(url)}";
     }
 
     private string GetBusinessImage()

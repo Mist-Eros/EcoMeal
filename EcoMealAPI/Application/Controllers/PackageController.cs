@@ -17,6 +17,38 @@ public class PackageController : ControllerBase
         _context = context;
     }
 
+    [HttpGet("expiring")]
+    public async Task<ActionResult<IEnumerable<ExpiringPackageDTO>>> GetExpiringPackages()
+    {
+        var now = DateTime.Now;
+        var packages = await _context.Package
+            .Include(p => p.PackageType)
+            .Include(p => p.Business)
+            .ThenInclude(b => b.BusinessType)
+            .Where(p => p.Start_PickUp <= now
+                     && now <= p.End_PickUp
+                     && p.Orders.Count == 0)
+            .OrderBy(p => p.End_PickUp)
+            .Select(p => new ExpiringPackageDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                Price = p.Price,
+                Start_PickUp = p.Start_PickUp,
+                End_PickUp = p.End_PickUp,
+                PackageTypeId = p.PackageTypeId,
+                PackageTypeName = p.PackageType.Name,
+                BusinessId = p.BusinessId,
+                BusinessName = p.Business.Name,
+                BusinessTypeName = p.Business.BusinessType.Name
+            })
+            .Take(20)
+            .ToListAsync();
+
+        return Ok(packages);
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<PackageDTO>> GetPackageById(int id)
     {

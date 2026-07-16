@@ -108,4 +108,6 @@
   <data name="Find your meal!" xml:space="preserve"><value>Găsește-ți masa!</value></data>
   <data name="Yes" xml:space="preserve"><value>Da</value></data>
   <data name="No" xml:space="preserve"><value>Nu</value></data>
+  <data name="Add" xml:space="preserve"><value>Adaugă</value></data>
+  <data name="Add Business" xml:space="preserve"><value>Adaugă Afacere</value></data>
 </root>

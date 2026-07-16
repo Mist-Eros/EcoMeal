@@ -109,4 +109,6 @@
   <data name="Find your meal!" xml:space="preserve"><value>اعثر على وجبتك!</value></data>
   <data name="Yes" xml:space="preserve"><value>نعم</value></data>
   <data name="No" xml:space="preserve"><value>لا</value></data>
+  <data name="Add" xml:space="preserve"><value>إضافة</value></data>
+  <data name="Add Business" xml:space="preserve"><value>إضافة عمل تجاري</value></data>
 </root>

@@ -109,4 +109,6 @@
   <data name="Find your meal!" xml:space="preserve"><value>Find your meal!</value></data>
   <data name="Yes" xml:space="preserve"><value>Yes</value></data>
   <data name="No" xml:space="preserve"><value>No</value></data>
+  <data name="Add" xml:space="preserve"><value>Add</value></data>
+  <data name="Add Business" xml:space="preserve"><value>Add Business</value></data>
 </root>

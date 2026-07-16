@@ -108,4 +108,6 @@
   <data name="Find your meal!" xml:space="preserve"><value>Finde dein Essen!</value></data>
   <data name="Yes" xml:space="preserve"><value>Ja</value></data>
   <data name="No" xml:space="preserve"><value>Nein</value></data>
+  <data name="Add" xml:space="preserve"><value>Hinzufügen</value></data>
+  <data name="Add Business" xml:space="preserve"><value>Betrieb hinzufügen</value></data>
 </root>

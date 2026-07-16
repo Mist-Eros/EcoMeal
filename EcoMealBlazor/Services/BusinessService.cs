@@ -133,6 +133,19 @@ public class BusinessService
         }
     }
 
+    public async Task<List<ExpiringPackageModel>> GetExpiringPackagesAsync()
+    {
+        try
+        {
+            var packages = await _http.GetFromJsonAsync<List<ExpiringPackageModel>>("api/package/expiring");
+            return packages ?? new List<ExpiringPackageModel>();
+        }
+        catch
+        {
+            return new List<ExpiringPackageModel>();
+        }
+    }
+
     public async Task<bool> RateBusinessAsync(int businessId, int stars)
     {
         try

@@ -1,8 +1,11 @@
 @namespace EcoMeal.EcoMealBlazor.Components.BusinessCard
+@using Microsoft.Extensions.Localization
+@using EcoMeal.EcoMealBlazor.Resources
+@inject IStringLocalizer<SharedResource> Loc
 
 <div class="add-card" @onclick="OnAdd">
     <div class="add-card-body">
         <div class="add-icon">+</div>
-        <span class="add-text">Add</span>
+        <span class="add-text">@Loc["Add"]</span>
     </div>
 </div>

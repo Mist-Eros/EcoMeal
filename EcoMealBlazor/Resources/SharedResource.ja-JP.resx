@@ -109,4 +109,6 @@
   <data name="Find your meal!" xml:space="preserve"><value>食事を見つけよう!</value></data>
   <data name="Yes" xml:space="preserve"><value>はい</value></data>
   <data name="No" xml:space="preserve"><value>いいえ</value></data>
+  <data name="Add" xml:space="preserve"><value>追加</value></data>
+  <data name="Add Business" xml:space="preserve"><value>ビジネスを追加</value></data>
 </root>

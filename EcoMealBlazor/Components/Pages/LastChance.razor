@@ -1,0 +1,99 @@
+@page "/last-chance"
+@rendermode InteractiveServer
+@using EcoMeal.EcoMealBlazor.Models
+@using EcoMeal.EcoMealBlazor.Services
+@using Microsoft.Extensions.Localization
+@using EcoMeal.EcoMealBlazor.Resources
+@inject BusinessService BusinessService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<SharedResource> Loc
+@inject CurrencyService Currency
+
+<PageTitle>Last Chance - EcoMeal</PageTitle>
+
+<div class="lastchance-page">
+    <div class="lastchance-header">
+        <div class="lastchance-header-icon">
+            <i class="bi bi-alarm"></i>
+        </div>
+        <h1 class="lastchance-title">Last chance!</h1>
+        <p class="lastchance-subtitle">Packages expiring soon — grab them before they're gone</p>
+    </div>
+
+    @if (_packages == null)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border" style="width: 3rem; height: 3rem; color: #e67e22;" role="status">
+                <span class="visually-hidden">@Loc["Loading"]</span>
+            </div>
+        </div>
+    }
+    else if (!_packages.Any())
+    {
+        <div class="lastchance-empty">
+            <i class="bi bi-emoji-smile lastchance-empty-icon"></i>
+            <h3>Nothing expiring right now!</h3>
+            <p>All packages are fresh. Check back later for deals.</p>
+            <button class="lastchance-back-btn" @onclick="GoBack">
+                <i class="bi bi-arrow-left"></i> Browse businesses
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="lastchance-count">
+            <span class="lastchance-count-badge">@_packages.Count packages</span>
+            <span class="lastchance-count-text">expiring soon</span>
+        </div>
+
+        <div class="lastchance-grid">
+            @foreach (var pkg in _packages)
+            {
+                <div class="lastchance-card" @onclick="() => GoToBusiness(pkg.BusinessId)">
+                    <div class="lastchance-card-top">
+                        <span class="lastchance-type">@pkg.PackageTypeName</span>
+                        <span class="lastchance-timer">
+                            <i class="bi bi-hourglass-split"></i>
+                            @GetTimeRemaining(pkg.End_PickUp)
+                        </span>
+                    </div>
+                    <h3 class="lastchance-pkg-name">@pkg.Name</h3>
+                    <p class="lastchance-business-name">@pkg.BusinessName</p>
+                    <p class="lastchance-desc">@pkg.Description</p>
+                    <div class="lastchance-card-footer">
+                        <span class="lastchance-price">@Currency.Format(pkg.Price)</span>
+                        <span class="lastchance-order-btn">Grab it <i class="bi bi-arrow-right"></i></span>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private List<ExpiringPackageModel>? _packages;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _packages = await BusinessService.GetExpiringPackagesAsync();
+    }
+
+    private void GoToBusiness(int businessId)
+    {
+        NavigationManager.NavigateTo($"/business/{businessId}");
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/businesses");
+    }
+
+    private string GetTimeRemaining(DateTime endPickup)
+    {
+        var remaining = endPickup - DateTime.Now;
+        if (remaining.TotalMinutes <= 0) return "Expired";
+        if (remaining.TotalHours < 1) return $"{(int)remaining.TotalMinutes}m left";
+        if (remaining.TotalHours < 24) return $"{(int)remaining.TotalHours}h {(int)remaining.Minutes}m left";
+        return $"{(int)remaining.TotalDays}d left";
+    }
+}
